@@ -1619,7 +1619,8 @@ const D = {
   "rotulo": "The packaging, its lid, its label and every word, logo and barcode printed on it stay exactly as photographed: same layout, same typography, same colours, same position. Do not redraw, re-letter, translate, invent or replace any printed element.",
   "marca_pack": "Do not add any text, caption, logo or branding that is not already printed on the product itself.",
   "parado": "The product is sealed and does not change in any way: nothing melts, steams, opens, pours, spills or moves. Only the camera moves.",
-  "identidade_pack": "The product's identity stays exactly as photographed: same packaging, same shape, same size, same colours and same quantity. Do not redraw, replace, restyle or beautify it — it must remain recognisably the same item."
+  "identidade_pack": "The product's identity stays exactly as photographed: same packaging, same shape, same size, same colours and same quantity. Do not redraw, replace, restyle or beautify it — it must remain recognisably the same item.",
+  "combo": "Two items are shown together and both stay fully in frame for the entire shot: neither disappears, leaves the frame, changes place, changes size or is replaced."
  },
  "fundos": {
   "escuro": [
@@ -1648,6 +1649,7 @@ const D = {
  "criar_estrutura_orn": "STRUCTURE: 3 to 4 shots in 6 seconds. Open wide on the product, cut to a slow macro push across the filling so its texture and quantity read clearly, then cut to a final shot in which the camera pulls slowly back and away from the product to reveal the full breadth of the scene, with %s resting on the surface around the product. These ingredients appear ONLY in this final shot and never in the earlier shots, and they stay completely still. In this last shot nothing moves except the camera: the arrangement is completely still, like a photograph, so the styling and every small detail read clearly. The video ends holding on this wide frame."
 };
 
+const QUINTA=3;   // segunda=0 na conta de dia da semana usada aqui
 const SLOTS = [
   ["07:00","MATINAL",[],[],"MENSAGEM"],
   ["15:30","TARDE",
@@ -1738,7 +1740,10 @@ function planoMes(ano,mes){
         return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:modo,prod:mat,
                 cfg:cfgDoPreset(mat.movs[(d-1)%mat.movs.length])};
       }
-      const cats = ds===6 ? cfg[3] : cfg[2];
+      // Biscoitos sao 21 e salgados 12: sem alternar, o sorteio so daria biscoito.
+      const cats = ds===QUINTA&&modo==="PRODUTO"
+                     ? (Math.floor((d-1)/7)%2 ? ["BISCOITOS"] : ["SALGADOS"])
+                 : ds===6 ? cfg[3] : cfg[2];
       const cand=cats.reduce(function(acc,c){return acc.concat(porCat[c]||[])},[]);
       let esc=null;
       const limites=[COOL,0];
@@ -1760,6 +1765,12 @@ function planoMes(ano,mes){
         if(best){uso[best.sku]=pos;usoCat[best.cat]=pos;esc=best;break}
       }
       pos++;
+      // Quinta do Combo: uma comida + uma bebida no turno da tarde.
+      if(ds===QUINTA&&modo==="PRODUTO"){
+        const beb=porCat.BEBIDAS||[];
+        return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"COMBO",prod:esc,
+                bebida:beb.length?beb[(d+si)%beb.length]:null,cfg:cfgDoProduto(esc)};
+      }
       return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"PRODUTO",prod:esc,
               cfg:cfgDoProduto(esc)};
     });
@@ -1791,6 +1802,7 @@ function travaBase(cfg){
   if(!fundoTrocado(cfg))  out.push(P.fundo);
   if(!luzLivre(cfg))      out.push(P.luz);
   if(!ornamentando(cfg))  out.push(P.objetos);
+  if(cfg.combo) out.push(P.combo);
   out.push(embalado(cfg)?P.marca_pack:P.marca,P.real);
   return out.join(" ");
 }
@@ -1903,7 +1915,8 @@ function montarPromptCriar(prod,cfg){
   return b.filter(Boolean).join(" ");
 }
 
-function montarPrompt(prod,cfg){
+function montarPrompt(prod,cfg,combo){
+  if(combo) cfg=Object.assign({},cfg,{combo:true});
   if(embalado(cfg)) cfg=Object.assign({},cfg,{tr:"tr_nenhuma",amb:"amb_nada",
                                               hum:"hum_nenhum",ut:"ut_nenhum",cena:""});
   if(modoDe(prod&&prod.sku)==="criar") return montarPromptCriar(prod,cfg);
@@ -2013,8 +2026,21 @@ function legendaMensagem(s){
   return L.join("\n");
 }
 
+function precoCombo(){return store.get("combo:"+iso)||""}
+
 function legenda(peca,s,d){
   if(s.modo==="MENSAGEM") return legendaMensagem(s);
+  if(s.modo==="COMBO"){
+    const b=s.bebida, pc=precoCombo();
+    let L=["QUINTA DO COMBO 🎉","",
+           peca.nome.toUpperCase()+(b?" + "+b.nome.toUpperCase():""),""];
+    L.push(pc?("por "+pc):"Peça o seu no balcão.");
+    L.push("","Só hoje, enquanto durar a fornada.","");
+    L=rodape(L);
+    L.push("",(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
+      .map(function(x){return "#"+x}).join(" ")+" #quintadocombo");
+    return L.join("\n");
+  }
   const g=GANCHO[s.bloco], gancho=g[d%g.length];
   const fecho=FECHO[s.obj]||"";
   const tags=(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
@@ -2125,6 +2151,10 @@ function render(){
       dia[slot].prod=pm;
     }
   }
+  const escB=escolhidoBeb[chaveSlot()];
+  if(escB&&dia[slot]&&dia[slot].modo==="COMBO"){
+    const bm=acharProduto(escB); if(bm) dia[slot].bebida=bm;
+  }
   const s=dia[slot], p=s.prod, t=$("ticket");
   if(!p){t.innerHTML="<p>Sem produto para este horário.</p>";return}
 
@@ -2174,7 +2204,20 @@ function render(){
                   '<button class="act ghost mini" id="nvok">Adicionar</button>'+
                 '</div>'
               : '<button class="lnk" id="nvab">+ produto que não está na lista</button>')+
-            '</div>')+
+            '</div>'+
+            (s.modo==="COMBO"
+              ? '<div class="field"><label class="flabel" for="sb">Bebida do combo</label>'+
+                '<select id="sb"><option value="">— escolher —</option>'+
+                  produtosTodos().filter(function(x){return x.cat==="BEBIDAS"||x.cat==="REVENDA"})
+                  .map(function(x){
+                    return '<option value="'+x.sku+'"'+
+                      (s.bebida&&x.sku===s.bebida.sku?" selected":"")+'>'+x.nome+'</option>'
+                  }).join("")+'</select>'+
+                '<label class="flabel" for="pcb" style="margin-top:12px">Preço do combo</label>'+
+                '<input type="text" id="pcb" placeholder="R$ 8,00" value="'+
+                  precoCombo().replace(/"/g,"&quot;")+'">'+
+                '<p class="hint">Fotografe a comida e a bebida juntas, no mesmo quadro.</p></div>'
+              : ''))+
 
       (ehMsg ? '' :
         '<div class="modos">'+
@@ -2307,6 +2350,10 @@ function render(){
   if($("sm")) $("sm").onchange=function(e){
     if(e.target.value) s.cfg=cfgDoPreset(e.target.value); else s.cfg.preset="";
     render()};
+  if($("sb"))  $("sb").onchange=function(e){
+    escolhidoBeb[chaveSlot()]=e.target.value; render()};
+  if($("pcb")) $("pcb").onchange=function(e){
+    store.set("combo:"+iso,e.target.value); render()};
   if($("nvab")) $("nvab").onclick=function(){novoAberto=true;render()};
   if($("nvn"))  $("nvn").oninput=function(e){novoNome=e.target.value};
   if($("nvc"))  $("nvc").onchange=function(e){novoCat=e.target.value};
@@ -2343,9 +2390,9 @@ function render(){
     el.onchange=function(e){store.set(par[1]+peca.sku,e.target.value); render()};
   });
   $("dliv").oninput=function(e){s.cfg.livre=e.target.value};
-  if($("pp")) $("pp").value=montarPrompt(peca,s.cfg);
+  if($("pp")) $("pp").value=montarPrompt(peca,s.cfg,s.modo==="COMBO");
   $("b1").onclick=function(){
-    copiar($("pp")?$("pp").value:montarPrompt(peca,s.cfg),"Prompt copiado.");
+    copiar($("pp")?$("pp").value:montarPrompt(peca,s.cfg,s.modo==="COMBO"),"Prompt copiado.");
   };
   $("b2").onclick=function(){copiar($("lg").value,"Legenda copiada.")};
 }
@@ -2362,7 +2409,7 @@ $("cfg").onclick=function(){$("painel").classList.toggle("on")};
 // limpar o cache nao pode devolver o produto do calendario.
 const CATS=["BISCOITOS","SALGADOS","PAES","BOLOS","BEBIDAS","LATICINIOS","REVENDA","OUTROS"];
 let novoAberto=false, novoNome="", novoCat="REVENDA";
-const escolhido={};
+const escolhido={}, escolhidoBeb={};
 
 // O catalogo do ERP nao cobre revenda, sazonais nem lancamentos.
 // Estes ficam no aparelho e convivem com os do catalogo.

@@ -1,7 +1,7 @@
 // Fornada — service worker
 // Troque a versao a cada atualizacao do app: e isso que forca o celular
 // a baixar o arquivo novo em vez de servir o antigo do cache.
-const VERSAO = "fornada-v1";
+const VERSAO = "fornada-v2";
 
 const ARQUIVOS = [
   "./",
