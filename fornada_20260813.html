@@ -1,0 +1,2964 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fornada — Pão de Mel</title>
+<meta name="theme-color" content="#B4601F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Fornada">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icone-192.png">
+<style>
+:root{
+  --ink:#1A1917; --ink-2:#57534E; --muted:#8B8681;
+  --ground:#FAFAF8; --surface:#FFFFFF; --fill:#F4F3F0;
+  --line:#E9E7E2; --line-2:#D8D5CE;
+  --accent:#B4601F; --heat:#8A2F14;
+  --radius:8px;
+  --sans:"Segoe UI","Segoe UI Variable Text",system-ui,-apple-system,
+         "Helvetica Neue",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.55;padding:0 0 64px;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px}
+@media (min-width:820px){ .wrap{max-width:1080px;padding:0 40px} }
+
+/* ---------- cabecalho ---------- */
+.masthead{display:flex;justify-content:space-between;align-items:center;
+  padding:28px 0 20px}
+.masthead b{font-weight:600;font-size:16px;letter-spacing:-.01em}
+.masthead .grp{display:flex;gap:18px}
+.masthead button{background:none;border:none;font-family:inherit;font-size:13px;
+  color:var(--muted);cursor:pointer;padding:6px 2px;border-radius:var(--radius)}
+.masthead button:hover{color:var(--ink)}
+
+/* ---------- data ---------- */
+.datebar{display:flex;align-items:center;gap:8px;padding-bottom:20px}
+.datebar input{flex:1;font-family:inherit;font-size:14px;padding:10px 12px;
+  border:none;border-radius:var(--radius);background:var(--fill);color:var(--ink)}
+.datebar button{font-size:15px;width:38px;height:38px;border:none;
+  background:var(--fill);color:var(--ink-2);border-radius:var(--radius);cursor:pointer;
+  transition:background .15s}
+.datebar button:hover{background:var(--line-2)}
+
+/* ---------- horarios ---------- */
+.rail{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.tab{border:none;background:none;font-family:inherit;padding:0 0 12px;cursor:pointer;
+  font-size:15px;font-weight:500;color:var(--muted);position:relative;text-align:left;
+  transition:color .15s}
+.tab .lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-top:2px}
+.tab:hover{color:var(--ink-2)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;
+  height:2px;background:var(--accent);border-radius:1px}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ---------- corpo ---------- */
+.ticket{background:none;border:none;padding:0}
+.meta{display:flex;gap:14px;font-size:12px;font-weight:600;letter-spacing:.06em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:28px}
+.goal{color:var(--accent)}
+.panes{display:grid;gap:32px}
+@media (min-width:820px){
+  .panes{grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+}
+.pane{min-width:0}
+
+/* ---------- campos ---------- */
+.field{margin-bottom:28px}
+.field:last-child{margin-bottom:0}
+.flabel{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+select,input[type=text],textarea{
+  width:100%;font-family:inherit;font-size:14.5px;padding:11px 12px;
+  border:1px solid transparent;border-radius:var(--radius);
+  background:var(--fill);color:var(--ink);transition:border-color .15s,background .15s;
+  appearance:none;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%238B8681' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+select:hover,input[type=text]:hover{background:var(--line)}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+textarea{min-height:220px;resize:vertical;line-height:1.65;font-size:14px}
+@media (min-width:820px){ textarea{min-height:340px} }
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.hint{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.hint b{color:var(--ink-2);font-weight:600}
+
+
+
+
+
+/* ---------- acoes ---------- */
+.steps{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.act{display:flex;align-items:center;gap:11px;width:100%;padding:13px 16px;
+  border:1px solid var(--ink);background:var(--ink);color:#fff;
+  font-family:inherit;font-size:14.5px;font-weight:500;text-align:left;
+  border-radius:var(--radius);cursor:pointer;transition:opacity .15s}
+.act:hover{opacity:.86}
+.act:active{transform:translateY(1px)}
+.act .n{font-size:11px;font-weight:600;opacity:.6;
+  min-width:14px}
+.act.ghost{background:var(--surface);color:var(--ink);border-color:var(--line-2)}
+.act.ghost:hover{background:var(--fill);opacity:1}
+.act:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- ajustes ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;margin-bottom:24px;display:none}
+.panel.on{display:block}
+.litem{padding:14px 0;border-top:1px solid var(--line)}
+.lhead{display:flex;justify-content:space-between;font-size:11px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.lhead b{color:var(--ink);font-weight:600}
+.lnome{font-size:15px;margin-bottom:10px}
+.lbtn{padding:9px 14px;font-size:13.5px;width:auto;display:inline-flex}
+.panel h2{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 16px}
+
+table.lote{width:100%;border-collapse:collapse;font-size:13px}
+table.lote th{text-align:left;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);padding:0 12px 8px 0;font-weight:600;white-space:nowrap}
+table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-align:top}
+.tt{font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px}
+.sub{font-size:13px;color:var(--muted);margin:0 0 30px}
+.lin{padding:20px 0;border-top:1px solid var(--line)}
+.lin .cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.lin .qd{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.lin .cab b{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.lin .mv{font-size:12px;color:var(--accent)}
+.act.mini{width:auto;padding:8px 16px;font-size:12.5px;margin:0}
+.lin-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mic{display:flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border:0;border-radius:50%;background:var(--fill);color:var(--ink-2);cursor:pointer;
+  flex:0 0 auto;margin-bottom:6px}
+.mic:hover{background:var(--line)}
+.mic.on{background:var(--heat);color:#fff;animation:pulsa 1.1s ease-in-out infinite}
+@keyframes pulsa{0%,100%{opacity:1}50%{opacity:.55}}
+textarea{width:100%;font-family:inherit;font-size:14px;line-height:1.5;padding:11px 12px;
+  background:var(--fill);border:1px solid transparent;border-radius:var(--radius);resize:vertical}
+textarea:focus{outline:none;border-color:var(--line-2);background:var(--surface)}
+textarea.mono{min-height:190px;font-family:ui-monospace,"Cascadia Mono","Consolas",
+  "SFMono-Regular",Menlo,monospace;font-size:12px;line-height:1.55}
+.novo{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.novo input{flex:1 1 160px}
+.novo select{flex:0 1 150px}
+.lnk{font-family:inherit;font-size:12.5px;color:var(--accent);background:none;border:0;
+  padding:8px 0 0;cursor:pointer;text-align:left}
+.modos{display:flex;gap:6px;margin:0 0 22px;background:var(--fill);
+  padding:4px;border-radius:999px;width:fit-content}
+.md{font-family:inherit;font-size:12.5px;padding:8px 16px;cursor:pointer;color:var(--ink-2);
+  background:transparent;border:0;border-radius:999px}
+.md.on{background:var(--surface);color:var(--ink);font-weight:600;
+  box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:12.5px;line-height:1.2;padding:8px 13px;cursor:pointer;
+  color:var(--ink-2);background:var(--fill);border:1px solid transparent;
+  border-radius:999px;transition:background .12s,color .12s,border-color .12s}
+.chip:hover{background:var(--line)}
+.chip.fm{border-color:var(--line-2)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip.on.fm{background:var(--heat);border-color:var(--heat)}
+details.fino{margin:22px 0 0;border-top:1px solid var(--line);padding-top:14px}
+details.fino>summary{cursor:pointer;font-size:12px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);list-style:none}
+details.fino>summary::-webkit-details-marker{display:none}
+details.fino>summary::before{content:"+ ";font-weight:600}
+details.fino[open]>summary::before{content:"\2212 "}
+details.fino[open]>summary{margin-bottom:14px}
+.hint.eixo{margin:14px 0 0;line-height:1.6}
+.verd{margin:16px 0 4px;padding:14px 16px;background:var(--fill);
+  border-radius:var(--radius);border-left:2px solid var(--heat)}
+.verd input{background:var(--surface)}
+.brief{margin:22px 0 18px;padding:14px 16px;background:var(--fill);
+  border-radius:var(--radius);border-left:2px solid var(--accent)}
+.brief b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.brief ul{margin:0;padding-left:17px}
+.brief li{font-size:13px;line-height:1.55;margin-bottom:4px}
+.brief li.al{color:var(--heat);font-weight:500}
+.note{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:44px;
+  padding-top:22px;border-top:1px solid var(--line)}
+.note b{color:var(--ink-2);font-weight:600}
+.note code{background:var(--fill);padding:2px 7px;border-radius:4px;font-size:11.5px;
+  font-family:ui-monospace,"Cascadia Mono",Consolas,monospace}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;
+  background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--radius);
+  font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s;
+  box-shadow:0 8px 28px rgba(26,25,23,.18);z-index:20;max-width:88vw}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead"><b>Fornada</b><span class="grp"><button id="vw">dia avulso</button><button id="cfg">ajustes</button></span></div>
+
+<div id="vAssist"></div>
+<div id="vSemana"></div>
+<div class="panel" id="painel">
+  <h2>Ajustes</h2>
+  <label class="flabel" for="wpp">WhatsApp</label>
+  <input type="text" id="wpp" placeholder="38991702459">
+  <label class="flabel" for="menu" style="margin-top:12px">Link do cardápio digital</label>
+  <input type="text" id="menu" placeholder="https://...">
+
+  <p class="hint">Fica salvo neste aparelho. Sem cardápio preenchido, a legenda usa só o WhatsApp.</p>
+</div>
+
+<div id="vDia" style="display:none">
+<div class="datebar">
+  <button id="prev" aria-label="Dia anterior">&#8592;</button>
+  <input type="date" id="dia">
+  <button id="next" aria-label="Próximo dia">&#8594;</button>
+</div>
+
+<div class="rail" role="tablist" id="rail"></div>
+<div class="ticket" id="ticket"></div>
+
+<p class="note">
+  Fotografe conforme o requisito do movimento. Toque em <b>1</b> e cole no Gemini com a foto.
+  Suba o vídeo no Canva para pôr título, preço e logo. Toque em <b>2</b> para a legenda.
+  Salve o vídeo como <code id="fname">&#8212;</code>.
+</p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+const D = {
+ "produtos": [
+  {
+   "sku": "22873",
+   "nome": "Biscoito Amanteigado",
+   "cat": "BISCOITOS",
+   "preco": "R$ 36,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "40",
+   "nome": "Biscoito Batatinha",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35965",
+   "nome": "Biscoito Chipa",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35921",
+   "nome": "Biscoito de Farinha",
+   "cat": "BISCOITOS",
+   "preco": "R$ 36,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35914",
+   "nome": "Biscoito de Mandioca",
+   "cat": "BISCOITOS",
+   "preco": "R$ 36,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35915",
+   "nome": "Biscoito de Milho",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "44",
+   "nome": "Biscoito de Nata",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make it look creamy."
+  },
+  {
+   "sku": "2000000000001",
+   "nome": "Biscoito de Povilho Espremido",
+   "cat": "BISCOITOS",
+   "preco": "R$ 36,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "2000000000023",
+   "nome": "Biscoito Doce",
+   "cat": "BISCOITOS",
+   "preco": "R$ 36,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35912",
+   "nome": "Biscoito Fofao",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "3591",
+   "nome": "Biscoito Frito Doce",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "47",
+   "nome": "Biscoito Frito Sal",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "48",
+   "nome": "Biscoito Provolone",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "35916",
+   "nome": "Biscoito Recheado de Carne",
+   "cat": "BISCOITOS",
+   "preco": "R$ 29,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "49",
+   "nome": "Biscoito Sequilho",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "2000000000025",
+   "nome": "Biscoito Toalha",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "2000000000003",
+   "nome": "Bolo de Chocolate",
+   "cat": "BOLOS",
+   "preco": "R$ 24,50/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt."
+  },
+  {
+   "sku": "2000000000020",
+   "nome": "Bolo de Chocolate Recheado",
+   "cat": "BOLOS",
+   "preco": "R$ 33,50/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt."
+  },
+  {
+   "sku": "35928",
+   "nome": "Bolo de Fuba",
+   "cat": "BOLOS",
+   "preco": "R$ 22,50/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt."
+  },
+  {
+   "sku": "35924",
+   "nome": "Bolo de Goiabada",
+   "cat": "BOLOS",
+   "preco": "R$ 30,19/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt."
+  },
+  {
+   "sku": "22880",
+   "nome": "Bolo de Queijo",
+   "cat": "BOLOS",
+   "preco": "R$ 24,50/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt."
+  },
+  {
+   "sku": "2000000000004",
+   "nome": "Coxinha de Frango com Catupiry",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "52",
+   "nome": "Croquete de Carne Seca",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000019",
+   "nome": "Empada de Frango",
+   "cat": "SALGADOS",
+   "preco": "R$ 43,69/kg",
+   "tier": "ALTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000007",
+   "nome": "Esfirra de Frango",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000011",
+   "nome": "Mini Hamburguer",
+   "cat": "SALGADOS",
+   "preco": "R$ 35,00/kg",
+   "tier": "ALTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000012",
+   "nome": "Paezinhos Pizza",
+   "cat": "SALGADOS",
+   "preco": "R$ 29,90/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "19",
+   "nome": "Pao de Queijo",
+   "cat": "PAES",
+   "preco": "R$ 32,90/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "30",
+   "nome": "Pao de Sal",
+   "cat": "PAES",
+   "preco": "R$ 13,00/kg",
+   "tier": "BAIXO",
+   "verdade": ""
+  },
+  {
+   "sku": "8",
+   "nome": "Pao de Sal 50 Gr",
+   "cat": "PAES",
+   "preco": "R$ 13,90/kg",
+   "tier": "BAIXO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000015",
+   "nome": "Pao de Sal 50 Gramas",
+   "cat": "PAES",
+   "preco": "R$ 14,50/kg",
+   "tier": "BAIXO",
+   "verdade": ""
+  },
+  {
+   "sku": "9",
+   "nome": "Pao Frances",
+   "cat": "PAES",
+   "preco": "R$ 10,50/kg",
+   "tier": "BAIXO",
+   "verdade": ""
+  },
+  {
+   "sku": "35940",
+   "nome": "Pao Sovado",
+   "cat": "PAES",
+   "preco": "R$ 15,00/kg",
+   "tier": "BAIXO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000002",
+   "nome": "Pastel de Carne Seca",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "33",
+   "nome": "Pizza Broto",
+   "cat": "SALGADOS",
+   "preco": "R$ 10,00/un",
+   "tier": "COMPLEMENTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000026",
+   "nome": "Pizza Grande",
+   "cat": "SALGADOS",
+   "preco": "R$ 35,00/kg",
+   "tier": "ALTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000016",
+   "nome": "Queijo Minas (Meia Cura)",
+   "cat": "LATICINIOS",
+   "preco": "R$ 38,90/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not melt or soften the cheese."
+  },
+  {
+   "sku": "18189",
+   "nome": "Refrigerante 2 Lt Laranja",
+   "cat": "BEBIDAS",
+   "preco": "R$ 8,20/un",
+   "tier": "COMPLEMENTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000006",
+   "nome": "Refrigerante 2Lt de Limao",
+   "cat": "BEBIDAS",
+   "preco": "R$ 8,20/un",
+   "tier": "COMPLEMENTO",
+   "verdade": ""
+  },
+  {
+   "sku": "7",
+   "nome": "Refrigerante Cola 2 Lt",
+   "cat": "BEBIDAS",
+   "preco": "R$ 8,20/un",
+   "tier": "COMPLEMENTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000017",
+   "nome": "Requeijao do Norte",
+   "cat": "LATICINIOS",
+   "preco": "R$ 51,90/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not melt or make it run."
+  },
+  {
+   "sku": "2000000000005",
+   "nome": "Rosca Recheada de Presunto",
+   "cat": "PAES",
+   "preco": "R$ 34,90/kg",
+   "tier": "ALTO",
+   "verdade": ""
+  },
+  {
+   "sku": "2000000000024",
+   "nome": "Rosca Tatu",
+   "cat": "BISCOITOS",
+   "preco": "R$ 24,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not soften it."
+  },
+  {
+   "sku": "35943",
+   "nome": "Rosquinha de Goiabada",
+   "cat": "BISCOITOS",
+   "preco": "R$ 29,90/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "2000000000018",
+   "nome": "Rosquinha de Leite Condensado",
+   "cat": "BISCOITOS",
+   "preco": "R$ 31,55/un",
+   "tier": "COMPLEMENTO",
+   "verdade": "Do not add steam. Do not melt the glaze."
+  },
+  {
+   "sku": "22892",
+   "nome": "Rosquinha de Nata",
+   "cat": "BISCOITOS",
+   "preco": "R$ 31,55/kg",
+   "tier": "MEDIO",
+   "verdade": "Do not add steam. Do not make it look creamy or soft."
+  },
+  {
+   "sku": "2000000000022",
+   "nome": "Rosquinha Recheada Goiaba e Mussarela",
+   "cat": "BISCOITOS",
+   "preco": "R$ 34,90/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam. Do not make anything melt or soften."
+  },
+  {
+   "sku": "2000000000013",
+   "nome": "Sanduiche Natural Mini",
+   "cat": "SALGADOS",
+   "preco": "R$ 34,90/kg",
+   "tier": "ALTO",
+   "verdade": "Do not add steam or heat. Do not melt anything."
+  },
+  {
+   "sku": "23",
+   "nome": "Suco Natural Diversos Sabores",
+   "cat": "BEBIDAS",
+   "preco": "R$ 6,00/un",
+   "tier": "COMPLEMENTO",
+   "verdade": "Do not add steam."
+  },
+  {
+   "sku": "63",
+   "nome": "Torrada",
+   "cat": "PAES",
+   "preco": "R$ 18,00/kg",
+   "tier": "BAIXO",
+   "verdade": "Do not add steam or moisture."
+  },
+  {
+   "sku": "198",
+   "nome": "Torta de Carne",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  },
+  {
+   "sku": "18",
+   "nome": "Torta de Frango",
+   "cat": "SALGADOS",
+   "preco": "R$ 30,00/kg",
+   "tier": "MEDIO",
+   "verdade": ""
+  }
+ ],
+ "matriz": {
+  "PAES": [
+   "MOV_01",
+   "MOV_05",
+   "MOV_07",
+   "MOV_09",
+   "MOV_10",
+   "MOV_13",
+   "MOV_15",
+   "MOV_16",
+   "MOV_18",
+   "MOV_20"
+  ],
+  "BISCOITOS": [
+   "MOV_04",
+   "MOV_07",
+   "MOV_08",
+   "MOV_09",
+   "MOV_10",
+   "MOV_17",
+   "MOV_20"
+  ],
+  "BOLOS": [
+   "MOV_03",
+   "MOV_07",
+   "MOV_08",
+   "MOV_10",
+   "MOV_12",
+   "MOV_14",
+   "MOV_16",
+   "MOV_18",
+   "MOV_19"
+  ],
+  "SALGADOS": [
+   "MOV_01",
+   "MOV_05",
+   "MOV_07",
+   "MOV_10",
+   "MOV_11",
+   "MOV_13",
+   "MOV_15",
+   "MOV_16",
+   "MOV_18",
+   "MOV_20"
+  ],
+  "BEBIDAS": [
+   "MOV_01",
+   "MOV_07",
+   "MOV_10"
+  ],
+  "LATICINIOS": [
+   "MOV_02",
+   "MOV_07",
+   "MOV_08",
+   "MOV_18"
+  ],
+  "OUTROS": [
+   "MOV_07",
+   "MOV_10"
+  ]
+ },
+ "ingredientes": {},
+ "formato": "Animate this photograph. One single continuous shot, vertical 9:16. No cuts, no scene changes.",
+ "estilo": "",
+ "chamadas": {
+  "MATINAL|PICO_PAGAMENTO": "Saiu do forno agora. Leve o seu",
+  "MATINAL|POS_PAGAMENTO": "Comece o dia com o quentinho",
+  "MATINAL|SEXTA_TICKET_ALTO": "Sexta começa melhor assim",
+  "MATINAL|RECUPERACAO_FLUXO": "O básico bem feito, todo dia",
+  "MATINAL|GIRO_ROTINA": "Fresquinho desde as 5h30",
+  "MATINAL|MARCA_ENCOMENDA": "Domingo pede mesa cheia",
+  "TARDE|PICO_PAGAMENTO": "A tarde merece esse",
+  "TARDE|POS_PAGAMENTO": "Café da tarde resolvido",
+  "TARDE|SEXTA_TICKET_ALTO": "Leve para o fim de semana",
+  "TARDE|RECUPERACAO_FLUXO": "Pausa da tarde sem pesar",
+  "TARDE|GIRO_ROTINA": "Ainda tem na vitrine",
+  "TARDE|MARCA_ENCOMENDA": "Encomende pelo WhatsApp",
+  "NOITE|PICO_PAGAMENTO": "Ainda dá tempo de levar",
+  "NOITE|POS_PAGAMENTO": "Feche o dia com o seu",
+  "NOITE|SEXTA_TICKET_ALTO": "O jantar de sexta começa aqui",
+  "NOITE|RECUPERACAO_FLUXO": "Até as 19h30 na loja",
+  "NOITE|GIRO_ROTINA": "Passe antes de fechar",
+  "NOITE|MARCA_ENCOMENDA": "Encomendas para a semana"
+ },
+ "fluidez": "The motion must be smooth, organic and continuous from the first frame to the last, with gentle easing in and out and a steady, even pace. No jumps, no stutter, no sudden acceleration or deceleration, no abrupt start or stop, no looping reset. Movement should feel filmed, not animated.",
+ "bancos": {
+  "camera": [
+   [
+    "cam_fixa",
+    "Câmera parada",
+    "The camera stays completely still, locked off."
+   ],
+   [
+    "cam_aproxima",
+    "Aproximação lenta",
+    "The camera pushes in slowly and continuously toward the subject."
+   ],
+   [
+    "cam_afasta",
+    "Afastamento lento",
+    "The camera pulls back slowly and continuously, revealing more of the frame."
+   ],
+   [
+    "cam_orbita",
+    "Órbita ao redor",
+    "The camera orbits slowly around the subject, keeping it centered and in focus."
+   ],
+   [
+    "cam_lateral",
+    "Deriva lateral",
+    "The camera drifts slowly sideways across the subject."
+   ],
+   [
+    "cam_desce",
+    "Descida sobre o produto",
+    "The camera tilts slowly downward over the subject."
+   ],
+   [
+    "cam_foco",
+    "Só o foco muda",
+    "The camera stays still while focus racks slowly from the front edge to the center."
+   ],
+   [
+    "cam_cinema",
+    "Clima de comercial",
+    "The camera pushes in very slowly along a slight arc, with a shallow depth of field: the product stays sharp while the surface and the background fall softly out of focus. A warm highlight travels slowly across the product as the camera moves."
+   ]
+  ],
+  "ambiente": [
+   [
+    "amb_nada",
+    "Nada se move",
+    ""
+   ],
+   [
+    "amb_vapor",
+    "Vapor subindo",
+    "Hot steam rises steadily from the subject and dissolves into the air."
+   ],
+   [
+    "amb_vapor_leve",
+    "Vapor tênue",
+    "A very faint thread of steam rises and fades."
+   ],
+   [
+    "amb_brilho",
+    "Brilho deslizando",
+    "The surface sheen shifts subtly as the light moves across it."
+   ],
+   [
+    "amb_farelo",
+    "Farelos assentando",
+    "A few loose crumbs settle and come to rest."
+   ],
+   [
+    "amb_creme",
+    "Creme já exposto escorre",
+    "The creamy filling that is ALREADY exposed oozes slowly over the open edge, thick and glossy."
+   ],
+   [
+    "amb_derrete",
+    "Queijo já visível amolece",
+    "The cheese that is ALREADY visible slowly softens and glistens."
+   ],
+   [
+    "amb_fio",
+    "Fio de queijo (fatia já separada)",
+    "The slice that is ALREADY separated in the photograph lifts a little and the cheese between the pieces stretches into a thin strand."
+   ],
+   [
+    "amb_condensa",
+    "Condensação escorrendo",
+    "Condensation droplets slide slowly down the surface."
+   ],
+   [
+    "amb_gota",
+    "Gota escorrendo na borda",
+    "A single drop forms slowly at the edge and stretches downward."
+   ]
+  ],
+  "humano": [
+   [
+    "hum_nenhum",
+    "Ninguém em quadro",
+    ""
+   ],
+   [
+    "hum_imovel",
+    "Mão já na foto, parada",
+    "The hand ALREADY in the photograph stays completely still."
+   ],
+   [
+    "hum_levanta",
+    "Mão já na foto levanta a peça",
+    "The hand ALREADY in the photograph slowly lifts the piece it is ALREADY holding."
+   ],
+   [
+    "hum_luva_entra",
+    "Luvas pretas entram e seguram",
+    "Hands in clean matte black nitrile gloves enter the frame from the edge, steadily hold the product, and stay still."
+   ],
+   [
+    "hum_luva_abre",
+    "Luvas pretas abrem o produto",
+    "Hands in clean matte black nitrile gloves enter the frame from the edge, gently take the product and slowly break it open into two halves, revealing the interior, then hold both halves still."
+   ],
+   [
+    "hum_luva_fatia",
+    "Luvas pretas retiram uma fatia",
+    "Hands in clean matte black nitrile gloves enter the frame from the edge, slowly draw one single slice away from the rest, lifting it a little, then hold it still."
+   ],
+   [
+    "hum_luva_pega",
+    "Luvas pretas pegam uma peça",
+    "Hands in clean matte black nitrile gloves enter the frame from the edge, pick up one single piece from the group and lift it slowly. The remaining pieces stay exactly in place."
+   ],
+   [
+    "hum_luva_serve",
+    "Luvas pretas servem no prato",
+    "Hands in clean matte black nitrile gloves enter the frame from the edge, place one piece down onto the surface, then withdraw slowly out of frame."
+   ]
+  ],
+  "ritmo": [
+   [
+    "rit_contemplativo",
+    "Muito lento",
+    "Very slow, contemplative pace throughout."
+   ],
+   [
+    "rit_lento",
+    "Lento e constante",
+    "Slow, steady pace throughout."
+   ],
+   [
+    "rit_moderado",
+    "Moderado",
+    "Moderate, even pace throughout."
+   ]
+  ],
+  "transformacao": [
+   [
+    "tr_nenhuma",
+    "Não muda de forma",
+    ""
+   ],
+   [
+    "tr_abre",
+    "Abre ao meio",
+    "TRANSFORMATION: the product slowly separates into two halves along one clean natural break, revealing its interior. It happens on its own, gradually, from the middle outward."
+   ],
+   [
+    "tr_abre_faca",
+    "Abre ao meio — uma faca corta",
+    "TRANSFORMATION: A gloved hand holding a kitchen knife enters the frame, cuts the product cleanly in half in one single slow stroke, and the two halves separate slightly, revealing the interior. The knife then withdraws out of frame."
+   ],
+   [
+    "tr_fatia",
+    "Solta uma fatia",
+    "TRANSFORMATION: one single slice slowly separates from the whole along one clean radial line, sliding a little away from the rest. It happens on its own, gradually."
+   ],
+   [
+    "tr_fatia_faca",
+    "Solta uma fatia — uma faca corta",
+    "TRANSFORMATION: A gloved hand holding a kitchen knife enters the frame, cuts one single slice from the product in one clean slow stroke, and that slice slides a little away from the rest. The knife then withdraws out of frame."
+   ],
+   [
+    "tr_fio",
+    "Solta uma fatia com queijo",
+    "TRANSFORMATION: one single slice slowly separates and lifts a little, and the melted cheese between it and the rest stretches into a thin continuous strand. It happens on its own."
+   ],
+   [
+    "tr_quebra",
+    "Quebra ao meio",
+    "TRANSFORMATION: the product slowly snaps along one clean line and the two parts separate slightly, releasing a few crumbs. It happens on its own."
+   ]
+  ],
+  "utensilio": [
+   [
+    "ut_nenhum",
+    "Sem talher",
+    ""
+   ],
+   [
+    "ut_espatula",
+    "Espátula levanta a fatia",
+    "A cake server slides under one slice and slowly lifts it clear of the rest, then holds it steady."
+   ],
+   [
+    "ut_pinca",
+    "Pinça pega a peça",
+    "Metal tongs close gently on one single piece, lift it slowly, and hold it steady. The remaining pieces stay exactly in place."
+   ],
+   [
+    "ut_garfo",
+    "Garfo separa um pedaço",
+    "A fork slowly presses into the product and draws a portion away, lifting it a little."
+   ],
+   [
+    "ut_colher",
+    "Colher recolhe o recheio",
+    "A spoon slowly draws through the filling that is already exposed and lifts some of it."
+   ]
+  ]
+ },
+ "presets": {
+  "MOV_01": [
+   "Vapor quente",
+   "cam_aproxima",
+   "amb_vapor",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto quente, recém-saído do forno."
+  ],
+  "MOV_02": [
+   "Queijo amolecendo",
+   "cam_fixa",
+   "amb_derrete",
+   "hum_nenhum",
+   "rit_contemplativo",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Queijo ou cobertura visível na superfície."
+  ],
+  "MOV_03": [
+   "Creme escorrendo",
+   "cam_fixa",
+   "amb_creme",
+   "hum_nenhum",
+   "rit_contemplativo",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto JÁ PARTIDO, recheio aparente."
+  ],
+  "MOV_04": [
+   "Crocância revelada",
+   "cam_lateral",
+   "amb_farelo",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto JÁ PARTIDO, farelos soltos ao lado."
+  ],
+  "MOV_05": [
+   "Miolo com vapor",
+   "cam_aproxima",
+   "amb_vapor",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto JÁ ABERTO, ainda quente, miolo exposto."
+  ],
+  "MOV_06": [
+   "Mordida revelada",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_imovel",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Mordida JÁ DADA, mão segurando."
+  ],
+  "MOV_07": [
+   "Aproximação simples",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Qualquer foto. Movimento coringa."
+  ],
+  "MOV_08": [
+   "Órbita lenta",
+   "cam_orbita",
+   "amb_nada",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Peça inteira, centralizada, espaço em volta."
+  ],
+  "MOV_09": [
+   "Peça na mão",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_imovel",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Mão JÁ segurando uma peça, conjunto ao fundo."
+  ],
+  "MOV_10": [
+   "Brilho e frescor",
+   "cam_lateral",
+   "amb_brilho",
+   "hum_nenhum",
+   "rit_contemplativo",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Qualquer foto, inclusive produto frio."
+  ],
+  "MOV_11": [
+   "Fio de queijo",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_fio",
+   "ut_nenhum",
+   "Pizza inteira ou fatiada. A separação é feita pelo modelo."
+  ],
+  "MOV_12": [
+   "Gota de calda",
+   "cam_fixa",
+   "amb_gota",
+   "hum_nenhum",
+   "rit_contemplativo",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Cobertura ou calda visível na borda."
+  ],
+  "MOV_13": [
+   "Abre revelando o miolo",
+   "cam_aproxima",
+   "amb_vapor",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_abre",
+   "ut_nenhum",
+   "Produto inteiro. A abertura é feita pelo modelo."
+  ],
+  "MOV_14": [
+   "Cobertura escorrendo",
+   "cam_fixa",
+   "amb_creme",
+   "hum_nenhum",
+   "rit_contemplativo",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Cobertura visível no topo."
+  ],
+  "MOV_15": [
+   "Luvas abrem o produto",
+   "cam_aproxima",
+   "amb_vapor",
+   "hum_luva_abre",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto inteiro. As luvas e a abertura são criadas pelo modelo."
+  ],
+  "MOV_16": [
+   "Luvas retiram uma fatia",
+   "cam_fixa",
+   "amb_nada",
+   "hum_luva_fatia",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Produto inteiro ou fatiado."
+  ],
+  "MOV_17": [
+   "Luvas pegam uma peça",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_luva_pega",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_nenhum",
+   "Várias peças agrupadas na foto."
+  ],
+  "MOV_18": [
+   "Faca corta ao meio",
+   "cam_fixa",
+   "amb_vapor",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_abre_faca",
+   "ut_nenhum",
+   "Produto inteiro. A faca e o corte são criados pelo modelo."
+  ],
+  "MOV_19": [
+   "Espátula serve a fatia",
+   "cam_aproxima",
+   "amb_nada",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_espatula",
+   "Bolo ou torta inteira."
+  ],
+  "MOV_20": [
+   "Pinça retira do balcão",
+   "cam_fixa",
+   "amb_nada",
+   "hum_nenhum",
+   "rit_lento",
+   "tr_nenhuma",
+   "ut_pinca",
+   "Várias peças agrupadas na foto."
+  ]
+ },
+ "trava_base": "The product's identity stays exactly as photographed: same recipe, same crust, same filling, same color, same size, same quantity, plus the same plate, surface, background, lighting and framing. Do not redraw, replace, restyle or beautify the product — it must remain recognisably the same item. Do not add objects, text, captions, logos or branding. This is a real photograph of a real product: preserve its identity exactly.",
+ "trava_sem_transformacao": "Do not cut, slice, break, open, tear, pierce or separate anything that appears whole or closed in the photograph. Only motion that is physically possible given exactly what the photograph already shows.",
+ "trava_sem_pessoas": "No people, no hands, no fingers and no arms appear or enter the frame at any moment.",
+ "trava_mao_da_foto": "No NEW people, hands or utensils enter the frame. Only the hand already visible in the photograph moves. No face, no body and no arm beyond the wrist is shown.",
+ "trava_com_luvas": "ONLY hands wearing clean, matte black, well-fitted nitrile gloves may appear. Show nothing above the wrist: no arm, no sleeve, no face, no body, no hair, no jewellery, no watch. No bare skin is visible at any point. The gloves are plain matte black with no logo, no print and no shine. The hands enter from the frame edge, perform only the described action, and move calmly and steadily. Two hands at most, correctly formed, with five fingers each.",
+ "trava_sem_utensilio": "No knives, forks, spoons, tongs, spatulas, servers, utensils or tools of any kind appear or enter the frame at any moment.",
+ "trava_com_utensilio": "Only the single utensil described above may appear. It is clean, plain stainless steel, with no logo, no branding and no engraving. No second utensil and no other tool appears. It is held in a hand wearing a clean matte black nitrile glove, and nothing is shown above the wrist: no arm, no sleeve, no face, no body, no hair, no jewellery and no bare skin. The utensil enters from the frame edge, performs only the described action, and moves calmly and steadily.",
+ "requisitos": {
+  "amb_vapor": "Produto recém-saído do forno, ainda quente.",
+  "amb_vapor_leve": "Produto ainda morno.",
+  "amb_brilho": "Superfície com brilho — pincelada de ovo ou glacê.",
+  "amb_farelo": "Alguns farelos soltos já no prato.",
+  "amb_creme": "Um item já partido, com o creme à mostra.",
+  "amb_derrete": "Queijo já visível na superfície.",
+  "amb_fio": "Uma fatia já separada, com queijo ligando as partes.",
+  "amb_condensa": "Produto gelado, gotas já na superfície.",
+  "amb_gota": "Calda ou cobertura já escorrendo pela borda.",
+  "hum_imovel": "A mão já precisa aparecer na foto, segurando a peça.",
+  "hum_levanta": "A mão já precisa aparecer na foto, segurando a peça.",
+  "hum_luva_entra": "Nada especial — as luvas entram pela borda.",
+  "hum_luva_abre": "Nada especial — as luvas entram pela borda.",
+  "hum_luva_fatia": "Produto inteiro, cortável, no centro do prato.",
+  "hum_luva_pega": "Mais de uma peça no prato.",
+  "hum_luva_serve": "Espaço livre no prato para a peça ser colocada.",
+  "ut_espatula": "Produto já fatiado, fatias encostadas.",
+  "ut_pinca": "Mais de uma peça, soltas.",
+  "ut_garfo": "Produto macio o bastante para o garfo entrar.",
+  "ut_colher": "Recheio já exposto — um item aberto.",
+  "tr_abre": "!O interior NÃO está na foto e será inventado. Se o recheio vende o produto, fotografe um já partido ao lado do inteiro e desligue a transformação.",
+  "tr_fatia": "!O interior NÃO está na foto e será inventado. Se o recheio vende o produto, fotografe um já fatiado e desligue a transformação.",
+  "tr_quebra": "!O interior NÃO está na foto e será inventado. Vale só para pão, biscoito e rosquinha, onde o miolo não é o argumento.",
+  "tr_fio": "!A face do corte não está na foto e será inventada. O queijo já deve estar visível no topo.",
+  "cam_orbita": "!O Flow ignora órbita em image-to-video nos dois testes feitos. Prefira aproximação lenta.",
+  "tr_abre_faca": "!O interior não está na foto e será inventado. Deixe espaço em volta para a lâmina.",
+  "tr_fatia_faca": "!A face do corte não está na foto e será inventada. Deixe espaço em volta para a lâmina.",
+  "cam_cinema": "Luz lateral quente, fundo mais escuro que o produto, superfície rústica (tábua, madeira ou pedra). O clima vem da foto, não do prompt.",
+  "orna": "!O que aparecer ao lado será criado pelo modelo. Escolha o ingrediente abaixo para dizer o quê — ou coloque um de verdade na mesa, que é mais seguro.",
+  "escuro": "Funciona melhor se o fundo já for mais escuro que o produto.",
+  "chama": "!O fundo será substituído por um cenário inventado. Prato e superfície são mantidos, mas confira se ainda parece a sua padaria antes de publicar.",
+  "sim": "!Rótulos são o ponto fraco destes modelos: o texto costuma sair embaralhado. Enquadre o pote de longe ou com o rótulo levemente fora de foco, e confira letra por letra antes de publicar."
+ },
+ "expoe_recheio": [
+  "tr_abre",
+  "tr_fatia",
+  "tr_quebra",
+  "tr_fio",
+  "ut_garfo",
+  "ut_colher",
+  "hum_luva_abre",
+  "hum_luva_fatia",
+  "amb_creme",
+  "tr_abre_faca",
+  "tr_fatia_faca"
+ ],
+ "usa_cobertura": [
+  "amb_gota",
+  "amb_derrete",
+  "amb_fio",
+  "amb_creme"
+ ],
+ "ancora_recheio": "The interior that becomes visible is %s. Render exactly this filling and nothing else: do not invent a different ingredient, colour or texture.",
+ "ancora_cobertura": "The topping is %s. Keep it exactly as photographed: do not restyle, replace or recolour it.",
+ "caracteristicas": {
+  "car_quente": [
+   "Está quente, saindo do forno",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_vapor"
+   },
+   ""
+  ],
+  "car_morno": [
+   "Ainda morno",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_vapor_leve"
+   },
+   ""
+  ],
+  "car_brilho": [
+   "Massa brilhante, bem assada",
+   {
+    "cam": "cam_lateral",
+    "amb": "amb_brilho"
+   },
+   ""
+  ],
+  "car_crocante": [
+   "Crocante, solta farelo",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_farelo"
+   },
+   ""
+  ],
+  "car_queijo": [
+   "Queijo derretendo por cima",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_derrete"
+   },
+   ""
+  ],
+  "car_cobertura": [
+   "Cobertura escorrendo",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_gota"
+   },
+   ""
+  ],
+  "car_creme": [
+   "Creme à mostra",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_creme"
+   },
+   ""
+  ],
+  "car_gelado": [
+   "Servido bem gelado",
+   {
+    "cam": "cam_aproxima",
+    "amb": "amb_condensa"
+   },
+   ""
+  ],
+  "car_porcao": [
+   "O tamanho da porção",
+   {
+    "cam": "cam_fixa",
+    "hum": "hum_luva_pega"
+   },
+   ""
+  ],
+  "car_fartura": [
+   "Fartura, tem bastante",
+   {
+    "cam": "cam_afasta"
+   },
+   ""
+  ],
+  "car_recheio": [
+   "Recheio generoso por dentro",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_abre"
+   },
+   "forma"
+  ],
+  "car_miolo": [
+   "Miolo macio por dentro",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_quebra",
+    "amb": "amb_farelo"
+   },
+   "forma"
+  ],
+  "car_fatia": [
+   "Rende fatias",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_fatia"
+   },
+   "forma"
+  ],
+  "car_fio": [
+   "Fio de queijo ao separar",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_fio"
+   },
+   "forma"
+  ],
+  "car_cinema": [
+   "Clima de comercial",
+   {
+    "cam": "cam_cinema",
+    "rit": "rit_lento"
+   },
+   ""
+  ],
+  "car_ornamento": [
+   "Ingredientes ao redor (arriscado)",
+   {
+    "cam": "cam_cinema",
+    "cena": "orna",
+    "rit": "rit_lento"
+   },
+   ""
+  ],
+  "car_fundo_escuro": [
+   "Fundo escurecido",
+   {
+    "fundo": "escuro",
+    "cam": "cam_cinema",
+    "rit": "rit_lento"
+   },
+   "fundo"
+  ],
+  "car_chama": [
+   "Fundo escuro com chama",
+   {
+    "fundo": "chama",
+    "cam": "cam_cinema",
+    "rit": "rit_lento"
+   },
+   "fundo"
+  ],
+  "car_embalado": [
+   "Produto embalado (revenda)",
+   {
+    "pack": "sim",
+    "cam": "cam_aproxima",
+    "amb": "amb_nada",
+    "tr": "tr_nenhuma",
+    "rit": "rit_lento"
+   },
+   ""
+  ]
+ },
+ "padrao_cat": {
+  "PAES": [
+   "car_quente"
+  ],
+  "SALGADOS": [
+   "car_quente"
+  ],
+  "BISCOITOS": [
+   "car_crocante"
+  ],
+  "BOLOS": [
+   "car_brilho"
+  ],
+  "BEBIDAS": [
+   "car_gelado"
+  ],
+  "LATICINIOS": [
+   "car_fartura"
+  ],
+  "OUTROS": [
+   "car_brilho"
+  ],
+  "REVENDA": [
+   "car_embalado"
+  ]
+ },
+ "insumos": {
+  "in_carne": [
+   "Carne moída",
+   "seasoned ground beef, dark brown, with small pieces of onion"
+  ],
+  "in_carne_q": [
+   "Carne com queijo",
+   "seasoned dark brown ground beef with melted white cheese"
+  ],
+  "in_frango": [
+   "Frango desfiado",
+   "shredded chicken, pale golden, moist"
+  ],
+  "in_frango_c": [
+   "Frango com catupiry",
+   "shredded chicken mixed with soft white cream cheese"
+  ],
+  "in_queijo": [
+   "Queijo",
+   "melted white cheese"
+  ],
+  "in_presunto": [
+   "Presunto e queijo",
+   "sliced pink ham with melted white cheese"
+  ],
+  "in_calabresa": [
+   "Calabresa",
+   "sliced reddish pork sausage with onion"
+  ],
+  "in_palmito": [
+   "Palmito",
+   "chopped pale ivory heart of palm in white sauce"
+  ],
+  "in_milho": [
+   "Milho",
+   "yellow sweet corn kernels in white sauce"
+  ],
+  "in_requeijao": [
+   "Requeijão",
+   "soft white cream cheese"
+  ],
+  "in_doce_leite": [
+   "Doce de leite",
+   "thick caramel-brown milk fudge"
+  ],
+  "in_goiabada": [
+   "Goiabada",
+   "dark red guava paste"
+  ],
+  "in_chocolate": [
+   "Chocolate",
+   "dark glossy chocolate"
+  ],
+  "in_creme": [
+   "Creme de baunilha",
+   "pale yellow vanilla custard"
+  ],
+  "in_coco": [
+   "Coco",
+   "white shredded coconut filling"
+  ],
+  "in_banana": [
+   "Banana",
+   "sliced banana with cinnamon"
+  ],
+  "in_miolo_pao": [
+   "Miolo de pão",
+   "soft airy white bread crumb"
+  ],
+  "in_miolo_bolo": [
+   "Miolo de bolo",
+   "moist pale cake crumb"
+  ],
+  "in_miolo_bisc": [
+   "Massa de biscoito",
+   "dense pale short crumb"
+  ],
+  "in_morango": [
+   "Morango com chantilly",
+   "fresh strawberry slices layered with white whipped cream"
+  ],
+  "in_chantilly": [
+   "Chantilly",
+   "white whipped cream, light and airy"
+  ],
+  "in_abacaxi": [
+   "Abacaxi",
+   "chopped golden pineapple in white cream"
+  ],
+  "in_brigadeiro": [
+   "Brigadeiro",
+   "dark glossy chocolate fudge"
+  ],
+  "in_prestigio": [
+   "Prestígio",
+   "white shredded coconut cream with dark chocolate"
+  ],
+  "in_pessego": [
+   "Pêssego",
+   "sliced golden peach in white cream"
+  ]
+ },
+ "coberturas": {
+  "cb_chocolate": [
+   "Chocolate",
+   "glossy dark chocolate glaze"
+  ],
+  "cb_glace": [
+   "Glacê branco",
+   "white sugar glaze"
+  ],
+  "cb_acucar": [
+   "Açúcar cristal",
+   "coarse sugar crystals"
+  ],
+  "cb_coco": [
+   "Coco ralado",
+   "shredded white coconut"
+  ],
+  "cb_goiabada": [
+   "Goiabada",
+   "dark red guava paste"
+  ],
+  "cb_leite_cond": [
+   "Leite condensado",
+   "white condensed milk drizzle"
+  ],
+  "cb_granulado": [
+   "Granulado",
+   "chocolate sprinkles"
+  ],
+  "cb_queijo": [
+   "Queijo derretido",
+   "melted white cheese"
+  ]
+ },
+ "cena_ornamento": "A few loose raw ingredients of this product rest on the rustic surface around it, slightly out of focus, and stay completely still: only the camera and the light move. Nothing is placed on top of the product and the product itself does not change.",
+ "ornamentos": {
+  "or_mandioca": [
+   "Mandioca cozida",
+   "a small rustic bowl of boiled cassava pieces, pale ivory and matte"
+  ],
+  "or_polvilho": [
+   "Polvilho",
+   "a small rustic bowl of fine white cassava starch"
+  ],
+  "or_trigo": [
+   "Farinha de trigo",
+   "a small rustic bowl of wheat flour with a few loose wheat ears"
+  ],
+  "or_ovos": [
+   "Ovos",
+   "two whole brown eggs resting on the surface"
+  ],
+  "or_queijo": [
+   "Queijo minas",
+   "a wedge of white minas cheese on a small wooden board"
+  ],
+  "or_milho": [
+   "Milho",
+   "a small rustic bowl of yellow corn kernels"
+  ],
+  "or_coco": [
+   "Coco",
+   "a piece of fresh coconut with white flesh"
+  ],
+  "or_goiaba": [
+   "Goiaba",
+   "one red guava cut in half, showing its pink flesh"
+  ],
+  "or_doce_leite": [
+   "Doce de leite",
+   "a small rustic bowl of caramel-brown milk fudge"
+  ],
+  "or_cafe": [
+   "Café",
+   "a small white cup of black coffee"
+  ],
+  "or_leite": [
+   "Leite",
+   "a small glass jug of milk"
+  ],
+  "or_manteiga": [
+   "Manteiga",
+   "a block of pale yellow butter on a small dish"
+  ],
+  "or_acucar": [
+   "Açúcar",
+   "a small rustic bowl of white sugar"
+  ],
+  "or_chocolate": [
+   "Chocolate",
+   "a few pieces of dark chocolate"
+  ],
+  "or_calabresa": [
+   "Calabresa",
+   "sliced pork sausage on a small wooden board"
+  ],
+  "or_banana": [
+   "Banana",
+   "one whole ripe banana"
+  ],
+  "or_morango": [
+   "Morangos frescos",
+   "a few whole fresh strawberries with green leaves"
+  ]
+ },
+ "ancora_ornamento": "%s rests on the rustic surface beside the product, slightly out of focus, and stays completely still: only the camera and the light move. It never touches or overlaps the product, and the product itself does not change.",
+ "trava_partes": {
+  "identidade": "The product's identity stays exactly as photographed: same recipe, same crust, same filling, same colour, same size and same quantity. Do not redraw, replace, restyle or beautify the product — it must remain recognisably the same item.",
+  "suporte": "The plate and the surface it rests on stay exactly as photographed.",
+  "fundo": "The background and the framing stay exactly as photographed.",
+  "luz": "The lighting stays exactly as photographed.",
+  "objetos": "Do not add objects.",
+  "marca": "Do not add text, captions, logos or branding.",
+  "real": "This is a real photograph of a real product: preserve its identity exactly.",
+  "rotulo": "The packaging, its lid, its label and every word, logo and barcode printed on it stay exactly as photographed: same layout, same typography, same colours, same position. Do not redraw, re-letter, translate, invent or replace any printed element.",
+  "marca_pack": "Do not add any text, caption, logo or branding that is not already printed on the product itself.",
+  "parado": "The product is sealed and does not change in any way: nothing melts, steams, opens, pours, spills or moves. Only the camera moves.",
+  "identidade_pack": "The product's identity stays exactly as photographed: same packaging, same shape, same size, same colours and same quantity. Do not redraw, replace, restyle or beautify it — it must remain recognisably the same item.",
+  "combo": "Two items are shown together and both stay fully in frame for the entire shot: neither disappears, leaves the frame, changes place, changes size or is replaced."
+ },
+ "fundos": {
+  "escuro": [
+   "Fundo escurecido",
+   "The background falls softly into darkness while the product stays lit, as if by one single warm source."
+  ],
+  "chama": [
+   "Fundo escuro com chama",
+   "The background is deep, dark and far out of focus, with one soft warm flame glowing well behind the product and flickering gently. The flame never touches the product."
+  ]
+ },
+ "base_cat": {
+  "BOLOS": "a round layered sponge cake covered in smooth white whipped cream",
+  "PAES": "a golden crusty artisan bread roll, freshly baked",
+  "BISCOITOS": "a small batch of golden home-style baked biscuits",
+  "SALGADOS": "a golden baked savoury pastry, freshly out of the oven",
+  "BEBIDAS": "a cold drink in a clear glass",
+  "LATICINIOS": "a block of fresh white farmhouse cheese",
+  "OUTROS": "a freshly baked bakery item",
+  "REVENDA": "a sealed retail package of the product with its printed label"
+ },
+ "criar_formato": "Use the attached photograph as the visual reference for the product: same recipe, same filling, same proportions and same finish. Build from it a 6-second cinematic food commercial, vertical 9:16, filmed on a macro lens with shallow depth of field. You may recompose the framing and cut between shots.",
+ "criar_estilo": "STYLE: warm golden colour grade, soft directional key light, rich contrast, shallow focus, appetising and premium. Real food photography, not illustration or 3D render.",
+ "criar_trava": "Do not add text, captions, subtitles, logos, brand marks or packaging. No faces. Keep the food realistic and physically plausible: nothing floating, no impossible shapes, no melted or deformed geometry.",
+ "criar_estrutura": "STRUCTURE: 3 to 4 shots in 6 seconds. Open wide on the product, cut to a slow macro push across the filling so its texture and quantity read clearly, then cut to a final shot in which the camera pulls slowly back and away from the product to reveal the full breadth of the scene. In this last shot nothing moves except the camera: the arrangement is completely still, like a photograph, so the styling and every small detail read clearly. The video ends holding on this wide frame.",
+ "criar_estrutura_orn": "STRUCTURE: 3 to 4 shots in 6 seconds. Open wide on the product, cut to a slow macro push across the filling so its texture and quantity read clearly, then cut to a final shot in which the camera pulls slowly back and away from the product to reveal the full breadth of the scene, with %s resting on the surface around the product. These ingredients appear ONLY in this final shot and never in the earlier shots, and they stay completely still. In this last shot nothing moves except the camera: the arrangement is completely still, like a photograph, so the styling and every small detail read clearly. The video ends holding on this wide frame.",
+ "lexico_car": {
+  "car_quente": [
+   "quente",
+   "forno",
+   "saindo do forno",
+   "fumegando",
+   "fumaca",
+   "vapor",
+   "quentinho"
+  ],
+  "car_morno": [
+   "morno",
+   "morninho"
+  ],
+  "car_brilho": [
+   "brilho",
+   "brilhante",
+   "dourado",
+   "pincelado",
+   "reluzente"
+  ],
+  "car_crocante": [
+   "crocante",
+   "farelo",
+   "sequinho",
+   "torrado",
+   "crocancia"
+  ],
+  "car_queijo": [
+   "queijo derretido",
+   "derretendo",
+   "derretido",
+   "gratinado"
+  ],
+  "car_cobertura": [
+   "cobertura",
+   "calda",
+   "glace",
+   "escorrendo",
+   "gotejando"
+  ],
+  "car_creme": [
+   "creme",
+   "cremoso",
+   "recheio a mostra"
+  ],
+  "car_gelado": [
+   "gelado",
+   "gelada",
+   "geladinho",
+   "frio",
+   "refrescante"
+  ],
+  "car_porcao": [
+   "tamanho",
+   "porcao",
+   "na mao",
+   "segurando"
+  ],
+  "car_fartura": [
+   "fartura",
+   "bastante",
+   "cheio",
+   "muitos",
+   "varios",
+   "vitrine cheia"
+  ],
+  "car_recheio": [
+   "recheio",
+   "abrir",
+   "abre",
+   "abrindo",
+   "por dentro",
+   "interior",
+   "ao meio",
+   "partir"
+  ],
+  "car_miolo": [
+   "miolo",
+   "macio",
+   "fofinho",
+   "fofo",
+   "quebrar",
+   "quebrando"
+  ],
+  "car_fatia": [
+   "fatia",
+   "fatiar",
+   "fatiado",
+   "pedaco",
+   "talhar"
+  ],
+  "car_fio": [
+   "fio de queijo",
+   "puxa",
+   "puxando",
+   "esticando"
+  ],
+  "car_cinema": [
+   "cinematografico",
+   "comercial",
+   "cinema",
+   "profissional",
+   "publicitario",
+   "clima"
+  ],
+  "car_ornamento": [
+   "ingredientes",
+   "ao redor",
+   "ornamento",
+   "enfeitar",
+   "ao lado",
+   "decorar"
+  ],
+  "car_fundo_escuro": [
+   "fundo escuro",
+   "escurecer",
+   "fundo preto",
+   "escurecido"
+  ],
+  "car_chama": [
+   "chama",
+   "fogo",
+   "labareda",
+   "brasa"
+  ],
+  "car_embalado": [
+   "pote",
+   "embalado",
+   "lacrado",
+   "rotulo",
+   "revenda",
+   "embalagem",
+   "garrafa",
+   "lata",
+   "pacote",
+   "caixa",
+   "vidro"
+  ]
+ },
+ "lexico_in": {
+  "in_carne": [
+   "carne moida",
+   "carne"
+  ],
+  "in_carne_q": [
+   "carne com queijo"
+  ],
+  "in_frango": [
+   "frango desfiado",
+   "frango"
+  ],
+  "in_frango_c": [
+   "frango com catupiry"
+  ],
+  "in_queijo": [
+   "queijo"
+  ],
+  "in_presunto": [
+   "presunto e queijo",
+   "presunto"
+  ],
+  "in_calabresa": [
+   "calabresa"
+  ],
+  "in_palmito": [
+   "palmito"
+  ],
+  "in_milho": [
+   "milho"
+  ],
+  "in_requeijao": [
+   "requeijao",
+   "catupiry"
+  ],
+  "in_doce_leite": [
+   "doce de leite"
+  ],
+  "in_goiabada": [
+   "goiabada"
+  ],
+  "in_chocolate": [
+   "chocolate"
+  ],
+  "in_creme": [
+   "creme de baunilha",
+   "baunilha"
+  ],
+  "in_coco": [
+   "coco"
+  ],
+  "in_banana": [
+   "banana"
+  ],
+  "in_miolo_pao": [
+   "miolo de pao"
+  ],
+  "in_miolo_bolo": [
+   "miolo de bolo"
+  ],
+  "in_miolo_bisc": [
+   "massa de biscoito"
+  ],
+  "in_morango": [
+   "morango com chantilly",
+   "morangos",
+   "morango"
+  ],
+  "in_chantilly": [
+   "chantilly",
+   "chantily"
+  ],
+  "in_abacaxi": [
+   "abacaxi"
+  ],
+  "in_brigadeiro": [
+   "brigadeiro"
+  ],
+  "in_prestigio": [
+   "prestigio"
+  ],
+  "in_pessego": [
+   "pessego"
+  ]
+ },
+ "lexico_or": {
+  "or_mandioca": [
+   "mandioca cozida",
+   "mandioca"
+  ],
+  "or_polvilho": [
+   "polvilho"
+  ],
+  "or_trigo": [
+   "farinha de trigo"
+  ],
+  "or_ovos": [
+   "ovos"
+  ],
+  "or_queijo": [
+   "queijo minas"
+  ],
+  "or_milho": [
+   "milho"
+  ],
+  "or_coco": [
+   "coco"
+  ],
+  "or_goiaba": [
+   "goiaba"
+  ],
+  "or_doce_leite": [
+   "doce de leite"
+  ],
+  "or_cafe": [
+   "cafe"
+  ],
+  "or_leite": [
+   "leite"
+  ],
+  "or_manteiga": [
+   "manteiga"
+  ],
+  "or_acucar": [
+   "acucar"
+  ],
+  "or_chocolate": [
+   "chocolate"
+  ],
+  "or_calabresa": [
+   "calabresa"
+  ],
+  "or_banana": [
+   "banana"
+  ],
+  "or_morango": [
+   "morangos frescos"
+  ]
+ }
+};
+
+const QUINTA=3;   // segunda=0 na conta de dia da semana usada aqui
+const SLOTS = [
+  ["07:00","MATINAL",[],[],"MENSAGEM"],
+  ["15:30","TARDE",
+   ["BOLOS","BISCOITOS","SALGADOS","PAES","LATICINIOS","BEBIDAS"],
+   ["BOLOS","BISCOITOS","SALGADOS","PAES","LATICINIOS"],"PRODUTO"]
+];
+
+// Assuntos da publicacao matinal. Bebida sem marca, sem rotulo.
+const MATINAIS=[
+  {sku:"MAT_POTE",nome:"Papel do pote + café",cat:"BEBIDAS",verdade:"",
+   movs:["MOV_01","MOV_07","MOV_10"]},
+  {sku:"MAT_POTE_PQ",nome:"Papel do pote + café + pão de queijo",cat:"BEBIDAS",verdade:"",
+   movs:["MOV_01","MOV_07","MOV_10"]},
+  {sku:"MAT_CAFE",nome:"Só o café",cat:"BEBIDAS",verdade:"",
+   movs:["MOV_01","MOV_07","MOV_10"]},
+  {sku:"MAT_POTE_OBJ",nome:"O pote da gratidão",cat:"BEBIDAS",verdade:"",
+   movs:["MOV_07","MOV_10"]},
+  {sku:"MAT_BALCAO",nome:"Café com a vitrine ao fundo",cat:"BEBIDAS",verdade:"",
+   movs:["MOV_07","MOV_01"]}
+];
+
+
+// Produto que fecha a mensagem: "O ... quente ja esta te esperando."
+const ACOMPANHA=["biscoitinho","pão de queijo","pãozinho","cafezinho","bolinho"];
+
+const ORDEM={ALTO:3,MEDIO:2,BAIXO:1,COMPLEMENTO:0}, COOL=9, PESO_CAT=4;
+const DIAS=["SEG","TER","QUA","QUI","SEX","SAB","DOM"];
+
+const GANCHO={
+  MATINAL:["Bom dia! O forno já trabalhou.","Começou o dia e já tem coisa boa pronta.",
+           "Cheiro de padaria desde cedo.","Primeira fornada saindo agora."],
+  TARDE:["A tarde melhora com isso.","Hora do café.",
+         "Pausa da tarde, do jeito certo.","Tem coisa fresca na vitrine agora."],
+  NOITE:["Antes de fechar, passa aqui.","Fim de tarde pede isso.",
+         "Ainda dá tempo.","Última fornada do dia."]
+};
+const REFORCO={
+  PAES:"Massa feita aqui, todo dia.",
+  BISCOITOS:"Assado no capricho, crocante de verdade.",
+  BOLOS:"Massa fofa e recheio generoso.",
+  SALGADOS:"Feito na hora, recheio caprichado.",
+  BEBIDAS:"Bem gelado para acompanhar.",
+  LATICINIOS:"Produto da região, direto do produtor.",
+  OUTROS:"Feito com capricho, todo dia."
+};
+const FECHO={
+  PICO_PAGAMENTO:"", POS_PAGAMENTO:"",
+  SEXTA_TICKET_ALTO:"O fim de semana começa aqui.",
+  RECUPERACAO_FLUXO:"Passa aqui, tá quentinho.",
+  GIRO_ROTINA:"", MARCA_ENCOMENDA:"Encomendas para a semana pelo WhatsApp."
+};
+const TAGS={
+  PAES:["paofresco","paoartesanal","paoquentinho"],
+  BISCOITOS:["biscoitocaseiro","biscoitomineiro","quitandasmineiras"],
+  BOLOS:["bolocaseiro","confeitaria","bolodepadaria"],
+  SALGADOS:["salgadosfrescos","lanchedatarde","salgadoassado"],
+  BEBIDAS:["bebidagelada"],
+  LATICINIOS:["queijominas","produtosmineiros"],
+  OUTROS:["padariaartesanal"]
+};
+const TAGS_FIXAS=["padariapaodemel","porteirinha","nortedeminas","padaria"];
+
+function objetivo(dm,ds){
+  if(ds===6) return ["MARCA_ENCOMENDA","MEDIO"];
+  if([2,5,7].includes(dm)) return ["PICO_PAGAMENTO","ALTO"];
+  if(ds===4) return ["SEXTA_TICKET_ALTO","ALTO"];
+  if(dm<=8) return ["POS_PAGAMENTO","ALTO"];
+  if(dm>=22&&dm<=25) return ["RECUPERACAO_FLUXO","BAIXO"];
+  return ["GIRO_ROTINA","MEDIO"];
+}
+
+const porCat={};
+D.produtos.forEach(function(p){(porCat[p.cat]=porCat[p.cat]||[]).push(p)});
+Object.values(porCat).forEach(function(a){a.sort(function(x,y){return x.nome.localeCompare(y.nome)})});
+
+const cache={};
+function planoMes(ano,mes){
+  const k=ano+"-"+mes; if(cache[k]) return cache[k];
+  const uso={},usoCat={},plano={}; let pos=0;
+  const total=new Date(ano,mes+1,0).getDate();
+  for(let d=1;d<=total;d++){
+    const ds=(new Date(ano,mes,d).getDay()+6)%7;
+    const alvo=objetivo(d,ds), obj=alvo[0], tier=alvo[1];
+    plano[d]=SLOTS.map(function(cfg,si){
+      const hora=cfg[0], bloco=cfg[1], modo=cfg[4];
+      if(modo==="MENSAGEM"){
+        const mat=MATINAIS[(d-1)%MATINAIS.length];
+        return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:modo,prod:mat,
+                cfg:cfgDoPreset(mat.movs[(d-1)%mat.movs.length])};
+      }
+      // Biscoitos sao 21 e salgados 12: sem alternar, o sorteio so daria biscoito.
+      const cats = ds===QUINTA&&modo==="PRODUTO"
+                     ? (Math.floor((d-1)/7)%2 ? ["BISCOITOS"] : ["SALGADOS"])
+                 : ds===6 ? cfg[3] : cfg[2];
+      const cand=cats.reduce(function(acc,c){return acc.concat(porCat[c]||[])},[]);
+      let esc=null;
+      const limites=[COOL,0];
+      for(let li=0;li<limites.length;li++){
+        let best=null,bs=null;
+        for(let i=0;i<cand.length;i++){
+          const it=cand[i];
+          const ult = (uso[it.sku]===undefined) ? -9999 : uso[it.sku];
+          const desde = pos-ult;
+          if(desde<=limites[li]) continue;
+          const oi=(ORDEM[it.tier]===undefined)?0:ORDEM[it.tier];
+          const oa=(ORDEM[tier]===undefined)?2:ORDEM[tier];
+          const ultC=(usoCat[it.cat]===undefined)?-9999:usoCat[it.cat];
+          const desdeCat=Math.min(pos-ultC,30);
+          // PESO_CAT evita que uma categoria grande domine o mes inteiro.
+          const sc=100-Math.abs(oi-oa)*35+Math.min(desde,45)+desdeCat*PESO_CAT;
+          if(bs===null||sc>bs){best=it;bs=sc}
+        }
+        if(best){uso[best.sku]=pos;usoCat[best.cat]=pos;esc=best;break}
+      }
+      pos++;
+      // Quinta do Combo: uma comida + uma bebida no turno da tarde.
+      if(ds===QUINTA&&modo==="PRODUTO"){
+        const beb=porCat.BEBIDAS||[];
+        return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"COMBO",prod:esc,
+                bebida:beb.length?beb[(d+si)%beb.length]:null,cfg:cfgDoProduto(esc)};
+      }
+      return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"PRODUTO",prod:esc,
+              cfg:cfgDoProduto(esc)};
+    });
+  }
+  cache[k]=plano; return plano;
+}
+
+function bloco(banco,id){
+  const b=(D.bancos[banco]||[]).filter(function(x){return x[0]===id})[0];
+  return b?b[2]:"";
+}
+
+function transformando(cfg){
+  return cfg.tr && cfg.tr!=="tr_nenhuma";
+}
+// A faca virou variante da mudanca de forma: o corte e a propria escolha,
+// nunca uma ordem separada competindo com ela.
+// O clima de comercial move a luz; o ornamento tambem cria objetos.
+function embalado(cfg){return cfg.pack==="sim"}
+function luzLivre(cfg){return cfg.cam==="cam_cinema"||!!cfg.fundo}
+function fundoTrocado(cfg){return !!cfg.fundo}
+
+// Cada clausula sai apenas se o modo escolhido precisar dela fora.
+function travaBase(cfg){
+  const P=D.trava_partes;
+  const out=[embalado(cfg)?P.identidade_pack:P.identidade,P.suporte];
+  // Produto de revenda: o rotulo ja existe e precisa sobreviver intacto.
+  if(embalado(cfg)) out.push(P.rotulo,P.parado);
+  if(!fundoTrocado(cfg))  out.push(P.fundo);
+  if(!luzLivre(cfg))      out.push(P.luz);
+  if(!ornamentando(cfg))  out.push(P.objetos);
+  if(cfg.combo) out.push(P.combo);
+  out.push(embalado(cfg)?P.marca_pack:P.marca,P.real);
+  return out.join(" ");
+}
+function ornamentando(cfg){return cfg.cena==="orna"}
+function facaNaForma(cfg){
+  return /_faca$/.test(cfg.tr||"");
+}
+function comLuvas(cfg){
+  return (cfg.hum||"").indexOf("hum_luva")===0 || facaNaForma(cfg);
+}
+function maoDaFoto(cfg){
+  return cfg.hum==="hum_imovel"||cfg.hum==="hum_levanta";
+}
+function comTalher(cfg){
+  return (cfg.ut && cfg.ut!=="ut_nenhum") || facaNaForma(cfg);
+}
+
+// ---------- recheio e cobertura ----------
+// Gravados por SKU: digita uma vez e vale para sempre naquele produto.
+function pedeRecheio(cfg){
+  return (D.expoe_recheio||[]).some(function(c){
+    return c===cfg.tr||c===cfg.ut||c===cfg.hum||c===cfg.amb});
+}
+function pedeCobertura(cfg){
+  return (D.usa_cobertura||[]).some(function(c){
+    return c===cfg.tr||c===cfg.amb});
+}
+function recheioDe(sku){return sku?(store.get("rec:"+sku)||""):""}
+function coberturaDe(sku){return sku?(store.get("cob:"+sku)||""):""}
+
+// O rotulo e portugues; o prompt sai em ingles. Valor fora do banco
+// (texto livre de versoes anteriores) e usado como veio, sem traduzir.
+function rotuloInsumo(v,banco){const e=banco[v];return e?e[0]:(v||"")}
+function textoIngles(v,banco){const e=banco[v];return e?e[1]:(v||"")}
+function ornamentoDe(sku){return sku?(store.get("orn:"+sku)||""):""}
+function ornamentoEN(sku){return textoIngles(ornamentoDe(sku),D.ornamentos)}
+function recheioEN(sku){return textoIngles(recheioDe(sku),D.insumos)}
+function coberturaEN(sku){return textoIngles(coberturaDe(sku),D.coberturas)}
+
+// ---------- requisito da foto ----------
+// Devolve o que a foto precisa conter para o comportamento escolhido funcionar.
+// Itens iniciados por "!" sao alertas criticos (o modelo vai inventar algo).
+function requisitosDaFoto(cfg){
+  const R=D.requisitos||{}, out=[];
+  [cfg.cam,cfg.amb,cfg.hum,cfg.ut,cfg.tr,cfg.cena,cfg.fundo,cfg.pack].forEach(function(cod){
+    const txt=R[cod];
+    if(txt && out.indexOf(txt)<0) out.push(txt);
+  });
+  return out;
+}
+
+function briefingHTML(cfg,sku){
+  if(modoDe(sku)==="criar")
+    return '<div class="brief"><b>Modo comercial — a foto é referência</b><ul>'+
+      '<li>Envie a foto no Flow normalmente. O modelo pode recompor o quadro e cortar '+
+        'entre planos: o resultado não será a sua foto animada.</li>'+
+      '<li>Quanto mais exatos o recheio e a cobertura registrados, mais perto o produto '+
+        'do vídeo fica do que sai do balcão.</li>'+
+      '<li>Confira o resultado antes de publicar.</li></ul></div>';
+  const rs=requisitosDaFoto(cfg).slice();
+  // Recheio nomeado troca o alerta de invencao por confirmacao.
+  if(ornamentando(cfg)&&ornamentoDe(sku)){
+    for(let i=0;i<rs.length;i++)
+      if(rs[i].indexOf("!O que aparecer")===0)
+        rs[i]="Ao lado aparece \u201c"+rotuloInsumo(ornamentoDe(sku),D.ornamentos)+
+              "\u201d, criado pelo modelo. Confira antes de publicar.";
+  }
+  if(pedeRecheio(cfg)&&recheioDe(sku)){
+    for(let i=0;i<rs.length;i++)
+      if(rs[i].indexOf("!O interior")===0)
+        rs[i]="O interior sai como \u201c"+rotuloInsumo(recheioDe(sku),D.insumos)+"\u201d. Confira se bate com o produto real.";
+  }
+  if(!rs.length) return '<div class="brief"><b>A foto precisa mostrar</b>'+
+    '<ul><li>O produto inteiro no prato, bem enquadrado.</li></ul></div>';
+  return '<div class="brief"><b>A foto precisa mostrar</b><ul>'+
+    rs.map(function(r){
+      return r.charAt(0)==="!" ? '<li class="al">'+r.slice(1)+'</li>' : '<li>'+r+'</li>';
+    }).join("")+'</ul></div>';
+}
+
+// ---------- modo criar ----------
+// Sem foto de origem, a fidelidade vem da descricao: quanto mais exata,
+// menor a distancia entre o video e o produto real.
+function modoDe(sku){return (sku&&store.get("mod:"+sku))==="criar"?"criar":"animar"}
+
+function sujeitoEN(prod){
+  const b=(D.base_cat||{})[prod.cat]||D.base_cat.OUTROS;
+  const rec=recheioEN(prod.sku), cob=coberturaEN(prod.sku), p=[b];
+  if(rec) p.push("filled with "+rec);
+  if(cob) p.push("topped with "+cob);
+  return p.join(", ")+".";
+}
+
+function montarPromptCriar(prod,cfg){
+  const b=[D.criar_formato,"SUBJECT: "+sujeitoEN(prod)];
+  const cena=["resting on a rustic dark wooden surface"];
+  if(cfg.fundo&&D.fundos[cfg.fundo]) cena.push(D.fundos[cfg.fundo][1]);
+  else cena.push("warm bakery light, background softly out of focus");
+  b.push("SCENE: "+cena.map(function(x,i){
+    return i===0?x:x.replace(/^\s*/,"")}).join(". ").replace(/\.\s*\./g,".")+
+    (/[.!?]$/.test(cena[cena.length-1])?"":"."));
+  // Os ingredientes entram na estrutura, no plano final — nunca soltos na cena.
+  const orn=ornamentoEN(prod.sku), temOrn=ornamentando(cfg)&&!!orn;
+  const acao=[bloco("camera",cfg.cam),bloco("ambiente",cfg.amb),
+              bloco("transformacao",cfg.tr),bloco("ritmo",cfg.rit)].filter(Boolean);
+  if(acao.length) b.push("ACTION: "+acao.join(" ").replace(/MOTION:\s*/g,""));
+  if(cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
+  b.push(temOrn ? D.criar_estrutura_orn.replace("%s",orn) : D.criar_estrutura,
+         D.criar_estilo, D.criar_trava);
+  return b.filter(Boolean).join(" ");
+}
+
+// ---------- interpretador ----------
+// Sem API: reconhecimento de vocabulario, nao compreensao. Por isso a tela
+// SEMPRE mostra o que foi entendido, para o usuario confirmar ou corrigir.
+function norm(s){
+  return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+}
+function achar(txt,banco){
+  const n=" "+norm(txt)+" ", achados=[];
+  Object.keys(banco).forEach(function(k){
+    if(banco[k].some(function(termo){return termo&&n.indexOf(" "+termo)>=0}))
+      achados.push(k);
+  });
+  return achados;
+}
+
+function interpretar(foto,quer){
+  const tudo=foto+" "+quer;
+  let cars=achar(quer,D.lexico_car);
+  // Embalagem e caracteristica da foto, nao do desejo.
+  achar(foto,D.lexico_car).forEach(function(k){
+    if(k==="car_embalado"&&cars.indexOf(k)<0) cars.push(k);
+  });
+  // Um por grupo: a ultima citada vence.
+  let lista=[];
+  cars.forEach(function(k){lista=alternarCaracteristica(lista,k)});
+
+  const rec=achar(tudo,D.lexico_in)[0]||"";
+  const orn=achar(quer,D.lexico_or)[0]||"";
+  const cfg=cfgDeCaracteristicas(lista);
+
+  const avisos=[], entendido=[];
+  lista.forEach(function(k){entendido.push(D.caracteristicas[k][0])});
+  if(rec) entendido.push("Recheio: "+D.insumos[rec][0]);
+  if(orn) entendido.push("Ao lado: "+D.ornamentos[orn][0]);
+
+  if(!lista.length)
+    avisos.push(["!","Não reconheci nenhum efeito. Descreva o que deve se mover: "+
+      "vapor, abrir ao meio, brilho, fatia, fundo escuro."]);
+  if(pedeRecheio(cfg)&&!rec)
+    avisos.push(["!","Você pediu para mostrar o interior, mas não disse o que tem dentro. "+
+      "Sem isso o modelo inventa o recheio."]);
+  if(embalado(cfg)&&lista.some(mudaForma))
+    avisos.push(["!","Produto lacrado não abre nem parte. Vou manter só o movimento de câmera."]);
+  if(ornamentando(cfg)&&!orn)
+    avisos.push(["!","Diga qual ingrediente aparece ao lado, senão o modelo escolhe sozinho."]);
+  if(ornamentando(cfg)&&orn&&norm(foto).indexOf(norm(D.ornamentos[orn][0]))<0)
+    avisos.push(["","Esse ingrediente não está na foto: será criado pelo modelo. "+
+      "Colocar um de verdade na mesa é mais seguro."]);
+  if(/gelad|frio/.test(norm(foto))&&cfg.amb==="amb_vapor")
+    avisos.push(["!","A foto descreve produto gelado, mas você pediu vapor. Escolha um."]);
+  if(pedeRecheio(cfg)&&norm(foto).indexOf("aberto")<0&&norm(foto).indexOf("partid")<0
+     &&norm(foto).indexOf("fatiad")<0&&rec)
+    avisos.push(["","O interior não aparece na foto. Vai sair como \u201c"+
+      D.insumos[rec][0]+"\u201d — confira se bate com o produto real."]);
+
+  return {cars:lista,cfg:cfg,rec:rec,orn:orn,entendido:entendido,avisos:avisos};
+}
+
+// ---------- versao curta para o campo do Canva ----------
+// O Canva ja e image-to-video por construcao: cabecalho de formato e
+// trava longa sao redundantes ali. Fica so o movimento e uma guarda curta.
+function montarPromptCurto(prod,cfg){
+  if(embalado(cfg)) cfg=Object.assign({},cfg,{tr:"tr_nenhuma",amb:"amb_nada",
+                                              hum:"hum_nenhum",ut:"ut_nenhum",cena:""});
+  const b=[[bloco("camera",cfg.cam),bloco("ambiente",cfg.amb),bloco("humano",cfg.hum),
+            bloco("utensilio",cfg.ut),bloco("ritmo",cfg.rit)].filter(Boolean)
+            .join(" ").replace(/MOTION:\s*/g,"")];
+  const tr=bloco("transformacao",cfg.tr);
+  if(tr) b.push(tr.replace(/TRANSFORMATION:\s*/,""));
+  const rec=recheioEN(prod.sku);
+  if(rec&&pedeRecheio(cfg)) b.push("The interior revealed is "+rec+".");
+  if(cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
+  b.push(embalado(cfg)
+    ? "Keep the packaging and every printed word exactly as in the photo. Only the camera moves."
+    : "Keep the product, plate and background exactly as in the photo. Add nothing, remove nothing.");
+  return b.filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+}
+
+function montarPrompt(prod,cfg,combo){
+  if(combo) cfg=Object.assign({},cfg,{combo:true});
+  if(embalado(cfg)) cfg=Object.assign({},cfg,{tr:"tr_nenhuma",amb:"amb_nada",
+                                              hum:"hum_nenhum",ut:"ut_nenhum",cena:""});
+  if(modoDe(prod&&prod.sku)==="criar") return montarPromptCriar(prod,cfg);
+  // So movimento e trava. Descrever cena ou produto faz o modelo redesenhar.
+  const mov=[bloco("camera",cfg.cam),bloco("ambiente",cfg.amb),
+             bloco("humano",cfg.hum),bloco("utensilio",cfg.ut),bloco("ritmo",cfg.rit)]
+             .filter(Boolean).join(" ");
+  const b=[D.formato,"MOTION: "+mov];
+  const tr=bloco("transformacao",cfg.tr);
+  if(tr) b.push(tr);
+  if(cfg.fundo&&D.fundos[cfg.fundo]) b.push(D.fundos[cfg.fundo][1]);
+  if(ornamentando(cfg)){
+    const orn=ornamentoEN(prod.sku);
+    b.push(orn ? D.ancora_ornamento.replace("%s",orn.charAt(0).toUpperCase()+orn.slice(1))
+               : D.cena_ornamento);
+  }
+  if(cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
+  // Nomear o que a foto nao mostra substitui invencao por verdade.
+  const rec=recheioEN(prod.sku), cob=coberturaEN(prod.sku);
+  if(rec&&pedeRecheio(cfg))  b.push(D.ancora_recheio.replace("%s",rec));
+  if(cob&&pedeCobertura(cfg)) b.push(D.ancora_cobertura.replace("%s",cob));
+  b.push(D.fluidez, travaBase(cfg));
+  // A trava e montada por partes: so proibe o que nao foi pedido.
+  if(!transformando(cfg)&&!comLuvas(cfg)&&!comTalher(cfg)) b.push(D.trava_sem_transformacao);
+  if(comLuvas(cfg))            b.push(D.trava_com_luvas);
+  else if(maoDaFoto(cfg))      b.push(D.trava_mao_da_foto);
+  else if(!comTalher(cfg))     b.push(D.trava_sem_pessoas);
+  b.push(comTalher(cfg)?D.trava_com_utensilio:D.trava_sem_utensilio);
+  if(prod.verdade) b.push(prod.verdade);
+  return b.filter(Boolean).join(" ");
+}
+
+// ---------- caracteristicas do produto ----------
+// O usuario diz o que o video precisa valorizar; as dimensoes saem daqui.
+// Guardado por SKU: escolhe uma vez e vale para todo post daquele produto.
+const BASE_CFG={cam:"cam_aproxima",amb:"amb_nada",hum:"hum_nenhum",
+                ut:"ut_nenhum",tr:"tr_nenhuma",rit:"rit_lento",cena:"",fundo:"",pack:""};
+
+// Caracteristicas do mesmo grupo se excluem: uma forma, um fundo.
+function grupoDe(cod){const c=D.caracteristicas[cod];return (c&&c[2])||""}
+function mudaForma(cod){return grupoDe(cod)==="forma"}
+
+function caracteristicasDe(sku,cat){
+  const g=sku?store.get("car:"+sku):null;
+  if(g!==null&&g!==undefined&&g!=="")
+    return g.split(",").filter(function(c){return !!D.caracteristicas[c]});
+  if(g==="") return [];
+  return ((D.padrao_cat||{})[cat]||D.padrao_cat.OUTROS||[]).slice();
+}
+
+function cfgDeCaracteristicas(lista){
+  const cfg=Object.assign({preset:"",livre:""},BASE_CFG);
+  // Ordem de declaracao, nunca ordem de clique: duas caracteristicas podem
+  // disputar a mesma dimensao e o resultado precisa ser sempre o mesmo.
+  const ordem=Object.keys(D.caracteristicas);
+  const ord=(lista||[]).slice().sort(function(a,b){return ordem.indexOf(a)-ordem.indexOf(b)});
+  ord.forEach(function(cod){
+    const c=D.caracteristicas[cod]; if(!c) return;
+    Object.keys(c[1]).forEach(function(k){cfg[k]=c[1][k]});
+  });
+  cfg.cars=ord;
+  return cfg;
+}
+
+function cfgDoProduto(prod){
+  return cfgDeCaracteristicas(caracteristicasDe(prod&&prod.sku,prod&&prod.cat));
+}
+
+// So uma mudanca de forma por video: a nova substitui a anterior.
+function alternarCaracteristica(lista,cod){
+  const i=lista.indexOf(cod);
+  if(i>=0) return lista.filter(function(x){return x!==cod});
+  const g=grupoDe(cod);
+  const fora=g?lista.filter(function(x){return grupoDe(x)!==g}):lista.slice();
+  return fora.concat([cod]);
+}
+
+function cfgDoPreset(id){
+  const p=D.presets[id];
+  return p?{preset:id,cam:p[1],amb:p[2],hum:p[3],rit:p[4],tr:p[5],ut:p[6],livre:""}
+          :{preset:"",cam:"cam_aproxima",amb:"amb_nada",hum:"hum_nenhum",
+            rit:"rit_lento",tr:"tr_nenhuma",ut:"ut_nenhum",livre:""};
+}
+
+function requisito(cfg){
+  const p=D.presets[cfg.preset];
+  return p?p[7]:"Confira se a foto já contém tudo que o movimento exige.";
+}
+
+function rodape(L){
+  const wpp=(store.get("wpp")||"38991702459").replace(/\D/g,"");
+  const menu=(store.get("menu")||"").trim();
+  if(menu) L.push("🔗 Cardápio: "+menu);
+  L.push("📲 Peça pelo WhatsApp: wa.me/55"+wpp);
+  L.push("📍 Porteirinha - MG");
+  return L;
+}
+
+function legendaMensagem(s){
+  const num=(store.get("pote:"+iso+":n")||"").trim();
+  const msg=(store.get("pote:"+iso+":m")||"").trim();
+  const ac=store.get("pote:"+iso+":a")||ACOMPANHA[0];
+  const L=["A mensagem do nosso Pote da Gratidão hoje é:"];
+  L.push(msg ? '"'+msg+'" ❤️' : '"[transcreva o papel sorteado]" ❤️');
+  L.push("O "+ac+" quente já está te esperando.");
+  if(num) L.push("","Papel nº "+num);
+  return L.join("\n");
+}
+
+function precoCombo(){return store.get("combo:"+iso)||""}
+
+function legenda(peca,s,d){
+  if(s.modo==="MENSAGEM") return legendaMensagem(s);
+  if(s.modo==="COMBO"){
+    const b=s.bebida, pc=precoCombo();
+    let L=["QUINTA DO COMBO 🎉","",
+           peca.nome.toUpperCase()+(b?" + "+b.nome.toUpperCase():""),""];
+    L.push(pc?("por "+pc):"Peça o seu no balcão.");
+    L.push("","Só hoje, enquanto durar a fornada.","");
+    L=rodape(L);
+    L.push("",(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
+      .map(function(x){return "#"+x}).join(" ")+" #quintadocombo");
+    return L.join("\n");
+  }
+  const g=GANCHO[s.bloco], gancho=g[d%g.length];
+  const fecho=FECHO[s.obj]||"";
+  const tags=(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
+    .map(function(t){return "#"+t}).join(" ");
+
+  let L=[gancho,"",peca.nome.toUpperCase()+" — "+peca.preco,"",
+         REFORCO[peca.cat]||REFORCO.OUTROS];
+  if(fecho) L.push(fecho);
+  L.push("");
+  L=rodape(L);
+  L.push("",tags);
+  return L.join("\n");
+}
+
+const store={
+  // "" e valor legitimo (nenhuma caracteristica). Nao pode virar null pelo ||.
+  get:function(k){try{return localStorage.getItem(k)}catch(e){
+    return (this.m&&Object.prototype.hasOwnProperty.call(this.m,k))?this.m[k]:null}},
+  set:function(k,v){try{localStorage.setItem(k,v)}catch(e){this.m=this.m||{};this.m[k]=v}}
+};
+function arq(iso,hora,sku){return iso.split("-").join("")+"_"+hora.replace(":","")+"_"+sku+".mp4"}
+function $(id){return document.getElementById(id)}
+
+let iso=new Date().toISOString().slice(0,10), slot=0;
+function diaAtual(){const p=iso.split("-");return planoMes(+p[0],+p[1]-1)[+p[2]]}
+
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");
+  clearTimeout(e.t);e.t=setTimeout(function(){e.classList.remove("on")},1900)}
+
+function copiar(txt,msg){
+  const fallback=function(){
+    const t=document.createElement("textarea");t.value=txt;
+    t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);
+    t.select();try{document.execCommand("copy")}catch(e){}t.remove();toast(msg);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){toast(msg)},fallback);
+  } else fallback();
+}
+
+
+// ---------- lote da semana ----------
+// Reune os posts dos proximos 7 dias para producao em bloco no Flow.
+function itensDaSemana(){
+  const base=new Date(iso+"T12:00:00"), out=[];
+  for(let k=0;k<7;k++){
+    const dt=new Date(base); dt.setDate(dt.getDate()+k);
+    const di=dt.toISOString().slice(0,10);
+    const plano=planoMes(dt.getFullYear(),dt.getMonth()+1);
+    (plano[dt.getDate()]||[]).forEach(function(s){
+      const p=s.prod; if(!p) return;
+      out.push({data:di,dia:dt.getDate(),mes:dt.getMonth()+1,ds:dt.getDay(),
+                hora:s.hora,modo:s.modo,nome:p.nome,sku:p.sku,cfg:s.cfg,
+                prompt:montarPrompt({sku:p.sku,cat:p.cat,verdade:p.verdade,
+                  nome:p.nome,preco:p.preco||""},s.cfg)});
+    });
+  }
+  return out;
+}
+
+// ---------- ditado por voz ----------
+// Web Speech API: nativa do navegador, sem dependencia e sem custo.
+// Exige https (o GitHub Pages atende) e permissao do microfone.
+const VOZ = (typeof window!=="undefined" &&
+             (window.SpeechRecognition||window.webkitSpeechRecognition)) || null;
+let ouvindo=null;
+
+function pararVoz(){
+  if(ouvindo){ try{ouvindo.stop()}catch(e){} ouvindo=null; }
+}
+
+// campoId: onde escrever. aoTexto: callback para atualizar o estado.
+function ditar(campoId, aoTexto){
+  if(!VOZ){toast("Este navegador não tem ditado. Use o microfone do teclado.");return}
+  if(ouvindo){pararVoz();renderAssist();return}
+  const r=new VOZ();
+  r.lang="pt-BR"; r.continuous=false; r.interimResults=true; r.maxAlternatives=1;
+  const base=($(campoId)&&$(campoId).value)||"";
+  r.onresult=function(ev){
+    let txt="";
+    for(let i=0;i<ev.results.length;i++) txt+=ev.results[i][0].transcript;
+    const novo=(base?base.replace(/\s*$/,"")+" ":"")+txt;
+    if($(campoId)) $(campoId).value=novo;
+    aoTexto(novo);
+  };
+  r.onerror=function(ev){
+    pararVoz();
+    toast(ev.error==="not-allowed"
+      ? "Permita o microfone nas configurações do navegador."
+      : ev.error==="no-speech" ? "Não ouvi nada. Tente de novo."
+      : "Não consegui usar o microfone.");
+    renderAssist();
+  };
+  r.onend=function(){ ouvindo=null; renderAssist(); };
+  ouvindo=r;
+  try{ r.start(); toast("Pode falar."); renderAssist(); }
+  catch(e){ ouvindo=null; toast("Não consegui abrir o microfone."); }
+}
+
+function botaoVoz(campoId){
+  if(!VOZ) return "";
+  const on = ouvindo && ouvindo._campo===campoId;
+  return '<button class="mic'+(on?" on":"")+'" data-mic="'+campoId+
+    '" aria-label="Ditar por voz" title="Ditar por voz">'+
+    '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" '+
+    'stroke-width="1.9" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/>'+
+    '<path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button>';
+}
+
+// ---------- tela do assistente ----------
+const SKU_ASSIST="ASSIST";
+let txFoto="", txQuer="", analise=null;
+
+function renderAssist(){
+  const A=analise;
+  let h='<h1 class="tt">O que você quer publicar?</h1>'+
+    '<p class="sub">Descreva a foto e o resultado. O app monta o prompt.</p>'+
+    '<div class="field"><div class="lin-lbl"><label class="flabel" for="tf">'+
+        'O que aparece na foto</label>'+botaoVoz("tf")+'</div>'+
+      '<textarea id="tf" rows="2" placeholder="duas esfihas de carne no prato, na vitrine"></textarea></div>'+
+    '<div class="field"><div class="lin-lbl"><label class="flabel" for="tq">'+
+        'O que você quer que aconteça</label>'+botaoVoz("tq")+'</div>'+
+      '<textarea id="tq" rows="2" placeholder="abrir ao meio mostrando o recheio, com vapor"></textarea></div>'+
+    '<button class="act" id="ban">Analisar</button>';
+
+  if(A){
+    h+='<div class="brief"><b>O que entendi</b>'+
+       (A.entendido.length
+         ? '<div class="chips" style="margin-top:4px">'+A.entendido.map(function(x){
+             return '<span class="chip on">'+x+'</span>'}).join("")+'</div>'
+         : '<ul><li class="al">Nada reconhecido.</li></ul>')+'</div>';
+    if(A.avisos.length)
+      h+='<div class="brief"><b>Confira antes</b><ul>'+A.avisos.map(function(v){
+        return '<li'+(v[0]==="!"?' class="al"':'')+'>'+v[1]+'</li>'}).join("")+'</ul></div>';
+    if(A.cars.length){
+      h+='<button class="act" id="bok">Aceitar e gerar o prompt</button>';
+      if(A.pronto){
+        h+='<div class="field" style="margin-top:24px">'+
+             '<span class="flabel">Prompt para o Flow</span>'+
+             '<textarea id="pf" class="mono" rows="8"></textarea>'+
+             '<button class="act ghost mini" id="cf">Copiar</button></div>'+
+           '<div class="field">'+
+             '<span class="flabel">Versão curta para o Canva (5s)</span>'+
+             '<textarea id="pk" class="mono" rows="5"></textarea>'+
+             '<button class="act ghost mini" id="ck">Copiar</button></div>';
+      }
+    }
+  }
+  $("vAssist").innerHTML=h;
+  $("tf").value=txFoto; $("tq").value=txQuer;
+  $("tf").oninput=function(e){txFoto=e.target.value};
+  $("tq").oninput=function(e){txQuer=e.target.value};
+  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-mic]"),function(b){
+    b.onclick=function(){
+      const campo=b.getAttribute("data-mic");
+      ditar(campo,function(txt){ if(campo==="tf") txFoto=txt; else txQuer=txt; });
+      if(ouvindo) ouvindo._campo=campo;
+    };
+  });
+  $("ban").onclick=function(){
+    pararVoz();
+    if(!txQuer.trim()){toast("Diga o que você quer que aconteça.");return}
+    analise=interpretar(txFoto,txQuer); analise.pronto=false; renderAssist();
+  };
+  if(A&&$("bok")) $("bok").onclick=function(){
+    analise.pronto=true; renderAssist();
+  };
+  if(A&&A.pronto&&$("pf")){
+    const prod={sku:SKU_ASSIST,cat:"OUTROS",nome:"Produto",preco:"",verdade:""};
+    store.set("rec:"+SKU_ASSIST,A.rec||"");
+    store.set("orn:"+SKU_ASSIST,A.orn||"");
+    store.set("mod:"+SKU_ASSIST,"animar");
+    $("pf").value=montarPrompt(prod,A.cfg);
+    $("pk").value=montarPromptCurto(prod,A.cfg);
+    $("cf").onclick=function(){copiar($("pf").value,"Prompt do Flow copiado.")};
+    $("ck").onclick=function(){copiar($("pk").value,"Versão do Canva copiada.")};
+  }
+}
+
+function renderLote(){
+  const it=itensDaSemana();
+  const ger=it.filter(function(x){return x.modo!=="manha"}).length;
+  const linhas=it.map(function(x,i){
+    const nome=D.presets[x.cfg.preset]?D.presets[x.cfg.preset][0]:"Personalizado";
+    return '<div class="lin">'+
+      '<div class="cab"><span class="qd">'+DIAS[x.ds]+' '+String(x.dia).padStart(2,"0")+'/'+
+        String(x.mes).padStart(2,"0")+' · '+x.hora+'</span>'+
+        '<b>'+x.nome+'</b><span class="mv">'+nome+'</span></div>'+
+      briefingHTML(x.cfg,x.sku)+
+      '<button class="act ghost mini" data-i="'+i+'">Copiar prompt</button></div>';
+  }).join("");
+  $("vSemana").innerHTML=
+    '<h1 class="tt">Semana · '+it.length+' posts</h1>'+
+    '<p class="sub">Fotografe tudo numa sessão. Gere no Flow em duas levas. Edite em bloco.</p>'+
+    linhas+
+    '<button class="act" id="lall">Copiar os '+it.length+' prompts de uma vez</button>'+
+    '<p class="hint">Sua cota é de 4 vídeos por dia. A semana usa '+ger+
+      ' gerações — cabem em duas sessões.</p>';
+  $("lall").onclick=function(){
+    const txt=it.map(function(x){
+      return "["+DIAS[x.ds]+" "+String(x.dia).padStart(2,"0")+"/"+
+        String(x.mes).padStart(2,"0")+" "+x.hora+" · "+x.nome+"]\n"+x.prompt;
+    }).join("\n\n---\n\n");
+    copiar(txt,it.length+" prompts copiados.");
+  };
+  Array.prototype.forEach.call($("vSemana").querySelectorAll("[data-i]"),function(b){
+    b.onclick=function(){copiar(it[+b.getAttribute("data-i")].prompt,"Prompt copiado.")};
+  });
+}
+
+function render(){
+  const dia=diaAtual(), pr=iso.split("-");
+  const a=+pr[0], m=+pr[1], d=+pr[2];
+  const ds=(new Date(a,m-1,d).getDay()+6)%7;
+
+  $("rail").innerHTML=dia.map(function(s,i){
+    return '<button class="tab" role="tab" aria-selected="'+(i===slot)+
+      '" data-i="'+i+'">'+s.hora+'<span class="lbl">'+s.bloco+'</span></button>'}).join("");
+  Array.prototype.forEach.call($("rail").querySelectorAll(".tab"),function(b){
+    b.onclick=function(){slot=+b.dataset.i;render()}});
+
+  const esc=escolhido[chaveSlot()];
+  if(esc&&dia[slot]&&dia[slot].modo!=="MENSAGEM"){
+    const pm=acharProduto(esc);
+    if(pm){
+      if(!dia[slot].prod||dia[slot].prod.sku!==pm.sku) dia[slot].cfg=cfgDoProduto(pm);
+      dia[slot].prod=pm;
+    }
+  }
+  const escB=escolhidoBeb[chaveSlot()];
+  if(escB&&dia[slot]&&dia[slot].modo==="COMBO"){
+    const bm=acharProduto(escB); if(bm) dia[slot].bebida=bm;
+  }
+  const s=dia[slot], p=s.prod, t=$("ticket");
+  if(!p){t.innerHTML="<p>Sem produto para este horário.</p>";return}
+
+  const ehMsg = s.modo==="MENSAGEM";
+  const permit = ehMsg ? p.movs : [];
+  const cfg = s.cfg;
+  const nome=p.nome, preco=ehMsg?"":p.preco;
+  const peca={sku:p.sku,cat:p.cat,verdade:p.verdade,nome:nome,preco:preco};
+
+  t.className="ticket";
+  t.innerHTML=
+    '<div class="meta"><span>'+DIAS[ds]+' '+String(d).padStart(2,"0")+'/'+
+      String(m).padStart(2,"0")+' · '+s.hora+'</span>'+
+      '<span class="goal">'+s.obj.split("_").join(" ")+'</span></div>'+
+    '<div class="panes">'+
+
+    '<div class="pane">'+
+      (ehMsg
+        ? '<div class="field"><label class="flabel" for="sp">Assunto da foto</label>'+
+            '<select id="sp">'+MATINAIS.map(function(x){
+              return '<option value="'+x.sku+'"'+(x.sku===p.sku?" selected":"")+'>'+
+                x.nome+'</option>'}).join("")+'</select>'+
+            '<p class="hint">Enquadre o papel do pote junto ao café.</p></div>'+
+          '<div class="field"><label class="flabel" for="tm">Mensagem sorteada</label>'+
+            '<textarea id="tm" style="min-height:84px" placeholder="Transcreva o papel do pote" aria-label="Mensagem sorteada">'+
+              (store.get("pote:"+iso+":m")||"").replace(/</g,"&lt;")+'</textarea>'+
+            '<div class="duo">'+
+              '<div><label class="flabel" for="tnum">Nº do papel</label>'+
+                '<input type="text" id="tnum" inputmode="numeric" placeholder="83" value="'+
+                (store.get("pote:"+iso+":n")||"")+'" aria-label="Número do papel"></div>'+
+              '<div><label class="flabel" for="tac">Acompanha</label><select id="tac">'+
+                ACOMPANHA.map(function(a){return '<option value="'+a+'"'+
+                  (a===(store.get("pote:"+iso+":a")||ACOMPANHA[0])?" selected":"")+'>'+
+                  a+'</option>'}).join("")+'</select></div>'+
+            '</div></div>'
+        : '<div class="field"><label class="flabel" for="sp">Produto</label>'+
+            '<select id="sp">'+produtosTodos().map(function(x){
+              return '<option value="'+x.sku+'"'+(x.sku===p.sku?" selected":"")+'>'+
+                x.nome+'</option>'}).join("")+'</select>'+
+            (novoAberto
+              ? '<div class="novo">'+
+                  '<input type="text" id="nvn" placeholder="Nome do produto" '+
+                    'value="'+novoNome.replace(/"/g,"&quot;")+'">'+
+                  '<select id="nvc">'+CATS.map(function(c){
+                    return '<option value="'+c+'"'+(c===novoCat?" selected":"")+'>'+c+
+                    '</option>'}).join("")+'</select>'+
+                  '<button class="act ghost mini" id="nvok">Adicionar</button>'+
+                '</div>'
+              : '<button class="lnk" id="nvab">+ produto que não está na lista</button>')+
+            '</div>'+
+            (s.modo==="COMBO"
+              ? '<div class="field"><label class="flabel" for="sb">Bebida do combo</label>'+
+                '<select id="sb"><option value="">— escolher —</option>'+
+                  produtosTodos().filter(function(x){return x.cat==="BEBIDAS"||x.cat==="REVENDA"})
+                  .map(function(x){
+                    return '<option value="'+x.sku+'"'+
+                      (s.bebida&&x.sku===s.bebida.sku?" selected":"")+'>'+x.nome+'</option>'
+                  }).join("")+'</select>'+
+                '<label class="flabel" for="pcb" style="margin-top:12px">Preço do combo</label>'+
+                '<input type="text" id="pcb" placeholder="R$ 8,00" value="'+
+                  precoCombo().replace(/"/g,"&quot;")+'">'+
+                '<p class="hint">Fotografe a comida e a bebida juntas, no mesmo quadro.</p></div>'
+              : ''))+
+
+      (ehMsg ? '' :
+        '<div class="modos">'+
+          '<button class="md'+(modoDe(peca.sku)==="animar"?" on":"")+'" data-md="animar">'+
+            'Animar minha foto</button>'+
+          '<button class="md'+(modoDe(peca.sku)==="criar"?" on":"")+'" data-md="criar">'+
+            'Comercial</button></div>')+
+      (ehMsg
+        ? '<div class="field"><label class="flabel" for="sm">Comportamento</label>'+
+          '<select id="sm">'+permit.map(function(k){
+            return '<option value="'+k+'"'+(k===cfg.preset?" selected":"")+'>'+
+              D.presets[k][0]+'</option>'}).join("")+'</select></div>'
+        : '<div class="field"><span class="flabel">O que o vídeo deve valorizar</span>'+
+          '<div class="chips">'+Object.keys(D.caracteristicas).map(function(k){
+            const c=D.caracteristicas[k], on=(cfg.cars||[]).indexOf(k)>=0;
+            return '<button class="chip'+(on?" on":"")+(c[2]?" fm":"")+
+              '" data-car="'+k+'">'+c[0]+'</button>'}).join("")+'</div>'+
+          '<p class="hint">Fica salvo para este produto. As de contorno grosso mudam a '+
+          'cena — só uma de cada grupo por vídeo.</p></div>')+
+
+      '<details class="fino"'+(ehMsg?" open":"")+'><summary>Ajuste fino</summary>'+
+        '<div class="duo" style="margin-top:10px">'+
+          '<div><label class="flabel" for="dcam">Câmera</label><select id="dcam">'+
+            D.bancos.camera.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.cam?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+          '<div><label class="flabel" for="drit">Ritmo</label><select id="drit">'+
+            D.bancos.ritmo.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.rit?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+        '</div>'+
+        '<div class="duo">'+
+          '<div><label class="flabel" for="damb">Só a superfície</label><select id="damb">'+
+            D.bancos.ambiente.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.amb?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+          '<div><label class="flabel" for="dhum">Pessoas</label><select id="dhum">'+
+            D.bancos.humano.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.hum?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+        '</div>'+
+        '<div class="duo">'+
+          '<div><label class="flabel" for="dut">Talher</label><select id="dut">'+
+            D.bancos.utensilio.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.ut?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+          '<div><label class="flabel" for="dtr">Muda de forma</label><select id="dtr">'+
+            D.bancos.transformacao.map(function(o){return '<option value="'+o[0]+'"'+
+              (o[0]===cfg.tr?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
+        '</div>'+
+        (pedeRecheio(cfg)||pedeCobertura(cfg)||ornamentando(cfg)
+          ? '<div class="verd">'+
+            (pedeRecheio(cfg)
+              ? '<label class="flabel" for="drec">Recheio deste produto</label>'+
+            '<select id="drec"><option value="">— escolher —</option>'+
+              Object.keys(D.insumos).map(function(k){
+                return '<option value="'+k+'"'+(k===recheioDe(peca.sku)?" selected":"")+
+                  '>'+D.insumos[k][0]+'</option>'}).join("")+
+              (D.insumos[recheioDe(peca.sku)]||!recheioDe(peca.sku)?"":
+                '<option value="'+recheioDe(peca.sku)+'" selected>'+recheioDe(peca.sku)+'</option>')+
+            '</select>'
+              : '')+
+            (pedeCobertura(cfg)
+              ? '<label class="flabel"'+(pedeRecheio(cfg)?' style="margin-top:12px"':'')+' for="dcob">Cobertura</label>'+
+            '<select id="dcob"><option value="">— escolher —</option>'+
+              Object.keys(D.coberturas).map(function(k){
+                return '<option value="'+k+'"'+(k===coberturaDe(peca.sku)?" selected":"")+
+                  '>'+D.coberturas[k][0]+'</option>'}).join("")+
+              (D.coberturas[coberturaDe(peca.sku)]||!coberturaDe(peca.sku)?"":
+                '<option value="'+coberturaDe(peca.sku)+'" selected>'+coberturaDe(peca.sku)+'</option>')+
+            '</select>'
+              : '')+
+            (ornamentando(cfg)
+              ? '<label class="flabel"'+((pedeRecheio(cfg)||pedeCobertura(cfg))?' style="margin-top:12px"':'')+
+                ' for="dorn">Ingrediente ao lado</label>'+
+                '<select id="dorn"><option value="">— escolher —</option>'+
+                  Object.keys(D.ornamentos).map(function(k){
+                    return '<option value="'+k+'"'+(k===ornamentoDe(peca.sku)?" selected":"")+
+                      '>'+D.ornamentos[k][0]+'</option>'}).join("")+
+                '</select>'
+              : '')+
+            '<p class="hint">Fica salvo para este produto. O prompt sai em inglês, com cor e textura. Sem isso, o modelo inventa.</p></div>'
+          : '')+
+        '<p class="hint eixo"><b>Superfície</b> anima o que já está na foto. '+
+          '<b>Forma</b> faz o produto virar outra coisa — e o que aparecer por dentro '+
+          'não existe na foto.</p>'+
+        ((transformando(cfg)||comLuvas(cfg)||comTalher(cfg))
+          ? '<p class="hint" style="color:var(--heat)">O modelo vai <b>criar</b> '+
+            (comTalher(cfg)?'o talher e o gesto':comLuvas(cfg)?'as luvas e o gesto':'isso')+
+            ', mesmo sem estar na foto. Gere duas e escolha.</p>'
+          : '<p class="hint">Nada é criado. Só se anima o que já está na foto.</p>')+
+        '<label class="flabel" style="margin-top:10px" for="dliv">Acrescentar (opcional)</label>'+
+        '<input type="text" id="dliv" value="'+(cfg.livre||"").replace(/"/g,"&quot;")+
+          '" placeholder="ex: a fatia da frente inclina levemente">'+
+        '<p class="hint">Só descreva <b>movimento</b>. Nunca o produto, a luz ou o fundo.</p>'+
+        '</details>'+
+    '</div>'+
+
+    '<div class="pane">'+
+      (ehMsg ? '' :
+        '<div class="field"><span class="flabel">Prompt</span>'+
+        '<textarea id="pp" class="mono" aria-label="Prompt"></textarea>'+
+        '<p class="hint">Editável. O botão copia o que estiver aqui — '+
+        'mexer nos campos ao lado reescreve tudo.</p></div>')+
+      '<div class="field"><span class="flabel">Legenda da publicação</span>'+
+        '<textarea id="lg" aria-label="Legenda"></textarea></div>'+
+      '<div class="steps">'+
+        briefingHTML(s.cfg,peca.sku)+
+        '<button class="act" id="b1"><span class="n">1</span>Copiar prompt · Flow</button>'+
+        (modoDe(peca.sku)==="animar"
+          ? '<button class="act ghost" id="bc">Copiar versão curta · Canva (5s)</button>'
+          : '')+
+        '<button class="act ghost" id="b2"><span class="n">2</span>Copiar legenda</button>'+
+      '</div>'+
+    '</div>'+
+
+    '</div>';
+
+  $("fname").textContent=arq(iso,s.hora,p.sku);
+  $("lg").value=legenda(peca,s,d);
+
+  if(ehMsg){
+    $("tm").oninput=function(e){store.set("pote:"+iso+":m",e.target.value);
+      $("lg").value=legenda(peca,s,d)};
+    $("tnum").oninput=function(e){store.set("pote:"+iso+":n",e.target.value);
+      $("lg").value=legenda(peca,s,d)};
+    $("tac").onchange=function(e){store.set("pote:"+iso+":a",e.target.value);
+      $("lg").value=legenda(peca,s,d)};
+    $("sp").onchange=function(e){
+      s.prod=MATINAIS.filter(function(x){return x.sku===e.target.value})[0];
+      if(s.prod.movs.indexOf(s.cfg.preset)<0) s.cfg=cfgDoPreset(s.prod.movs[0]);
+      render()};
+  } else {
+    $("sp").onchange=function(e){
+      escolhido[chaveSlot()]=e.target.value;
+      render()};
+  }
+  if($("sm")) $("sm").onchange=function(e){
+    if(e.target.value) s.cfg=cfgDoPreset(e.target.value); else s.cfg.preset="";
+    render()};
+  if($("sb"))  $("sb").onchange=function(e){
+    escolhidoBeb[chaveSlot()]=e.target.value; render()};
+  if($("pcb")) $("pcb").onchange=function(e){
+    store.set("combo:"+iso,e.target.value); render()};
+  if($("nvab")) $("nvab").onclick=function(){novoAberto=true;render()};
+  if($("nvn"))  $("nvn").oninput=function(e){novoNome=e.target.value};
+  if($("nvc"))  $("nvc").onchange=function(e){novoCat=e.target.value};
+  if($("nvok")) $("nvok").onclick=function(){
+    const novo=salvarProdutoLocal(novoNome,novoCat);
+    if(!novo){toast("Dê um nome ao produto.");return}
+    // Revenda ja nasce com a trava de rotulo ligada.
+    if(novo.cat==="REVENDA") store.set("car:"+novo.sku,"car_embalado");
+    escolhido[chaveSlot()]=novo.sku;
+    novoAberto=false; novoNome=""; 
+    Object.keys(cache).forEach(function(k){delete cache[k]});
+    render(); toast(novo.nome+" adicionado.");
+  };
+  Array.prototype.forEach.call(t.querySelectorAll("[data-md]"),function(b){
+    b.onclick=function(){store.set("mod:"+peca.sku,b.getAttribute("data-md"));render()};
+  });
+  Array.prototype.forEach.call(t.querySelectorAll("[data-car]"),function(b){
+    b.onclick=function(){
+      const nova=alternarCaracteristica(s.cfg.cars||[],b.getAttribute("data-car"));
+      store.set("car:"+peca.sku, nova.join(","));
+      // O plano do mes fica em cache: sem limpar, a semana nao acompanha.
+      Object.keys(cache).forEach(function(k){delete cache[k]});
+      s.cfg=cfgDeCaracteristicas(nova);
+      render();
+    };
+  });
+  ["dcam:cam","damb:amb","dhum:hum","drit:rit","dtr:tr","dut:ut"].forEach(function(par){
+    const q=par.split(":");
+    $(q[0]).onchange=function(e){s.cfg[q[1]]=e.target.value;s.cfg.preset="";render()};
+  });
+  // Grava a cada tecla, mas so redesenha ao sair do campo: nao perde o foco.
+  [["drec","rec:"],["dcob","cob:"],["dorn","orn:"]].forEach(function(par){
+    const el=$(par[0]); if(!el) return;
+    el.onchange=function(e){store.set(par[1]+peca.sku,e.target.value); render()};
+  });
+  $("dliv").oninput=function(e){s.cfg.livre=e.target.value};
+  if($("pp")) $("pp").value=montarPrompt(peca,s.cfg,s.modo==="COMBO");
+  $("b1").onclick=function(){
+    copiar($("pp")?$("pp").value:montarPrompt(peca,s.cfg,s.modo==="COMBO"),"Prompt copiado.");
+  };
+  if($("bc")) $("bc").onclick=function(){
+    copiar(montarPromptCurto(peca,s.cfg),"Versão curta copiada. Cole em Imagem a vídeo → Personalizar.");
+  };
+  $("b2").onclick=function(){copiar($("lg").value,"Legenda copiada.")};
+}
+
+function irPara(n){const dt=new Date(iso+"T12:00:00");dt.setDate(dt.getDate()+n);
+  iso=dt.toISOString().slice(0,10);$("dia").value=iso;slot=0;render()}
+
+$("wpp").value=store.get("wpp")||"38991702459";
+$("menu").value=store.get("menu")||"";
+$("wpp").oninput=function(e){store.set("wpp",e.target.value);render()};
+$("menu").oninput=function(e){store.set("menu",e.target.value);render()};
+$("cfg").onclick=function(){$("painel").classList.toggle("on")};
+// Produto escolhido a mao, por dia e turno. Fica fora do cache do plano:
+// limpar o cache nao pode devolver o produto do calendario.
+const CATS=["BISCOITOS","SALGADOS","PAES","BOLOS","BEBIDAS","LATICINIOS","REVENDA","OUTROS"];
+let novoAberto=false, novoNome="", novoCat="REVENDA";
+const escolhido={}, escolhidoBeb={};
+
+// O catalogo do ERP nao cobre revenda, sazonais nem lancamentos.
+// Estes ficam no aparelho e convivem com os do catalogo.
+function produtosLocais(){
+  try{const j=JSON.parse(store.get("novos")||"[]");return Array.isArray(j)?j:[]}
+  catch(e){return []}
+}
+function produtosTodos(){return D.produtos.concat(produtosLocais())}
+function acharProduto(sku){
+  return produtosTodos().filter(function(x){return x.sku===sku})[0]||null;
+}
+function salvarProdutoLocal(nome,cat){
+  const n=(nome||"").trim(); if(!n) return null;
+  const novo={sku:"LOCAL"+Date.now(),nome:n,cat:cat||"OUTROS",preco:"",verdade:"",local:true};
+  const lista=produtosLocais(); lista.push(novo);
+  store.set("novos",JSON.stringify(lista));
+  return novo;
+}
+function chaveSlot(){return iso+"|"+slot}
+let modo="assist";
+const CICLO=["assist","dia","semana"];
+const NOMES={assist:"assistente",dia:"dia avulso",semana:"semana"};
+function aplicarModo(){
+  $("vAssist").style.display=modo==="assist"?"":"none";
+  $("vSemana").style.display=modo==="semana"?"":"none";
+  $("vDia").style.display   =modo==="dia"?"":"none";
+  const prox=CICLO[(CICLO.indexOf(modo)+1)%CICLO.length];
+  $("vw").textContent=NOMES[prox];
+  $("painel").classList.remove("on");
+  if(modo==="assist") renderAssist();
+  else if(modo==="semana") renderLote();
+  else render();
+}
+$("vw").onclick=function(){
+  modo=CICLO[(CICLO.indexOf(modo)+1)%CICLO.length]; aplicarModo();
+};
+
+
+$("dia").value=iso;
+$("dia").onchange=function(e){if(e.target.value){iso=e.target.value;slot=0;render()}};
+$("prev").onclick=function(){irPara(-1)};
+$("next").onclick=function(){irPara(1)};
+
+const hr=new Date().getHours();
+slot = hr<11 ? 0 : 1;
+aplicarModo();
+</script>
+<script>
+// Registro do service worker. So funciona em http(s): abrindo o arquivo
+// direto do celular (file://) o app roda igual, mas sem icone nem offline.
+if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
