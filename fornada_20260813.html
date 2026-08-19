@@ -137,6 +137,12 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
 .lin .cab b{font-size:16px;font-weight:600;letter-spacing:-.01em}
 .lin .mv{font-size:12px;color:var(--accent)}
 .act.mini{width:auto;padding:8px 16px;font-size:12.5px;margin:0}
+.guias{display:flex;gap:4px;background:var(--fill);padding:4px;border-radius:999px;
+  width:fit-content;margin-bottom:10px}
+.gb{font-family:inherit;font-size:12.5px;padding:7px 15px;border:0;border-radius:999px;
+  background:transparent;color:var(--ink-2);cursor:pointer}
+.gb.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chip[data-off]{cursor:pointer}
 .falar{display:flex;align-items:center;gap:14px;margin:4px 0 26px}
 .mic-g{display:flex;align-items:center;justify-content:center;width:66px;height:66px;
   border:0;border-radius:50%;background:var(--accent);color:#fff;cursor:pointer;flex:0 0 auto}
@@ -208,10 +214,9 @@ details.fino[open]>summary{margin-bottom:14px}
 <body>
 <div class="wrap">
 
-<div class="masthead"><b>Fornada</b><span class="grp"><button id="vw">dia avulso</button><button id="cfg">ajustes</button></span></div>
+<div class="masthead"><b>Fornada</b><span class="grp"><button id="cfg">ajustes</button></span></div>
 
 <div id="vAssist"></div>
-<div id="vSemana"></div>
 <div class="panel" id="painel">
   <h2>Ajustes</h2>
   <label class="flabel" for="wpp">WhatsApp</label>
@@ -222,22 +227,7 @@ details.fino[open]>summary{margin-bottom:14px}
   <p class="hint">Fica salvo neste aparelho. Sem cardápio preenchido, a legenda usa só o WhatsApp.</p>
 </div>
 
-<div id="vDia" style="display:none">
-<div class="datebar">
-  <button id="prev" aria-label="Dia anterior">&#8592;</button>
-  <input type="date" id="dia">
-  <button id="next" aria-label="Próximo dia">&#8594;</button>
-</div>
 
-<div class="rail" role="tablist" id="rail"></div>
-<div class="ticket" id="ticket"></div>
-
-<p class="note">
-  Fotografe conforme o requisito do movimento. Toque em <b>1</b> e cole no Gemini com a foto.
-  Suba o vídeo no Canva para pôr título, preço e logo. Toque em <b>2</b> para a legenda.
-  Salve o vídeo como <code id="fname">&#8212;</code>.
-</p>
-</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
@@ -1665,146 +1655,296 @@ const D = {
  "criar_estrutura_orn": "STRUCTURE: 3 to 4 shots in 6 seconds. Open wide on the product, cut to a slow macro push across the filling so its texture and quantity read clearly, then cut to a final shot in which the camera pulls slowly back and away from the product to reveal the full breadth of the scene, with %s resting on the surface around the product. These ingredients appear ONLY in this final shot and never in the earlier shots, and they stay completely still. In this last shot nothing moves except the camera: the arrangement is completely still, like a photograph, so the styling and every small detail read clearly. The video ends holding on this wide frame.",
  "lexico_car": {
   "car_quente": [
+   "soltando fumaca",
+   "saindo do forno",
+   "acabou de sair",
+   "fumaca subindo",
+   "saindo quente",
+   "recem assado",
+   "fresquinho",
+   "quentinho",
+   "fumegando",
+   "quentinha",
+   "na hora",
+   "fumegar",
+   "fumaca",
    "quente",
    "forno",
-   "saindo do forno",
-   "fumegando",
-   "fumaca",
    "vapor",
-   "quentinho"
+   "calor"
   ],
   "car_morno": [
-   "morno",
-   "morninho"
+   "meio quente",
+   "amornado",
+   "morninho",
+   "morno"
   ],
   "car_brilho": [
-   "brilho",
-   "brilhante",
-   "dourado",
+   "envernizado",
+   "bem assado",
+   "douradinho",
+   "tostadinho",
+   "cor bonita",
+   "reluzente",
+   "brilhando",
    "pincelado",
-   "reluzente"
+   "brilhante",
+   "lustroso",
+   "reluzir",
+   "dourado",
+   "brilho"
   ],
   "car_crocante": [
-   "crocante",
-   "farelo",
+   "casca crocante",
+   "torradinho",
+   "crocancia",
+   "crocantes",
+   "casquinha",
+   "farelinho",
    "sequinho",
+   "migalhas",
+   "crocante",
+   "migalha",
    "torrado",
-   "crocancia"
+   "farelos",
+   "estala",
+   "farelo"
   ],
   "car_queijo": [
+   "queijo escorrendo",
    "queijo derretido",
+   "borbulhando",
+   "queijo mole",
+   "amolecendo",
    "derretendo",
    "derretido",
-   "gratinado"
+   "gratinado",
+   "gratinar"
   ],
   "car_cobertura": [
-   "cobertura",
-   "calda",
-   "glace",
+   "cobertura escorrendo",
+   "calda escorrendo",
    "escorrendo",
-   "gotejando"
+   "gotejando",
+   "cobertura",
+   "glaceado",
+   "pingando",
+   "gotejar",
+   "banhado",
+   "regado",
+   "goteja",
+   "glace",
+   "calda"
   ],
   "car_creme": [
-   "creme",
+   "recheio aparecendo",
+   "creme escorrendo",
+   "recheio a mostra",
+   "creme aparecendo",
+   "recheio cremoso",
    "cremoso",
-   "recheio a mostra"
+   "creme"
   ],
   "car_gelado": [
-   "gelado",
-   "gelada",
+   "na geladeira",
+   "condensacao",
+   "refrescante",
+   "bem gelado",
    "geladinho",
-   "frio",
-   "refrescante"
+   "gotinhas",
+   "orvalho",
+   "suando",
+   "gelada",
+   "gelado",
+   "suado",
+   "frio"
   ],
   "car_porcao": [
+   "mostrar o tamanho",
+   "segurando na mao",
+   "segurando",
+   "com a mao",
+   "com luva",
+   "na palma",
    "tamanho",
+   "pegando",
+   "peguei",
    "porcao",
    "na mao",
-   "segurando"
+   "luva"
   ],
   "car_fartura": [
-   "fartura",
+   "vitrine cheia",
+   "abrir a cena",
+   "mostrar tudo",
+   "cesto cheio",
+   "panoramica",
+   "abundancia",
+   "tem muito",
    "bastante",
-   "cheio",
-   "muitos",
+   "bandeja",
+   "fartura",
+   "vitrine",
+   "afastar",
    "varios",
-   "vitrine cheia"
+   "muitos",
+   "balcao",
+   "cheio"
   ],
   "car_recheio": [
-   "recheio",
-   "abrir",
-   "abre",
-   "abrindo",
+   "mostrar o recheio",
+   "o que tem dentro",
+   "mostrando dentro",
+   "partir ao meio",
+   "abrir ao meio",
+   "meio a meio",
    "por dentro",
    "interior",
+   "abertura",
+   "recheado",
+   "recheio",
    "ao meio",
-   "partir"
+   "abrindo",
+   "revelar",
+   "dividir",
+   "rachar",
+   "partir",
+   "abrir",
+   "abre"
   ],
   "car_miolo": [
+   "parte de dentro",
+   "quebrar ao meio",
+   "estala e quebra",
+   "massa macia",
+   "quebrando",
+   "partindo",
+   "fofinha",
+   "fofinho",
+   "quebrar",
+   "aerada",
+   "areada",
    "miolo",
    "macio",
-   "fofinho",
-   "fofo",
-   "quebrar",
-   "quebrando"
+   "fofo"
   ],
   "car_fatia": [
-   "fatia",
-   "fatiar",
+   "separar um pedaco",
+   "cortar uma fatia",
+   "tirar uma fatia",
+   "soltar a fatia",
+   "pedacinho",
+   "fatiando",
    "fatiado",
+   "talhar",
    "pedaco",
-   "talhar"
+   "fatiar",
+   "fatia"
   ],
   "car_fio": [
+   "esticar o queijo",
+   "queijo puxando",
    "fio de queijo",
-   "puxa",
+   "puxa queijo",
+   "esticando",
+   "elastico",
    "puxando",
-   "esticando"
+   "puxa",
+   "fio"
   ],
   "car_cinema": [
+   "estilo comercial",
    "cinematografico",
-   "comercial",
-   "cinema",
-   "profissional",
+   "cinematografia",
    "publicitario",
-   "clima"
+   "profissional",
+   "sofisticado",
+   "propaganda",
+   "caprichado",
+   "comercial",
+   "aproximar",
+   "hollywood",
+   "elegante",
+   "impacto",
+   "bonito",
+   "cinema",
+   "filme",
+   "close",
+   "macro",
+   "clima",
+   "tv"
   ],
   "car_ornamento": [
+   "ingrediente do lado",
+   "materia prima",
    "ingredientes",
-   "ao redor",
+   "composicao",
+   "recipiente",
+   "decoracao",
    "ornamento",
    "enfeitar",
+   "em volta",
+   "ao redor",
+   "cercado",
+   "enfeite",
+   "decorar",
+   "potinho",
    "ao lado",
-   "decorar"
+   "tigela"
   ],
   "car_fundo_escuro": [
+   "destacar o produto",
+   "fundo mais escuro",
+   "desfocar o fundo",
+   "fundo desfocado",
+   "escuro atras",
    "fundo escuro",
-   "escurecer",
+   "sombra atras",
    "fundo preto",
-   "escurecido"
+   "escurecido",
+   "escurecer"
   ],
   "car_chama": [
-   "chama",
-   "fogo",
+   "forno a lenha",
+   "chama atras",
+   "fogo atras",
+   "labaredas",
+   "fogueira",
    "labareda",
-   "brasa"
+   "brasas",
+   "chama",
+   "brasa",
+   "fogo"
   ],
   "car_embalado": [
-   "pote",
-   "embalado",
-   "lacrado",
-   "rotulo",
-   "revenda",
+   "industrializado",
+   "fornecedor",
    "embalagem",
+   "saquinho",
+   "conserva",
+   "comprado",
+   "embalado",
+   "revenda",
    "garrafa",
-   "lata",
+   "lacrado",
+   "bisnaga",
+   "frasco",
    "pacote",
+   "rotulo",
+   "tampa",
+   "marca",
+   "sache",
    "caixa",
-   "vidro"
+   "vidro",
+   "selo",
+   "lata",
+   "pote"
   ]
  },
  "lexico_in": {
   "in_carne": [
+   "carne com cebola",
+   "carne temperada",
    "carne moida",
    "carne"
   ],
@@ -1813,12 +1953,17 @@ const D = {
   ],
   "in_frango": [
    "frango desfiado",
+   "frango cremoso",
+   "galinha",
    "frango"
   ],
   "in_frango_c": [
    "frango com catupiry"
   ],
   "in_queijo": [
+   "queijo minas",
+   "mussarela",
+   "mucarela",
    "queijo"
   ],
   "in_presunto": [
@@ -1826,32 +1971,48 @@ const D = {
    "presunto"
   ],
   "in_calabresa": [
-   "calabresa"
+   "calabresa",
+   "calabreza",
+   "linguica"
   ],
   "in_palmito": [
    "palmito"
   ],
   "in_milho": [
+   "milho verde",
    "milho"
   ],
   "in_requeijao": [
+   "cream cheese",
    "requeijao",
-   "catupiry"
+   "catupiry",
+   "catupiri"
   ],
   "in_doce_leite": [
-   "doce de leite"
+   "docinho de leite",
+   "doce de leite",
+   "doce leite"
   ],
   "in_goiabada": [
-   "goiabada"
+   "romeu e julieta",
+   "goiabada",
+   "goiaba"
   ],
   "in_chocolate": [
-   "chocolate"
+   "achocolatado",
+   "chocolate",
+   "nutella",
+   "cacau"
   ],
   "in_creme": [
    "creme de baunilha",
+   "creme amarelo",
+   "confeiteiro",
    "baunilha"
   ],
   "in_coco": [
+   "coco ralado",
+   "cocada",
    "coco"
   ],
   "in_banana": [
@@ -1868,17 +2029,21 @@ const D = {
   ],
   "in_morango": [
    "morango com chantilly",
+   "morangos frescos",
    "morangos",
    "morango"
   ],
   "in_chantilly": [
+   "nata batida",
    "chantilly",
-   "chantily"
+   "chantily",
+   "chantili"
   ],
   "in_abacaxi": [
    "abacaxi"
   ],
   "in_brigadeiro": [
+   "brigadeirao",
    "brigadeiro"
   ],
   "in_prestigio": [
@@ -1891,18 +2056,29 @@ const D = {
  "lexico_or": {
   "or_mandioca": [
    "mandioca cozida",
-   "mandioca"
+   "macaxeira",
+   "mandioca",
+   "aipim"
   ],
   "or_polvilho": [
-   "polvilho"
+   "polvilho azedo",
+   "polvilho doce",
+   "polvilho",
+   "goma"
   ],
   "or_trigo": [
-   "farinha de trigo"
+   "farinha de trigo",
+   "espiga de trigo",
+   "farinha",
+   "trigo"
   ],
   "or_ovos": [
-   "ovos"
+   "ovos caipira",
+   "ovos",
+   "ovo"
   ],
   "or_queijo": [
+   "pedaco de queijo",
    "queijo minas"
   ],
   "or_milho": [
@@ -1918,12 +2094,17 @@ const D = {
    "doce de leite"
   ],
   "or_cafe": [
+   "xicara de cafe",
+   "cafezinho",
    "cafe"
   ],
   "or_leite": [
+   "jarra de leite",
+   "copo de leite",
    "leite"
   ],
   "or_manteiga": [
+   "manteiga na tigela",
    "manteiga"
   ],
   "or_acucar": [
@@ -1943,135 +2124,6 @@ const D = {
   ]
  }
 };
-
-const QUINTA=3;   // segunda=0 na conta de dia da semana usada aqui
-const SLOTS = [
-  ["07:00","MATINAL",[],[],"MENSAGEM"],
-  ["15:30","TARDE",
-   ["BOLOS","BISCOITOS","SALGADOS","PAES","LATICINIOS","BEBIDAS"],
-   ["BOLOS","BISCOITOS","SALGADOS","PAES","LATICINIOS"],"PRODUTO"]
-];
-
-// Assuntos da publicacao matinal. Bebida sem marca, sem rotulo.
-const MATINAIS=[
-  {sku:"MAT_POTE",nome:"Papel do pote + café",cat:"BEBIDAS",verdade:"",
-   movs:["MOV_01","MOV_07","MOV_10"]},
-  {sku:"MAT_POTE_PQ",nome:"Papel do pote + café + pão de queijo",cat:"BEBIDAS",verdade:"",
-   movs:["MOV_01","MOV_07","MOV_10"]},
-  {sku:"MAT_CAFE",nome:"Só o café",cat:"BEBIDAS",verdade:"",
-   movs:["MOV_01","MOV_07","MOV_10"]},
-  {sku:"MAT_POTE_OBJ",nome:"O pote da gratidão",cat:"BEBIDAS",verdade:"",
-   movs:["MOV_07","MOV_10"]},
-  {sku:"MAT_BALCAO",nome:"Café com a vitrine ao fundo",cat:"BEBIDAS",verdade:"",
-   movs:["MOV_07","MOV_01"]}
-];
-
-
-// Produto que fecha a mensagem: "O ... quente ja esta te esperando."
-const ACOMPANHA=["biscoitinho","pão de queijo","pãozinho","cafezinho","bolinho"];
-
-const ORDEM={ALTO:3,MEDIO:2,BAIXO:1,COMPLEMENTO:0}, COOL=9, PESO_CAT=4;
-const DIAS=["SEG","TER","QUA","QUI","SEX","SAB","DOM"];
-
-const GANCHO={
-  MATINAL:["Bom dia! O forno já trabalhou.","Começou o dia e já tem coisa boa pronta.",
-           "Cheiro de padaria desde cedo.","Primeira fornada saindo agora."],
-  TARDE:["A tarde melhora com isso.","Hora do café.",
-         "Pausa da tarde, do jeito certo.","Tem coisa fresca na vitrine agora."],
-  NOITE:["Antes de fechar, passa aqui.","Fim de tarde pede isso.",
-         "Ainda dá tempo.","Última fornada do dia."]
-};
-const REFORCO={
-  PAES:"Massa feita aqui, todo dia.",
-  BISCOITOS:"Assado no capricho, crocante de verdade.",
-  BOLOS:"Massa fofa e recheio generoso.",
-  SALGADOS:"Feito na hora, recheio caprichado.",
-  BEBIDAS:"Bem gelado para acompanhar.",
-  LATICINIOS:"Produto da região, direto do produtor.",
-  OUTROS:"Feito com capricho, todo dia."
-};
-const FECHO={
-  PICO_PAGAMENTO:"", POS_PAGAMENTO:"",
-  SEXTA_TICKET_ALTO:"O fim de semana começa aqui.",
-  RECUPERACAO_FLUXO:"Passa aqui, tá quentinho.",
-  GIRO_ROTINA:"", MARCA_ENCOMENDA:"Encomendas para a semana pelo WhatsApp."
-};
-const TAGS={
-  PAES:["paofresco","paoartesanal","paoquentinho"],
-  BISCOITOS:["biscoitocaseiro","biscoitomineiro","quitandasmineiras"],
-  BOLOS:["bolocaseiro","confeitaria","bolodepadaria"],
-  SALGADOS:["salgadosfrescos","lanchedatarde","salgadoassado"],
-  BEBIDAS:["bebidagelada"],
-  LATICINIOS:["queijominas","produtosmineiros"],
-  OUTROS:["padariaartesanal"]
-};
-const TAGS_FIXAS=["padariapaodemel","porteirinha","nortedeminas","padaria"];
-
-function objetivo(dm,ds){
-  if(ds===6) return ["MARCA_ENCOMENDA","MEDIO"];
-  if([2,5,7].includes(dm)) return ["PICO_PAGAMENTO","ALTO"];
-  if(ds===4) return ["SEXTA_TICKET_ALTO","ALTO"];
-  if(dm<=8) return ["POS_PAGAMENTO","ALTO"];
-  if(dm>=22&&dm<=25) return ["RECUPERACAO_FLUXO","BAIXO"];
-  return ["GIRO_ROTINA","MEDIO"];
-}
-
-const porCat={};
-D.produtos.forEach(function(p){(porCat[p.cat]=porCat[p.cat]||[]).push(p)});
-Object.values(porCat).forEach(function(a){a.sort(function(x,y){return x.nome.localeCompare(y.nome)})});
-
-const cache={};
-function planoMes(ano,mes){
-  const k=ano+"-"+mes; if(cache[k]) return cache[k];
-  const uso={},usoCat={},plano={}; let pos=0;
-  const total=new Date(ano,mes+1,0).getDate();
-  for(let d=1;d<=total;d++){
-    const ds=(new Date(ano,mes,d).getDay()+6)%7;
-    const alvo=objetivo(d,ds), obj=alvo[0], tier=alvo[1];
-    plano[d]=SLOTS.map(function(cfg,si){
-      const hora=cfg[0], bloco=cfg[1], modo=cfg[4];
-      if(modo==="MENSAGEM"){
-        const mat=MATINAIS[(d-1)%MATINAIS.length];
-        return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:modo,prod:mat,
-                cfg:cfgDoPreset(mat.movs[(d-1)%mat.movs.length])};
-      }
-      // Biscoitos sao 21 e salgados 12: sem alternar, o sorteio so daria biscoito.
-      const cats = ds===QUINTA&&modo==="PRODUTO"
-                     ? (Math.floor((d-1)/7)%2 ? ["BISCOITOS"] : ["SALGADOS"])
-                 : ds===6 ? cfg[3] : cfg[2];
-      const cand=cats.reduce(function(acc,c){return acc.concat(porCat[c]||[])},[]);
-      let esc=null;
-      const limites=[COOL,0];
-      for(let li=0;li<limites.length;li++){
-        let best=null,bs=null;
-        for(let i=0;i<cand.length;i++){
-          const it=cand[i];
-          const ult = (uso[it.sku]===undefined) ? -9999 : uso[it.sku];
-          const desde = pos-ult;
-          if(desde<=limites[li]) continue;
-          const oi=(ORDEM[it.tier]===undefined)?0:ORDEM[it.tier];
-          const oa=(ORDEM[tier]===undefined)?2:ORDEM[tier];
-          const ultC=(usoCat[it.cat]===undefined)?-9999:usoCat[it.cat];
-          const desdeCat=Math.min(pos-ultC,30);
-          // PESO_CAT evita que uma categoria grande domine o mes inteiro.
-          const sc=100-Math.abs(oi-oa)*35+Math.min(desde,45)+desdeCat*PESO_CAT;
-          if(bs===null||sc>bs){best=it;bs=sc}
-        }
-        if(best){uso[best.sku]=pos;usoCat[best.cat]=pos;esc=best;break}
-      }
-      pos++;
-      // Quinta do Combo: uma comida + uma bebida no turno da tarde.
-      if(ds===QUINTA&&modo==="PRODUTO"){
-        const beb=porCat.BEBIDAS||[];
-        return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"COMBO",prod:esc,
-                bebida:beb.length?beb[(d+si)%beb.length]:null,cfg:cfgDoProduto(esc)};
-      }
-      return {hora:hora,bloco:bloco,obj:obj,tier:tier,modo:"PRODUTO",prod:esc,
-              cfg:cfgDoProduto(esc)};
-    });
-  }
-  cache[k]=plano; return plano;
-}
 
 function bloco(banco,id){
   const b=(D.bancos[banco]||[]).filter(function(x){return x[0]===id})[0];
@@ -2239,12 +2291,20 @@ function interpretar(foto,quer){
 
   const rec=achar(tudo,D.lexico_in)[0]||"";
   const orn=achar(quer,D.lexico_or)[0]||"";
+  return montarAnalise(lista,rec,orn,foto);
+}
+
+function reavaliar(lista,rec,orn,foto){return montarAnalise(lista,rec,orn,foto)}
+
+// Separado do reconhecimento: ao desmarcar um chip a conferencia precisa ser
+// recalculada sobre a lista nova, nao sobre a fala original.
+function montarAnalise(lista,rec,orn,foto){
   const cfg=cfgDeCaracteristicas(lista);
 
   const avisos=[], entendido=[];
-  lista.forEach(function(k){entendido.push(D.caracteristicas[k][0])});
-  if(rec) entendido.push("Recheio: "+D.insumos[rec][0]);
-  if(orn) entendido.push("Ao lado: "+D.ornamentos[orn][0]);
+  lista.forEach(function(k){entendido.push(["car",k,D.caracteristicas[k][0]])});
+  if(rec) entendido.push(["rec",rec,"Recheio: "+D.insumos[rec][0]]);
+  if(orn) entendido.push(["orn",orn,"Ao lado: "+D.ornamentos[orn][0]]);
 
   if(!lista.length)
     avisos.push(["!","Não reconheci nenhum efeito. Descreva o que deve se mover: "+
@@ -2266,7 +2326,7 @@ function interpretar(foto,quer){
     avisos.push(["","O interior não aparece na foto. Vai sair como \u201c"+
       D.insumos[rec][0]+"\u201d — confira se bate com o produto real."]);
 
-  return {cars:lista,cfg:cfg,rec:rec,orn:orn,entendido:entendido,avisos:avisos};
+  return {cars:lista,cfg:cfg,rec:rec,orn:orn,foto:foto,entendido:entendido,avisos:avisos};
 }
 
 // ---------- versao curta para o campo do Canva ----------
@@ -2368,13 +2428,6 @@ function alternarCaracteristica(lista,cod){
   return fora.concat([cod]);
 }
 
-function cfgDoPreset(id){
-  const p=D.presets[id];
-  return p?{preset:id,cam:p[1],amb:p[2],hum:p[3],rit:p[4],tr:p[5],ut:p[6],livre:""}
-          :{preset:"",cam:"cam_aproxima",amb:"amb_nada",hum:"hum_nenhum",
-            rit:"rit_lento",tr:"tr_nenhuma",ut:"ut_nenhum",livre:""};
-}
-
 function requisito(cfg){
   const p=D.presets[cfg.preset];
   return p?p[7]:"Confira se a foto já contém tudo que o movimento exige.";
@@ -2389,58 +2442,15 @@ function rodape(L){
   return L;
 }
 
-function legendaMensagem(s){
-  const num=(store.get("pote:"+iso+":n")||"").trim();
-  const msg=(store.get("pote:"+iso+":m")||"").trim();
-  const ac=store.get("pote:"+iso+":a")||ACOMPANHA[0];
-  const L=["A mensagem do nosso Pote da Gratidão hoje é:"];
-  L.push(msg ? '"'+msg+'" ❤️' : '"[transcreva o papel sorteado]" ❤️');
-  L.push("O "+ac+" quente já está te esperando.");
-  if(num) L.push("","Papel nº "+num);
-  return L.join("\n");
-}
-
-function precoCombo(){return store.get("combo:"+iso)||""}
-
-function legenda(peca,s,d){
-  if(s.modo==="MENSAGEM") return legendaMensagem(s);
-  if(s.modo==="COMBO"){
-    const b=s.bebida, pc=precoCombo();
-    let L=["QUINTA DO COMBO 🎉","",
-           peca.nome.toUpperCase()+(b?" + "+b.nome.toUpperCase():""),""];
-    L.push(pc?("por "+pc):"Peça o seu no balcão.");
-    L.push("","Só hoje, enquanto durar a fornada.","");
-    L=rodape(L);
-    L.push("",(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
-      .map(function(x){return "#"+x}).join(" ")+" #quintadocombo");
-    return L.join("\n");
-  }
-  const g=GANCHO[s.bloco], gancho=g[d%g.length];
-  const fecho=FECHO[s.obj]||"";
-  const tags=(TAGS[peca.cat]||TAGS.OUTROS).concat(TAGS_FIXAS)
-    .map(function(t){return "#"+t}).join(" ");
-
-  let L=[gancho,"",peca.nome.toUpperCase()+" — "+peca.preco,"",
-         REFORCO[peca.cat]||REFORCO.OUTROS];
-  if(fecho) L.push(fecho);
-  L.push("");
-  L=rodape(L);
-  L.push("",tags);
-  return L.join("\n");
-}
-
 const store={
   // "" e valor legitimo (nenhuma caracteristica). Nao pode virar null pelo ||.
   get:function(k){try{return localStorage.getItem(k)}catch(e){
     return (this.m&&Object.prototype.hasOwnProperty.call(this.m,k))?this.m[k]:null}},
   set:function(k,v){try{localStorage.setItem(k,v)}catch(e){this.m=this.m||{};this.m[k]=v}}
 };
-function arq(iso,hora,sku){return iso.split("-").join("")+"_"+hora.replace(":","")+"_"+sku+".mp4"}
 function $(id){return document.getElementById(id)}
 
 let iso=new Date().toISOString().slice(0,10), slot=0;
-function diaAtual(){const p=iso.split("-");return planoMes(+p[0],+p[1]-1)[+p[2]]}
-
 function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");
   clearTimeout(e.t);e.t=setTimeout(function(){e.classList.remove("on")},1900)}
 
@@ -2458,24 +2468,6 @@ function copiar(txt,msg){
 
 // ---------- lote da semana ----------
 // Reune os posts dos proximos 7 dias para producao em bloco no Flow.
-function itensDaSemana(){
-  const base=new Date(iso+"T12:00:00"), out=[];
-  for(let k=0;k<7;k++){
-    const dt=new Date(base); dt.setDate(dt.getDate()+k);
-    const di=dt.toISOString().slice(0,10);
-    const plano=planoMes(dt.getFullYear(),dt.getMonth()+1);
-    (plano[dt.getDate()]||[]).forEach(function(s){
-      const p=s.prod; if(!p) return;
-      out.push({data:di,dia:dt.getDate(),mes:dt.getMonth()+1,ds:dt.getDay(),
-                hora:s.hora,modo:s.modo,nome:p.nome,sku:p.sku,cfg:s.cfg,
-                prompt:montarPrompt({sku:p.sku,cat:p.cat,verdade:p.verdade,
-                  nome:p.nome,preco:p.preco||""},s.cfg)});
-    });
-  }
-  return out;
-}
-
-// ---------- ditado por voz ----------
 // Web Speech API: nativa do navegador, sem dependencia e sem custo.
 // Exige https (o GitHub Pages atende) e permissao do microfone.
 const VOZ = (typeof window!=="undefined" &&
@@ -2526,7 +2518,7 @@ function botaoVoz(campoId){
 
 // ---------- tela do assistente ----------
 const SKU_ASSIST="ASSIST";
-let txFoto="", txQuer="", analise=null;
+let txFoto="", txQuer="", analise=null, guia="flow";
 
 function renderAssist(){
   const A=analise, ouv=!!ouvindo;
@@ -2556,12 +2548,12 @@ function renderAssist(){
       h+='<div class="brief"><b>Confira antes</b><ul>'+A.avisos.map(function(v){
         return '<li'+(v[0]==="!"?' class="al"':'')+'>'+v[1]+'</li>'}).join("")+'</ul></div>';
     if(A.cars.length)
-      h+='<div class="field"><span class="flabel">Prompt para o Flow</span>'+
-           '<textarea id="pf" class="mono" rows="7"></textarea>'+
-           '<button class="act ghost mini" id="cf">Copiar</button></div>'+
-         '<div class="field"><span class="flabel">Versão curta para o Canva (5s)</span>'+
-           '<textarea id="pk" class="mono" rows="5"></textarea>'+
-           '<button class="act ghost mini" id="ck">Copiar</button></div>';
+      h+='<div class="field"><div class="guias">'+
+           '<button class="gb'+(guia==="flow"?" on":"")+'" data-g="flow">Flow</button>'+
+           '<button class="gb'+(guia==="canva"?" on":"")+'" data-g="canva">Canva · 5s</button>'+
+         '</div><textarea id="pp" class="mono" rows="'+(guia==="flow"?8:5)+'"></textarea>'+
+         '<button class="act" id="cp">Copiar prompt do '+
+           (guia==="flow"?"Flow":"Canva")+'</button></div>';
   }
   $("vAssist").innerHTML=h;
   $("tq").value=txQuer;
@@ -2578,379 +2570,37 @@ function renderAssist(){
     ditar("tq",function(txt){txQuer=txt}, analisar);
   };
 
-  if(A&&A.cars.length&&$("pf")){
+  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-off]"),function(b){
+    b.onclick=function(){
+      const par=b.getAttribute("data-off").split(":");
+      let cars=A.cars.slice(), rec=A.rec, orn=A.orn;
+      if(par[0]==="car") cars=cars.filter(function(x){return x!==par[1]});
+      if(par[0]==="rec") rec="";
+      if(par[0]==="orn") orn="";
+      analise=reavaliar(cars,rec,orn,A.foto); renderAssist();
+    };
+  });
+  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-g]"),function(b){
+    b.onclick=function(){guia=b.getAttribute("data-g");renderAssist()};
+  });
+  if(A&&A.cars.length&&$("pp")){
     const prod={sku:SKU_ASSIST,cat:"OUTROS",nome:"Produto",preco:"",verdade:""};
     store.set("rec:"+SKU_ASSIST,A.rec||"");
     store.set("orn:"+SKU_ASSIST,A.orn||"");
     store.set("mod:"+SKU_ASSIST,"animar");
-    $("pf").value=montarPrompt(prod,A.cfg);
-    $("pk").value=montarPromptCurto(prod,A.cfg);
-    $("cf").onclick=function(){copiar($("pf").value,"Prompt do Flow copiado.")};
-    $("ck").onclick=function(){copiar($("pk").value,"Versão do Canva copiada.")};
+    $("pp").value = guia==="flow" ? montarPrompt(prod,A.cfg) : montarPromptCurto(prod,A.cfg);
+    $("cp").onclick=function(){copiar($("pp").value,
+      "Prompt do "+(guia==="flow"?"Flow":"Canva")+" copiado.")};
   }
 }
 
-function renderLote(){
-  const it=itensDaSemana();
-  const ger=it.filter(function(x){return x.modo!=="manha"}).length;
-  const linhas=it.map(function(x,i){
-    const nome=D.presets[x.cfg.preset]?D.presets[x.cfg.preset][0]:"Personalizado";
-    return '<div class="lin">'+
-      '<div class="cab"><span class="qd">'+DIAS[x.ds]+' '+String(x.dia).padStart(2,"0")+'/'+
-        String(x.mes).padStart(2,"0")+' · '+x.hora+'</span>'+
-        '<b>'+x.nome+'</b><span class="mv">'+nome+'</span></div>'+
-      briefingHTML(x.cfg,x.sku)+
-      '<button class="act ghost mini" data-i="'+i+'">Copiar prompt</button></div>';
-  }).join("");
-  $("vSemana").innerHTML=
-    '<h1 class="tt">Semana · '+it.length+' posts</h1>'+
-    '<p class="sub">Fotografe tudo numa sessão. Gere no Flow em duas levas. Edite em bloco.</p>'+
-    linhas+
-    '<button class="act" id="lall">Copiar os '+it.length+' prompts de uma vez</button>'+
-    '<p class="hint">Sua cota é de 4 vídeos por dia. A semana usa '+ger+
-      ' gerações — cabem em duas sessões.</p>';
-  $("lall").onclick=function(){
-    const txt=it.map(function(x){
-      return "["+DIAS[x.ds]+" "+String(x.dia).padStart(2,"0")+"/"+
-        String(x.mes).padStart(2,"0")+" "+x.hora+" · "+x.nome+"]\n"+x.prompt;
-    }).join("\n\n---\n\n");
-    copiar(txt,it.length+" prompts copiados.");
-  };
-  Array.prototype.forEach.call($("vSemana").querySelectorAll("[data-i]"),function(b){
-    b.onclick=function(){copiar(it[+b.getAttribute("data-i")].prompt,"Prompt copiado.")};
-  });
-}
-
-function render(){
-  const dia=diaAtual(), pr=iso.split("-");
-  const a=+pr[0], m=+pr[1], d=+pr[2];
-  const ds=(new Date(a,m-1,d).getDay()+6)%7;
-
-  $("rail").innerHTML=dia.map(function(s,i){
-    return '<button class="tab" role="tab" aria-selected="'+(i===slot)+
-      '" data-i="'+i+'">'+s.hora+'<span class="lbl">'+s.bloco+'</span></button>'}).join("");
-  Array.prototype.forEach.call($("rail").querySelectorAll(".tab"),function(b){
-    b.onclick=function(){slot=+b.dataset.i;render()}});
-
-  const esc=escolhido[chaveSlot()];
-  if(esc&&dia[slot]&&dia[slot].modo!=="MENSAGEM"){
-    const pm=acharProduto(esc);
-    if(pm){
-      if(!dia[slot].prod||dia[slot].prod.sku!==pm.sku) dia[slot].cfg=cfgDoProduto(pm);
-      dia[slot].prod=pm;
-    }
-  }
-  const escB=escolhidoBeb[chaveSlot()];
-  if(escB&&dia[slot]&&dia[slot].modo==="COMBO"){
-    const bm=acharProduto(escB); if(bm) dia[slot].bebida=bm;
-  }
-  const s=dia[slot], p=s.prod, t=$("ticket");
-  if(!p){t.innerHTML="<p>Sem produto para este horário.</p>";return}
-
-  const ehMsg = s.modo==="MENSAGEM";
-  const permit = ehMsg ? p.movs : [];
-  const cfg = s.cfg;
-  const nome=p.nome, preco=ehMsg?"":p.preco;
-  const peca={sku:p.sku,cat:p.cat,verdade:p.verdade,nome:nome,preco:preco};
-
-  t.className="ticket";
-  t.innerHTML=
-    '<div class="meta"><span>'+DIAS[ds]+' '+String(d).padStart(2,"0")+'/'+
-      String(m).padStart(2,"0")+' · '+s.hora+'</span>'+
-      '<span class="goal">'+s.obj.split("_").join(" ")+'</span></div>'+
-    '<div class="panes">'+
-
-    '<div class="pane">'+
-      (ehMsg
-        ? '<div class="field"><label class="flabel" for="sp">Assunto da foto</label>'+
-            '<select id="sp">'+MATINAIS.map(function(x){
-              return '<option value="'+x.sku+'"'+(x.sku===p.sku?" selected":"")+'>'+
-                x.nome+'</option>'}).join("")+'</select>'+
-            '<p class="hint">Enquadre o papel do pote junto ao café.</p></div>'+
-          '<div class="field"><label class="flabel" for="tm">Mensagem sorteada</label>'+
-            '<textarea id="tm" style="min-height:84px" placeholder="Transcreva o papel do pote" aria-label="Mensagem sorteada">'+
-              (store.get("pote:"+iso+":m")||"").replace(/</g,"&lt;")+'</textarea>'+
-            '<div class="duo">'+
-              '<div><label class="flabel" for="tnum">Nº do papel</label>'+
-                '<input type="text" id="tnum" inputmode="numeric" placeholder="83" value="'+
-                (store.get("pote:"+iso+":n")||"")+'" aria-label="Número do papel"></div>'+
-              '<div><label class="flabel" for="tac">Acompanha</label><select id="tac">'+
-                ACOMPANHA.map(function(a){return '<option value="'+a+'"'+
-                  (a===(store.get("pote:"+iso+":a")||ACOMPANHA[0])?" selected":"")+'>'+
-                  a+'</option>'}).join("")+'</select></div>'+
-            '</div></div>'
-        : '<div class="field"><label class="flabel" for="sp">Produto</label>'+
-            '<select id="sp">'+produtosTodos().map(function(x){
-              return '<option value="'+x.sku+'"'+(x.sku===p.sku?" selected":"")+'>'+
-                x.nome+'</option>'}).join("")+'</select>'+
-            (novoAberto
-              ? '<div class="novo">'+
-                  '<input type="text" id="nvn" placeholder="Nome do produto" '+
-                    'value="'+novoNome.replace(/"/g,"&quot;")+'">'+
-                  '<select id="nvc">'+CATS.map(function(c){
-                    return '<option value="'+c+'"'+(c===novoCat?" selected":"")+'>'+c+
-                    '</option>'}).join("")+'</select>'+
-                  '<button class="act ghost mini" id="nvok">Adicionar</button>'+
-                '</div>'
-              : '<button class="lnk" id="nvab">+ produto que não está na lista</button>')+
-            '</div>'+
-            (s.modo==="COMBO"
-              ? '<div class="field"><label class="flabel" for="sb">Bebida do combo</label>'+
-                '<select id="sb"><option value="">— escolher —</option>'+
-                  produtosTodos().filter(function(x){return x.cat==="BEBIDAS"||x.cat==="REVENDA"})
-                  .map(function(x){
-                    return '<option value="'+x.sku+'"'+
-                      (s.bebida&&x.sku===s.bebida.sku?" selected":"")+'>'+x.nome+'</option>'
-                  }).join("")+'</select>'+
-                '<label class="flabel" for="pcb" style="margin-top:12px">Preço do combo</label>'+
-                '<input type="text" id="pcb" placeholder="R$ 8,00" value="'+
-                  precoCombo().replace(/"/g,"&quot;")+'">'+
-                '<p class="hint">Fotografe a comida e a bebida juntas, no mesmo quadro.</p></div>'
-              : ''))+
-
-      (ehMsg ? '' :
-        '<div class="modos">'+
-          '<button class="md'+(modoDe(peca.sku)==="animar"?" on":"")+'" data-md="animar">'+
-            'Animar minha foto</button>'+
-          '<button class="md'+(modoDe(peca.sku)==="criar"?" on":"")+'" data-md="criar">'+
-            'Comercial</button></div>')+
-      (ehMsg
-        ? '<div class="field"><label class="flabel" for="sm">Comportamento</label>'+
-          '<select id="sm">'+permit.map(function(k){
-            return '<option value="'+k+'"'+(k===cfg.preset?" selected":"")+'>'+
-              D.presets[k][0]+'</option>'}).join("")+'</select></div>'
-        : '<div class="field"><span class="flabel">O que o vídeo deve valorizar</span>'+
-          '<div class="chips">'+Object.keys(D.caracteristicas).map(function(k){
-            const c=D.caracteristicas[k], on=(cfg.cars||[]).indexOf(k)>=0;
-            return '<button class="chip'+(on?" on":"")+(c[2]?" fm":"")+
-              '" data-car="'+k+'">'+c[0]+'</button>'}).join("")+'</div>'+
-          '<p class="hint">Fica salvo para este produto. As de contorno grosso mudam a '+
-          'cena — só uma de cada grupo por vídeo.</p></div>')+
-
-      '<details class="fino"'+(ehMsg?" open":"")+'><summary>Ajuste fino</summary>'+
-        '<div class="duo" style="margin-top:10px">'+
-          '<div><label class="flabel" for="dcam">Câmera</label><select id="dcam">'+
-            D.bancos.camera.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.cam?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-          '<div><label class="flabel" for="drit">Ritmo</label><select id="drit">'+
-            D.bancos.ritmo.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.rit?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-        '</div>'+
-        '<div class="duo">'+
-          '<div><label class="flabel" for="damb">Só a superfície</label><select id="damb">'+
-            D.bancos.ambiente.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.amb?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-          '<div><label class="flabel" for="dhum">Pessoas</label><select id="dhum">'+
-            D.bancos.humano.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.hum?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-        '</div>'+
-        '<div class="duo">'+
-          '<div><label class="flabel" for="dut">Talher</label><select id="dut">'+
-            D.bancos.utensilio.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.ut?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-          '<div><label class="flabel" for="dtr">Muda de forma</label><select id="dtr">'+
-            D.bancos.transformacao.map(function(o){return '<option value="'+o[0]+'"'+
-              (o[0]===cfg.tr?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></div>'+
-        '</div>'+
-        (pedeRecheio(cfg)||pedeCobertura(cfg)||ornamentando(cfg)
-          ? '<div class="verd">'+
-            (pedeRecheio(cfg)
-              ? '<label class="flabel" for="drec">Recheio deste produto</label>'+
-            '<select id="drec"><option value="">— escolher —</option>'+
-              Object.keys(D.insumos).map(function(k){
-                return '<option value="'+k+'"'+(k===recheioDe(peca.sku)?" selected":"")+
-                  '>'+D.insumos[k][0]+'</option>'}).join("")+
-              (D.insumos[recheioDe(peca.sku)]||!recheioDe(peca.sku)?"":
-                '<option value="'+recheioDe(peca.sku)+'" selected>'+recheioDe(peca.sku)+'</option>')+
-            '</select>'
-              : '')+
-            (pedeCobertura(cfg)
-              ? '<label class="flabel"'+(pedeRecheio(cfg)?' style="margin-top:12px"':'')+' for="dcob">Cobertura</label>'+
-            '<select id="dcob"><option value="">— escolher —</option>'+
-              Object.keys(D.coberturas).map(function(k){
-                return '<option value="'+k+'"'+(k===coberturaDe(peca.sku)?" selected":"")+
-                  '>'+D.coberturas[k][0]+'</option>'}).join("")+
-              (D.coberturas[coberturaDe(peca.sku)]||!coberturaDe(peca.sku)?"":
-                '<option value="'+coberturaDe(peca.sku)+'" selected>'+coberturaDe(peca.sku)+'</option>')+
-            '</select>'
-              : '')+
-            (ornamentando(cfg)
-              ? '<label class="flabel"'+((pedeRecheio(cfg)||pedeCobertura(cfg))?' style="margin-top:12px"':'')+
-                ' for="dorn">Ingrediente ao lado</label>'+
-                '<select id="dorn"><option value="">— escolher —</option>'+
-                  Object.keys(D.ornamentos).map(function(k){
-                    return '<option value="'+k+'"'+(k===ornamentoDe(peca.sku)?" selected":"")+
-                      '>'+D.ornamentos[k][0]+'</option>'}).join("")+
-                '</select>'
-              : '')+
-            '<p class="hint">Fica salvo para este produto. O prompt sai em inglês, com cor e textura. Sem isso, o modelo inventa.</p></div>'
-          : '')+
-        '<p class="hint eixo"><b>Superfície</b> anima o que já está na foto. '+
-          '<b>Forma</b> faz o produto virar outra coisa — e o que aparecer por dentro '+
-          'não existe na foto.</p>'+
-        ((transformando(cfg)||comLuvas(cfg)||comTalher(cfg))
-          ? '<p class="hint" style="color:var(--heat)">O modelo vai <b>criar</b> '+
-            (comTalher(cfg)?'o talher e o gesto':comLuvas(cfg)?'as luvas e o gesto':'isso')+
-            ', mesmo sem estar na foto. Gere duas e escolha.</p>'
-          : '<p class="hint">Nada é criado. Só se anima o que já está na foto.</p>')+
-        '<label class="flabel" style="margin-top:10px" for="dliv">Acrescentar (opcional)</label>'+
-        '<input type="text" id="dliv" value="'+(cfg.livre||"").replace(/"/g,"&quot;")+
-          '" placeholder="ex: a fatia da frente inclina levemente">'+
-        '<p class="hint">Só descreva <b>movimento</b>. Nunca o produto, a luz ou o fundo.</p>'+
-        '</details>'+
-    '</div>'+
-
-    '<div class="pane">'+
-      (ehMsg ? '' :
-        '<div class="field"><span class="flabel">Prompt</span>'+
-        '<textarea id="pp" class="mono" aria-label="Prompt"></textarea>'+
-        '<p class="hint">Editável. O botão copia o que estiver aqui — '+
-        'mexer nos campos ao lado reescreve tudo.</p></div>')+
-      '<div class="field"><span class="flabel">Legenda da publicação</span>'+
-        '<textarea id="lg" aria-label="Legenda"></textarea></div>'+
-      '<div class="steps">'+
-        briefingHTML(s.cfg,peca.sku)+
-        '<button class="act" id="b1"><span class="n">1</span>Copiar prompt · Flow</button>'+
-        (modoDe(peca.sku)==="animar"
-          ? '<button class="act ghost" id="bc">Copiar versão curta · Canva (5s)</button>'
-          : '')+
-        '<button class="act ghost" id="b2"><span class="n">2</span>Copiar legenda</button>'+
-      '</div>'+
-    '</div>'+
-
-    '</div>';
-
-  $("fname").textContent=arq(iso,s.hora,p.sku);
-  $("lg").value=legenda(peca,s,d);
-
-  if(ehMsg){
-    $("tm").oninput=function(e){store.set("pote:"+iso+":m",e.target.value);
-      $("lg").value=legenda(peca,s,d)};
-    $("tnum").oninput=function(e){store.set("pote:"+iso+":n",e.target.value);
-      $("lg").value=legenda(peca,s,d)};
-    $("tac").onchange=function(e){store.set("pote:"+iso+":a",e.target.value);
-      $("lg").value=legenda(peca,s,d)};
-    $("sp").onchange=function(e){
-      s.prod=MATINAIS.filter(function(x){return x.sku===e.target.value})[0];
-      if(s.prod.movs.indexOf(s.cfg.preset)<0) s.cfg=cfgDoPreset(s.prod.movs[0]);
-      render()};
-  } else {
-    $("sp").onchange=function(e){
-      escolhido[chaveSlot()]=e.target.value;
-      render()};
-  }
-  if($("sm")) $("sm").onchange=function(e){
-    if(e.target.value) s.cfg=cfgDoPreset(e.target.value); else s.cfg.preset="";
-    render()};
-  if($("sb"))  $("sb").onchange=function(e){
-    escolhidoBeb[chaveSlot()]=e.target.value; render()};
-  if($("pcb")) $("pcb").onchange=function(e){
-    store.set("combo:"+iso,e.target.value); render()};
-  if($("nvab")) $("nvab").onclick=function(){novoAberto=true;render()};
-  if($("nvn"))  $("nvn").oninput=function(e){novoNome=e.target.value};
-  if($("nvc"))  $("nvc").onchange=function(e){novoCat=e.target.value};
-  if($("nvok")) $("nvok").onclick=function(){
-    const novo=salvarProdutoLocal(novoNome,novoCat);
-    if(!novo){toast("Dê um nome ao produto.");return}
-    // Revenda ja nasce com a trava de rotulo ligada.
-    if(novo.cat==="REVENDA") store.set("car:"+novo.sku,"car_embalado");
-    escolhido[chaveSlot()]=novo.sku;
-    novoAberto=false; novoNome=""; 
-    Object.keys(cache).forEach(function(k){delete cache[k]});
-    render(); toast(novo.nome+" adicionado.");
-  };
-  Array.prototype.forEach.call(t.querySelectorAll("[data-md]"),function(b){
-    b.onclick=function(){store.set("mod:"+peca.sku,b.getAttribute("data-md"));render()};
-  });
-  Array.prototype.forEach.call(t.querySelectorAll("[data-car]"),function(b){
-    b.onclick=function(){
-      const nova=alternarCaracteristica(s.cfg.cars||[],b.getAttribute("data-car"));
-      store.set("car:"+peca.sku, nova.join(","));
-      // O plano do mes fica em cache: sem limpar, a semana nao acompanha.
-      Object.keys(cache).forEach(function(k){delete cache[k]});
-      s.cfg=cfgDeCaracteristicas(nova);
-      render();
-    };
-  });
-  ["dcam:cam","damb:amb","dhum:hum","drit:rit","dtr:tr","dut:ut"].forEach(function(par){
-    const q=par.split(":");
-    $(q[0]).onchange=function(e){s.cfg[q[1]]=e.target.value;s.cfg.preset="";render()};
-  });
-  // Grava a cada tecla, mas so redesenha ao sair do campo: nao perde o foco.
-  [["drec","rec:"],["dcob","cob:"],["dorn","orn:"]].forEach(function(par){
-    const el=$(par[0]); if(!el) return;
-    el.onchange=function(e){store.set(par[1]+peca.sku,e.target.value); render()};
-  });
-  $("dliv").oninput=function(e){s.cfg.livre=e.target.value};
-  if($("pp")) $("pp").value=montarPrompt(peca,s.cfg,s.modo==="COMBO");
-  $("b1").onclick=function(){
-    copiar($("pp")?$("pp").value:montarPrompt(peca,s.cfg,s.modo==="COMBO"),"Prompt copiado.");
-  };
-  if($("bc")) $("bc").onclick=function(){
-    copiar(montarPromptCurto(peca,s.cfg),"Versão curta copiada. Cole em Imagem a vídeo → Personalizar.");
-  };
-  $("b2").onclick=function(){copiar($("lg").value,"Legenda copiada.")};
-}
-
-function irPara(n){const dt=new Date(iso+"T12:00:00");dt.setDate(dt.getDate()+n);
-  iso=dt.toISOString().slice(0,10);$("dia").value=iso;slot=0;render()}
-
-$("wpp").value=store.get("wpp")||"38991702459";
+// ---------- arranque ----------
+$("wpp").value=store.get("wpp")||"";
 $("menu").value=store.get("menu")||"";
-$("wpp").oninput=function(e){store.set("wpp",e.target.value);render()};
-$("menu").oninput=function(e){store.set("menu",e.target.value);render()};
+$("wpp").onchange=function(e){store.set("wpp",e.target.value)};
+$("menu").onchange=function(e){store.set("menu",e.target.value)};
 $("cfg").onclick=function(){$("painel").classList.toggle("on")};
-// Produto escolhido a mao, por dia e turno. Fica fora do cache do plano:
-// limpar o cache nao pode devolver o produto do calendario.
-const CATS=["BISCOITOS","SALGADOS","PAES","BOLOS","BEBIDAS","LATICINIOS","REVENDA","OUTROS"];
-let novoAberto=false, novoNome="", novoCat="REVENDA";
-const escolhido={}, escolhidoBeb={};
-
-// O catalogo do ERP nao cobre revenda, sazonais nem lancamentos.
-// Estes ficam no aparelho e convivem com os do catalogo.
-function produtosLocais(){
-  try{const j=JSON.parse(store.get("novos")||"[]");return Array.isArray(j)?j:[]}
-  catch(e){return []}
-}
-function produtosTodos(){return D.produtos.concat(produtosLocais())}
-function acharProduto(sku){
-  return produtosTodos().filter(function(x){return x.sku===sku})[0]||null;
-}
-function salvarProdutoLocal(nome,cat){
-  const n=(nome||"").trim(); if(!n) return null;
-  const novo={sku:"LOCAL"+Date.now(),nome:n,cat:cat||"OUTROS",preco:"",verdade:"",local:true};
-  const lista=produtosLocais(); lista.push(novo);
-  store.set("novos",JSON.stringify(lista));
-  return novo;
-}
-function chaveSlot(){return iso+"|"+slot}
-let modo="assist";
-const CICLO=["assist","dia","semana"];
-const NOMES={assist:"assistente",dia:"dia avulso",semana:"semana"};
-function aplicarModo(){
-  $("vAssist").style.display=modo==="assist"?"":"none";
-  $("vSemana").style.display=modo==="semana"?"":"none";
-  $("vDia").style.display   =modo==="dia"?"":"none";
-  const prox=CICLO[(CICLO.indexOf(modo)+1)%CICLO.length];
-  $("vw").textContent=NOMES[prox];
-  $("painel").classList.remove("on");
-  if(modo==="assist") renderAssist();
-  else if(modo==="semana") renderLote();
-  else render();
-}
-$("vw").onclick=function(){
-  modo=CICLO[(CICLO.indexOf(modo)+1)%CICLO.length]; aplicarModo();
-};
-
-
-$("dia").value=iso;
-$("dia").onchange=function(e){if(e.target.value){iso=e.target.value;slot=0;render()}};
-$("prev").onclick=function(){irPara(-1)};
-$("next").onclick=function(){irPara(1)};
-
-const hr=new Date().getHours();
-slot = hr<11 ? 0 : 1;
-aplicarModo();
+renderAssist();
 </script>
 <script>
 // Registro do service worker. So funciona em http(s): abrindo o arquivo
