@@ -137,6 +137,14 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
 .lin .cab b{font-size:16px;font-weight:600;letter-spacing:-.01em}
 .lin .mv{font-size:12px;color:var(--accent)}
 .act.mini{width:auto;padding:8px 16px;font-size:12.5px;margin:0}
+.topo{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.nota{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.nota b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stars{display:flex;gap:4px}
+.st{font-family:inherit;font-size:26px;line-height:1;padding:2px 4px;border:0;
+  background:none;color:var(--line-2);cursor:pointer}
+.st.on{color:var(--accent)}
 .guias{display:flex;gap:4px;background:var(--fill);padding:4px;border-radius:999px;
   width:fit-content;margin-bottom:10px}
 .gb{font-family:inherit;font-size:12.5px;padding:7px 15px;border:0;border-radius:999px;
@@ -2262,6 +2270,52 @@ function montarPromptCriar(prod,cfg){
   return b.filter(Boolean).join(" ");
 }
 
+// ---------- memoria de resultados ----------
+// A nota so serve se voltar como informacao: a chave e a combinacao de
+// caracteristicas, para que a media reapareca quando ela se repetir.
+function chaveNota(cars){return (cars||[]).slice().sort().join(",")}
+
+function lerNota(chave){
+  try{
+    const j=JSON.parse(store.get("nota:"+chave)||"null");
+    if(j&&j.n>0) return {n:j.n, media:j.soma/j.n};
+  }catch(e){}
+  return null;
+}
+
+function gravarNota(chave,n,soma){
+  if(n<=0) store.set("nota:"+chave,"");
+  else store.set("nota:"+chave,JSON.stringify({n:n,soma:soma}));
+}
+function salvarNota(chave,estrelas){
+  const at=lerNota(chave);
+  const n=(at?at.n:0)+1, soma=(at?at.media*at.n:0)+estrelas;
+  gravarNota(chave,n,soma);
+  return {n:n, media:soma/n};
+}
+// Clicar na mesma estrela desfaz o voto, sem deixar residuo na media.
+function desfazerNota(chave,estrelas){
+  const at=lerNota(chave); if(!at) return null;
+  const n=at.n-1, soma=at.media*at.n-estrelas;
+  gravarNota(chave,n,soma);
+  return n>0?{n:n,media:soma/n}:null;
+}
+
+function estrelasHTML(chave,dada){
+  const h=lerNota(chave);
+  let s='<div class="nota"><b>Como ficou o vídeo?</b><div class="stars">';
+  for(let i=1;i<=5;i++)
+    s+='<button class="st'+(dada&&i<=dada?" on":"")+'" data-nota="'+i+'" '+
+       'aria-label="'+i+' de 5">★</button>';
+  s+='</div>';
+  if(dada) s+='<p class="hint">Guardado. Toque na mesma estrela para desfazer.</p>';
+  if(h) s+='<p class="hint">Essa combinação já foi usada '+h.n+
+    (h.n===1?" vez":" vezes")+' — média '+h.media.toFixed(1)+'★.</p>';
+  else if(!dada) s+='<p class="hint">A nota fica guardada e reaparece quando você repetir '+
+    'essa combinação.</p>';
+  return s+'</div>';
+}
+
 // ---------- interpretador ----------
 // Sem API: reconhecimento de vocabulario, nao compreensao. Por isso a tela
 // SEMPRE mostra o que foi entendido, para o usuario confirmar ou corrigir.
@@ -2306,6 +2360,13 @@ function montarAnalise(lista,rec,orn,foto){
   if(rec) entendido.push(["rec",rec,"Recheio: "+D.insumos[rec][0]]);
   if(orn) entendido.push(["orn",orn,"Ao lado: "+D.ornamentos[orn][0]]);
 
+  const hist=lista.length?lerNota(chaveNota(lista)):null;
+  if(hist&&hist.n>=2&&hist.media<2.5)
+    avisos.push(["!","Essa combinação rendeu média "+hist.media.toFixed(1)+
+      "★ em "+hist.n+" tentativas. Considere trocar um dos itens."]);
+  else if(hist&&hist.n>=2&&hist.media>=4)
+    avisos.push(["","Essa combinação já rendeu média "+hist.media.toFixed(1)+
+      "★ em "+hist.n+" usos."]);
   if(!lista.length)
     avisos.push(["!","Não reconheci nenhum efeito. Descreva o que deve se mover: "+
       "vapor, abrir ao meio, brilho, fatia, fundo escuro."]);
@@ -2518,11 +2579,12 @@ function botaoVoz(campoId){
 
 // ---------- tela do assistente ----------
 const SKU_ASSIST="ASSIST";
-let txFoto="", txQuer="", analise=null, guia="flow";
+let txFoto="", txQuer="", analise=null, guia="flow", notaDada=0;
 
 function renderAssist(){
   const A=analise, ouv=!!ouvindo;
-  let h='<h1 class="tt">Fale o que deve acontecer</h1>'+
+  let h='<div class="topo"><h1 class="tt">Fale o que deve acontecer</h1>'+
+    ((txQuer||A) ? '<button class="lnk" id="bnovo">Novo</button>' : '')+'</div>'+
     '<p class="sub">Diga o produto e o movimento. O prompt sai pronto.</p>';
 
   h+= VOZ
@@ -2553,7 +2615,8 @@ function renderAssist(){
            '<button class="gb'+(guia==="canva"?" on":"")+'" data-g="canva">Canva · 5s</button>'+
          '</div><textarea id="pp" class="mono" rows="'+(guia==="flow"?8:5)+'"></textarea>'+
          '<button class="act" id="cp">Copiar prompt do '+
-           (guia==="flow"?"Flow":"Canva")+'</button></div>';
+           (guia==="flow"?"Flow":"Canva")+'</button></div>'+
+         estrelasHTML(chaveNota(A.cars),notaDada);
   }
   $("vAssist").innerHTML=h;
   $("tq").value=txQuer;
@@ -2561,6 +2624,7 @@ function renderAssist(){
   // O texto e a unica entrada: descreve a cena e o desejo ao mesmo tempo.
   function analisar(){
     analise = txQuer.trim() ? interpretar(txQuer,txQuer) : null;
+    notaDada=0;
     renderAssist();
   }
   $("tq").oninput =function(e){txQuer=e.target.value};
@@ -2570,6 +2634,22 @@ function renderAssist(){
     ditar("tq",function(txt){txQuer=txt}, analisar);
   };
 
+  if($("bnovo")) $("bnovo").onclick=function(){
+    pararVoz(); txQuer=""; analise=null; notaDada=0; guia="flow"; renderAssist();
+  };
+  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-nota]"),function(b){
+    b.onclick=function(){
+      const v=+b.getAttribute("data-nota"), ch=chaveNota(A.cars);
+      if(notaDada===v){ desfazerNota(ch,v); notaDada=0; toast("Nota removida."); }
+      else {
+        if(notaDada) desfazerNota(ch,notaDada);   // troca de nota, nao soma duas
+        const r=salvarNota(ch,v); notaDada=v;
+        toast("Guardado. Média "+r.media.toFixed(1)+"★ em "+r.n+
+              (r.n===1?" uso.":" usos."));
+      }
+      renderAssist();
+    };
+  });
   Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-off]"),function(b){
     b.onclick=function(){
       const par=b.getAttribute("data-off").split(":");
@@ -2577,7 +2657,7 @@ function renderAssist(){
       if(par[0]==="car") cars=cars.filter(function(x){return x!==par[1]});
       if(par[0]==="rec") rec="";
       if(par[0]==="orn") orn="";
-      analise=reavaliar(cars,rec,orn,A.foto); renderAssist();
+      analise=reavaliar(cars,rec,orn,A.foto); notaDada=0; renderAssist();
     };
   });
   Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-g]"),function(b){

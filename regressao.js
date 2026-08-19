@@ -16,13 +16,13 @@ const doc={getElementById:id=>ids.has(id)?(criados[id]=criados[id]||elem(id)):nu
   querySelectorAll:()=>[],addEventListener(){},createElement:elem,body:elem("body")};
 let capt="";
 const A=new Function("document","navigator","localStorage","setTimeout","clearTimeout","win","FileReader","URL","confirm","fetch",
- js+"\n;return{D,store,VOZ,interpretar,reavaliar,montarAnalise,montarPrompt,montarPromptCurto,cfgDeCaracteristicas,renderAssist,travaBase,pedeRecheio,embalado,ornamentando,alternarCaracteristica,grupoDe,mudaForma,botaoVoz,ditar};")
+ js+"\n;return{D,store,VOZ,interpretar,reavaliar,montarAnalise,montarPrompt,montarPromptCurto,cfgDeCaracteristicas,renderAssist,travaBase,pedeRecheio,embalado,ornamentando,alternarCaracteristica,grupoDe,mudaForma,botaoVoz,ditar,chaveNota,lerNota,salvarNota,desfazerNota,estrelasHTML};")
  (doc,{clipboard:{writeText:t=>{capt=t;return Promise.resolve()}}},null,f=>{if(f)f();return 0},()=>{},
   {open(){}},function(){},{createObjectURL:()=>""},()=>true,()=>Promise.reject(new Error("x")));
 let falhas=0; const erro=(...m)=>{falhas++;console.log("  FALHA:",m.join(" "))};
-const {D,store,VOZ,interpretar,reavaliar,montarPrompt,montarPromptCurto,
+const {D,store,VOZ,interpretar,reavaliar,montarAnalise,montarPrompt,montarPromptCurto,
        cfgDeCaracteristicas,renderAssist,travaBase,pedeRecheio,embalado,
-       alternarCaracteristica,grupoDe,mudaForma,botaoVoz,ditar}=A;
+       alternarCaracteristica,grupoDe,mudaForma,botaoVoz,ditar,chaveNota,lerNota,salvarNota,desfazerNota,estrelasHTML}=A;
 
 // 1. calendario e telas antigas nao podem ter deixado vestigio
 ["planoMes","renderLote","irPara","aplicarModo","legenda","MATINAIS","SLOTS","GANCHO"]
@@ -87,6 +87,10 @@ if(tela.indexOf('id="tq"')<0) erro("campo de fala ausente");
 if(tela.indexOf('id="pp"')>=0) erro("prompt exibido antes de falar");
 if(VOZ!==null||botaoVoz("tq")!=="") erro("botao de voz sem suporte no ambiente");
 ditar("tq",function(){});
+// Botao Novo so aparece com conteudo, e limpa tudo.
+renderAssist();
+if(criados["vAssist"].innerHTML.indexOf('id="bnovo"')>=0)
+  erro("botao Novo aparece com a tela vazia");
 console.log("tela: campo unico, sem botao morto");
 
 // 7. ajustes gravam de verdade
@@ -99,5 +103,36 @@ if(store.get("menu")!=="https://exemplo") erro("ajustes nao gravaram o cardapio"
 ["salvarProdutoLocal","produtosTodos","acharProduto","CATS","novoAberto"].forEach(n=>{
   if(new RegExp("\\b"+n+"\\b").test(js)) erro("resto do cadastro local: "+n) });
 console.log("ajustes: gravam; cadastro de produto removido sem resto");
+// 8. memoria de notas
+const ch=chaveNota(["car_quente","car_recheio"]);
+if(chaveNota(["car_recheio","car_quente"])!==ch) erro("chave da nota depende da ordem");
+store.set("nota:"+ch,"");
+if(lerNota(ch)) erro("nota deveria comecar vazia");
+salvarNota(ch,4); salvarNota(ch,2);
+let h=lerNota(ch);
+if(!h||h.n!==2||Math.abs(h.media-3)>1e-9) erro("media errada: "+JSON.stringify(h));
+// Desfazer nao pode deixar residuo.
+desfazerNota(ch,2); h=lerNota(ch);
+if(!h||h.n!==1||Math.abs(h.media-4)>1e-9) erro("desfazer deixou residuo: "+JSON.stringify(h));
+desfazerNota(ch,4);
+if(lerNota(ch)) erro("ultima nota desfeita deveria zerar o registro");
+// Combinacao ruim vira alerta; boa vira informacao.
+[1,2,1].forEach(()=>salvarNota(ch,1));
+let r=montarAnalise(["car_quente","car_recheio"],"in_carne","","esfiha");
+if(!r.avisos.some(v=>v[0]==="!"&&/média/.test(v[1]))) erro("media baixa nao alertou");
+store.set("nota:"+ch,""); [5,5].forEach(()=>salvarNota(ch,5));
+r=montarAnalise(["car_quente","car_recheio"],"in_carne","","esfiha");
+if(!r.avisos.some(v=>v[0]===""&&/média/.test(v[1]))) erro("media alta nao informou");
+if(r.avisos.some(v=>v[0]==="!"&&/Considere trocar/.test(v[1]))) erro("media alta alertou como ruim");
+// Uma tentativa so nao gera julgamento.
+store.set("nota:"+ch,""); salvarNota(ch,1);
+r=montarAnalise(["car_quente","car_recheio"],"in_carne","","esfiha");
+if(r.avisos.some(v=>/média/.test(v[1]))) erro("uma tentativa nao deveria virar veredito");
+store.set("nota:"+ch,"");
+// Estrelas: marcadas ate a nota dada.
+const sv=estrelasHTML(ch,3);
+if((sv.match(/class="st on"/g)||[]).length!==3) erro("estrelas marcadas erradas");
+if(sv.indexOf("Toque na mesma estrela")<0) erro("sem instrucao de desfazer");
+console.log("notas: media, desfazer sem residuo, alerta so com repeticao");
 console.log(falhas?falhas+" FALHAS":"TODOS OS TESTES PASSARAM");
 process.exit(falhas?1:0);
