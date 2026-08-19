@@ -693,10 +693,12 @@ if(pca.length>=pfl.length) erro("versao curta do assistente nao encurtou");
 store.set("rec:ASSIST","");
 // A tela precisa sobreviver ao estado inicial, sem analise nenhuma.
 renderAssist();
-if(criados["vAssist"].innerHTML.indexOf("O que aparece na foto")<0)
-  erro("tela do assistente vazia no estado inicial");
-if(criados["vAssist"].innerHTML.indexOf("id=\"pf\"")>=0)
-  erro("prompt exibido antes de analisar");
+const telaIni=criados["vAssist"].innerHTML;
+if(telaIni.indexOf('id="tq"')<0) erro("campo de fala ausente");
+if(telaIni.indexOf('id="tf"')>=0) erro("campo antigo de foto ainda existe");
+if(telaIni.indexOf('id="pf"')>=0) erro("prompt exibido antes de qualquer fala");
+if(telaIni.indexOf("Analisar")>=0) erro("botao Analisar deveria ter sumido");
+if(telaIni.indexOf("Aceitar e gerar")>=0) erro("botao Aceitar deveria ter sumido");
 // Sem a API de voz o app nao pode quebrar nem mostrar botao morto.
 if(VOZ!==null) erro("VOZ deveria ser null sem suporte no ambiente");
 if(botaoVoz("tf")!=="") erro("botao de microfone exibido sem suporte");
@@ -704,6 +706,15 @@ renderAssist();
 if(criados["vAssist"].innerHTML.indexOf("data-mic")>=0)
   erro("microfone renderizado em ambiente sem suporte");
 ditar("tf",function(){});   // nao pode lancar excecao
+// Uma frase so descreve a cena e o desejo ao mesmo tempo.
+const iu=interpretar("esfiha de carne, quero que abra ao meio com vapor",
+                     "esfiha de carne, quero que abra ao meio com vapor");
+if(iu.cars.indexOf("car_recheio")<0||iu.cars.indexOf("car_quente")<0)
+  erro("fala unica nao produziu os efeitos");
+if(iu.rec!=="in_carne") erro("fala unica nao pegou o recheio");
+const ip=interpretar("pote lacrado de doce de leite com fundo escuro",
+                     "pote lacrado de doce de leite com fundo escuro");
+if(ip.cars.indexOf("car_embalado")<0) erro("fala unica nao detectou embalagem");
 if(!falhas) console.log("assistente: interpreta, alerta conflitos e gera os dois prompts");
 if(!falhas) console.log("voz: degrada sem suporte, sem botao morto");
 
