@@ -39,39 +39,8 @@ body{
 .masthead button{background:none;border:none;font-family:inherit;font-size:13px;
   color:var(--muted);cursor:pointer;padding:6px 2px;border-radius:var(--radius)}
 .masthead button:hover{color:var(--ink)}
-
-/* ---------- data ---------- */
-.datebar{display:flex;align-items:center;gap:8px;padding-bottom:20px}
-.datebar input{flex:1;font-family:inherit;font-size:14px;padding:10px 12px;
-  border:none;border-radius:var(--radius);background:var(--fill);color:var(--ink)}
-.datebar button{font-size:15px;width:38px;height:38px;border:none;
-  background:var(--fill);color:var(--ink-2);border-radius:var(--radius);cursor:pointer;
-  transition:background .15s}
-.datebar button:hover{background:var(--line-2)}
-
-/* ---------- horarios ---------- */
-.rail{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:28px}
-.tab{border:none;background:none;font-family:inherit;padding:0 0 12px;cursor:pointer;
-  font-size:15px;font-weight:500;color:var(--muted);position:relative;text-align:left;
-  transition:color .15s}
-.tab .lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;
-  text-transform:uppercase;color:var(--muted);margin-top:2px}
-.tab:hover{color:var(--ink-2)}
-.tab[aria-selected="true"]{color:var(--ink)}
-.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;
-  height:2px;background:var(--accent);border-radius:1px}
-.tab:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-
-/* ---------- corpo ---------- */
-.ticket{background:none;border:none;padding:0}
-.meta{display:flex;gap:14px;font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:var(--muted);text-transform:uppercase;margin-bottom:28px}
-.goal{color:var(--accent)}
-.panes{display:grid;gap:32px}
 @media (min-width:820px){
-  .panes{grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 }
-.pane{min-width:0}
 
 /* ---------- campos ---------- */
 .field{margin-bottom:28px}
@@ -89,17 +58,8 @@ select:hover,input[type=text]:hover{background:var(--line)}
 select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)}
 textarea{min-height:220px;resize:vertical;line-height:1.65;font-size:14px}
 @media (min-width:820px){ textarea{min-height:340px} }
-
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .hint{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.5}
 .hint b{color:var(--ink-2);font-weight:600}
-
-
-
-
-
-/* ---------- acoes ---------- */
-.steps{margin-top:24px;display:flex;flex-direction:column;gap:10px}
 .act{display:flex;align-items:center;gap:11px;width:100%;padding:13px 16px;
   border:1px solid var(--ink);background:var(--ink);color:#fff;
   font-family:inherit;font-size:14.5px;font-weight:500;text-align:left;
@@ -116,12 +76,6 @@ textarea{min-height:220px;resize:vertical;line-height:1.65;font-size:14px}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:22px;margin-bottom:24px;display:none}
 .panel.on{display:block}
-.litem{padding:14px 0;border-top:1px solid var(--line)}
-.lhead{display:flex;justify-content:space-between;font-size:11px;font-weight:600;
-  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.lhead b{color:var(--ink);font-weight:600}
-.lnome{font-size:15px;margin-bottom:10px}
-.lbtn{padding:9px 14px;font-size:13.5px;width:auto;display:inline-flex}
 .panel h2{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
   color:var(--muted);margin:0 0 16px}
 
@@ -131,13 +85,7 @@ table.lote th{text-align:left;font-size:10.5px;letter-spacing:.07em;text-transfo
 table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-align:top}
 .tt{font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px}
 .sub{font-size:13px;color:var(--muted);margin:0 0 30px}
-.lin{padding:20px 0;border-top:1px solid var(--line)}
-.lin .cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
-.lin .qd{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.lin .cab b{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.lin .mv{font-size:12px;color:var(--accent)}
 .act.mini{width:auto;padding:8px 16px;font-size:12.5px;margin:0}
-.topo{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .nota{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
 .nota b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.07em;
   text-transform:uppercase;color:var(--muted);margin-bottom:8px}
@@ -150,21 +98,11 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
 .gb{font-family:inherit;font-size:12.5px;padding:7px 15px;border:0;border-radius:999px;
   background:transparent;color:var(--ink-2);cursor:pointer}
 .gb.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.chip[data-off]{cursor:pointer}
 .falar{display:flex;align-items:flex-start;gap:14px;margin:4px 0 26px}
 .mic-s{display:flex;align-items:center;justify-content:center;width:46px;height:46px;
   margin-top:10px;border:1px solid var(--line-2);border-radius:50%;background:var(--surface);
   color:var(--ink-2);cursor:pointer;flex:0 0 auto}
 .mic-s:hover{border-color:var(--accent);color:var(--accent)}
-.itens{list-style:none;margin:6px 0 0;padding:0}
-.itens li{padding:10px 0;border-bottom:1px solid var(--line)}
-.itens li:last-child{border-bottom:0}
-.it-cab{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.it-cab b{font-size:14px;font-weight:600}
-.rem{font-family:inherit;font-size:19px;line-height:1;padding:0 4px;border:0;background:none;
-  color:var(--muted);cursor:pointer;flex:0 0 auto}
-.rem:hover{color:var(--heat)}
-.it-ef{display:block;font-size:12.5px;line-height:1.5;color:var(--ink-2);margin-top:3px}
 .falar-txt{flex:1 1 auto;min-width:0;padding-top:6px}
 .dicas{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px}
 .dica{font-family:inherit;font-size:12.5px;line-height:1.35;text-align:left;
@@ -175,7 +113,6 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
   border:0;border-radius:50%;background:var(--accent);color:#fff;cursor:pointer;flex:0 0 auto}
 .mic-g.on{background:var(--heat);animation:pulsa 1.1s ease-in-out infinite}
 .falar-dica{font-size:14px;color:var(--muted)}
-.lin-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .mic{display:flex;align-items:center;justify-content:center;width:34px;height:34px;
   border:0;border-radius:50%;background:var(--fill);color:var(--ink-2);cursor:pointer;
   flex:0 0 auto;margin-bottom:6px}
@@ -190,15 +127,6 @@ textarea.mono{min-height:190px;font-family:ui-monospace,"Cascadia Mono","Consola
 .novo{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .novo input{flex:1 1 160px}
 .novo select{flex:0 1 150px}
-.lnk{font-family:inherit;font-size:12.5px;color:var(--accent);background:none;border:0;
-  padding:8px 0 0;cursor:pointer;text-align:left}
-.modos{display:flex;gap:6px;margin:0 0 22px;background:var(--fill);
-  padding:4px;border-radius:999px;width:fit-content}
-.md{font-family:inherit;font-size:12.5px;padding:8px 16px;cursor:pointer;color:var(--ink-2);
-  background:transparent;border:0;border-radius:999px}
-.md.on{background:var(--surface);color:var(--ink);font-weight:600;
-  box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
 .chip{font-family:inherit;font-size:12.5px;line-height:1.2;padding:8px 13px;cursor:pointer;
   color:var(--ink-2);background:var(--fill);border:1px solid transparent;
   border-radius:999px;transition:background .12s,color .12s,border-color .12s}
@@ -214,9 +142,6 @@ details.fino>summary::before{content:"+ ";font-weight:600}
 details.fino[open]>summary::before{content:"\2212 "}
 details.fino[open]>summary{margin-bottom:14px}
 .hint.eixo{margin:14px 0 0;line-height:1.6}
-.verd{margin:16px 0 4px;padding:14px 16px;background:var(--fill);
-  border-radius:var(--radius);border-left:2px solid var(--heat)}
-.verd input{background:var(--surface)}
 .brief{margin:22px 0 18px;padding:14px 16px;background:var(--fill);
   border-radius:var(--radius);border-left:2px solid var(--accent)}
 .brief b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.07em;
@@ -224,11 +149,6 @@ details.fino[open]>summary{margin-bottom:14px}
 .brief ul{margin:0;padding-left:17px}
 .brief li{font-size:13px;line-height:1.55;margin-bottom:4px}
 .brief li.al{color:var(--heat);font-weight:500}
-.note{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:44px;
-  padding-top:22px;border-top:1px solid var(--line)}
-.note b{color:var(--ink-2);font-weight:600}
-.note code{background:var(--fill);padding:2px 7px;border-radius:4px;font-size:11.5px;
-  font-family:ui-monospace,"Cascadia Mono",Consolas,monospace}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;
   background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--radius);
@@ -253,8 +173,6 @@ details.fino[open]>summary{margin-bottom:14px}
 
   <p class="hint">Fica salvo neste aparelho. Sem cardápio preenchido, a legenda usa só o WhatsApp.</p>
 </div>
-
-
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
@@ -2541,8 +2459,6 @@ function sugestoes(A){
   // Acabamento.
   if(!tem("car_cinema")&&!tem("car_fundo_escuro")&&!tem("car_chama"))
     s.push(["Fundo escurecido destaca o produto","com fundo escurecido"]);
-  if(!tem("car_ornamento"))
-    s.push(["Ingredientes ao lado enriquecem a cena","com ingredientes ao lado"]);
   if(A.cfg.amb==="amb_nada"&&!embalado(A.cfg))
     s.push(["Nada se move na superfície — vapor ou brilho ajudam","com vapor"]);
   return s.slice(0,3);
@@ -2868,7 +2784,6 @@ function copiar(txt,msg){
   } else fallback();
 }
 
-
 // ---------- lote da semana ----------
 // Reune os posts dos proximos 7 dias para producao em bloco no Flow.
 // Web Speech API: nativa do navegador, sem dependencia e sem custo.
@@ -2962,11 +2877,6 @@ function renderAssist(){
      '<p class="hint">Pode corrigir o texto e o prompt se refaz.</p></div>';
 
   if(A){
-    h+='<div class="brief"><b>O que entendi</b>'+
-       (A.entendido.length
-         ? '<div class="chips" style="margin-top:4px">'+A.entendido.map(function(x){
-             return '<span class="chip on">'+x+'</span>'}).join("")+'</div>'
-         : '<ul><li class="al">Nada reconhecido.</li></ul>')+'</div>';
     if(A.avisos.length)
       h+='<div class="brief"><b>Confira antes</b><ul>'+A.avisos.map(function(v){
         return '<li'+(v[0]==="!"?' class="al"':'')+'>'+v[1]+'</li>'}).join("")+'</ul></div>';
@@ -3018,16 +2928,6 @@ function renderAssist(){
               (r.n===1?" uso.":" usos."));
       }
       renderAssist();
-    };
-  });
-  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-off]"),function(b){
-    b.onclick=function(){
-      const par=b.getAttribute("data-off").split(":");
-      let cars=A.cars.slice(), rec=A.rec, orn=A.orn;
-      if(par[0]==="car") cars=cars.filter(function(x){return x!==par[1]});
-      if(par[0]==="rec") rec=rec.split(",").filter(function(x){return x!==par[1]}).join(",");
-      if(par[0]==="orn") orn="";
-      analise=reavaliar(cars,rec,orn,A.foto); notaDada=0; renderAssist();
     };
   });
   Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-g]"),function(b){
