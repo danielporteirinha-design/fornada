@@ -152,6 +152,19 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
 .gb.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .chip[data-off]{cursor:pointer}
 .falar{display:flex;align-items:flex-start;gap:14px;margin:4px 0 26px}
+.mic-s{display:flex;align-items:center;justify-content:center;width:46px;height:46px;
+  margin-top:10px;border:1px solid var(--line-2);border-radius:50%;background:var(--surface);
+  color:var(--ink-2);cursor:pointer;flex:0 0 auto}
+.mic-s:hover{border-color:var(--accent);color:var(--accent)}
+.itens{list-style:none;margin:6px 0 0;padding:0}
+.itens li{padding:10px 0;border-bottom:1px solid var(--line)}
+.itens li:last-child{border-bottom:0}
+.it-cab{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.it-cab b{font-size:14px;font-weight:600}
+.rem{font-family:inherit;font-size:19px;line-height:1;padding:0 4px;border:0;background:none;
+  color:var(--muted);cursor:pointer;flex:0 0 auto}
+.rem:hover{color:var(--heat)}
+.it-ef{display:block;font-size:12.5px;line-height:1.5;color:var(--ink-2);margin-top:3px}
 .falar-txt{flex:1 1 auto;min-width:0;padding-top:6px}
 .dicas{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px}
 .dica{font-family:inherit;font-size:12.5px;line-height:1.35;text-align:left;
@@ -1452,103 +1465,128 @@ const D = {
  "insumos": {
   "in_carne": [
    "Carne moída",
-   "seasoned ground beef, dark brown, with small pieces of onion"
+   "seasoned ground beef, dark brown, with small pieces of onion",
+   "carne moída escura, com pedaços de cebola"
   ],
   "in_carne_q": [
    "Carne com queijo",
-   "seasoned dark brown ground beef with melted white cheese"
+   "seasoned dark brown ground beef with melted white cheese",
+   "carne moída escura com queijo derretido"
   ],
   "in_frango": [
    "Frango desfiado",
-   "shredded chicken, pale golden, moist"
+   "shredded chicken, pale golden, moist",
+   "frango desfiado, dourado claro e úmido"
   ],
   "in_frango_c": [
    "Frango com catupiry",
-   "shredded chicken mixed with soft white cream cheese"
+   "shredded chicken mixed with soft white cream cheese",
+   "frango desfiado com requeijão branco"
   ],
   "in_queijo": [
    "Queijo",
-   "melted white cheese"
+   "melted white cheese",
+   "queijo branco derretido"
   ],
   "in_presunto": [
    "Presunto e queijo",
-   "sliced pink ham with melted white cheese"
+   "sliced pink ham with melted white cheese",
+   "presunto rosado com queijo branco derretido"
   ],
   "in_calabresa": [
    "Calabresa",
-   "sliced reddish pork sausage with onion"
+   "sliced reddish pork sausage with onion",
+   "rodelas avermelhadas de calabresa com cebola"
   ],
   "in_palmito": [
    "Palmito",
-   "chopped pale ivory heart of palm in white sauce"
+   "chopped pale ivory heart of palm in white sauce",
+   "palmito picado, cor marfim, em molho branco"
   ],
   "in_milho": [
    "Milho",
-   "yellow sweet corn kernels in white sauce"
+   "yellow sweet corn kernels in white sauce",
+   "milho amarelo em molho branco"
   ],
   "in_requeijao": [
    "Requeijão",
-   "soft white cream cheese"
+   "soft white cream cheese",
+   "requeijão branco e cremoso"
   ],
   "in_doce_leite": [
    "Doce de leite",
-   "thick caramel-brown milk fudge"
+   "thick caramel-brown milk fudge",
+   "doce de leite espesso, cor caramelo"
   ],
   "in_goiabada": [
    "Goiabada",
-   "dark red guava paste"
+   "dark red guava paste",
+   "goiabada vermelho-escura"
   ],
   "in_chocolate": [
    "Chocolate",
-   "dark glossy chocolate"
+   "dark glossy chocolate",
+   "chocolate escuro e brilhante"
   ],
   "in_creme": [
    "Creme de baunilha",
-   "pale yellow vanilla custard"
+   "pale yellow vanilla custard",
+   "creme de baunilha amarelo-claro"
   ],
   "in_coco": [
    "Coco",
-   "white shredded coconut filling"
+   "white shredded coconut filling",
+   "recheio branco de coco ralado"
   ],
   "in_banana": [
    "Banana",
-   "sliced banana with cinnamon"
+   "sliced banana with cinnamon",
+   "banana em rodelas com canela"
   ],
   "in_miolo_pao": [
    "Miolo de pão",
-   "soft airy white bread crumb"
+   "soft airy white bread crumb",
+   "miolo de pão branco, macio e aerado"
   ],
   "in_miolo_bolo": [
    "Miolo de bolo",
-   "moist pale cake crumb"
+   "moist pale cake crumb",
+   "miolo de bolo claro e úmido"
   ],
   "in_miolo_bisc": [
    "Massa de biscoito",
-   "dense pale short crumb"
+   "dense pale short crumb",
+   "massa clara e densa de biscoito"
   ],
   "in_morango": [
    "Morango com chantilly",
-   "fresh strawberry slices layered with white whipped cream"
+   "fresh strawberry slices layered with white whipped cream",
+   "fatias de morango entre camadas de chantilly branco"
   ],
   "in_chantilly": [
    "Chantilly",
-   "white whipped cream, light and airy"
+   "white whipped cream, light and airy",
+   "chantilly branco, leve e aerado"
   ],
   "in_abacaxi": [
    "Abacaxi",
-   "chopped golden pineapple in white cream"
+   "chopped golden pineapple in white cream",
+   "abacaxi dourado picado em creme branco"
   ],
   "in_brigadeiro": [
    "Brigadeiro",
-   "dark glossy chocolate fudge"
+   "dark glossy chocolate fudge",
+   "brigadeiro escuro e brilhante"
   ],
   "in_prestigio": [
    "Prestígio",
-   "white shredded coconut cream with dark chocolate"
+   "white shredded coconut cream with dark chocolate",
+   "creme branco de coco com chocolate escuro"
   ],
   "in_pessego": [
    "Pêssego",
-   "sliced golden peach in white cream"
+   "sliced golden peach in white cream",
+   "pêssego dourado em fatias, em creme branco"
   ]
  },
  "coberturas": {
@@ -2192,6 +2230,30 @@ const D = {
   "or_morango": [
    "morangos frescos"
   ]
+ },
+ "efeito_pt": {
+  "car_quente": "Vapor quente sobe do produto e se dissolve no ar.",
+  "car_morno": "Um fio leve de vapor sobe do produto.",
+  "car_brilho": "Um reflexo quente desliza pela superfície conforme a câmera anda.",
+  "car_crocante": "Alguns farelos se soltam e assentam lentamente no prato.",
+  "car_queijo": "O queijo já visível amolece e brilha aos poucos.",
+  "car_cobertura": "Uma gota da cobertura se forma na borda e escorre devagar.",
+  "car_creme": "O creme já exposto escorre lentamente.",
+  "car_gelado": "Gotas de condensação se formam e escorrem pela superfície.",
+  "car_porcao": "Uma mão com luva preta entra e segura a peça, mostrando o tamanho.",
+  "car_fartura": "A câmera afasta devagar, revelando o conjunto.",
+  "car_recheio": "O produto se abre em duas metades, sozinho, revelando o interior.",
+  "car_recheio_faca": "Uma mão com luva traz uma faca e corta o produto ao meio num golpe lento; as metades se afastam e a faca sai de quadro.",
+  "car_miolo": "O produto se parte ao meio soltando farelos, mostrando o miolo.",
+  "car_fatia": "Uma fatia se separa do restante, sozinha, e desliza um pouco.",
+  "car_fatia_faca": "Uma mão com luva traz uma faca e corta uma fatia num golpe lento; a fatia desliza e a faca sai de quadro.",
+  "car_espatula": "Uma mão com luva desliza uma espátula sob uma fatia e a levanta devagar.",
+  "car_fio": "Uma fatia se separa e o queijo derretido estica num fio contínuo.",
+  "car_embalado": "Nada no produto se move: a embalagem fica intacta e só a câmera anda.",
+  "car_cinema": "A câmera aproxima num arco lento, fundo desfocado, com um brilho quente atravessando o produto.",
+  "car_ornamento": "No plano final, ingredientes aparecem ao redor, parados, enquanto a câmera afasta.",
+  "car_fundo_escuro": "O fundo cai na sombra e o produto continua iluminado.",
+  "car_chama": "O fundo fica escuro e desfocado, com uma chama quente tremulando ao longe."
  }
 };
 
@@ -2338,11 +2400,7 @@ function montarPromptCriar(prod,cfg){
 const PARES_FACA={car_recheio:"car_recheio_faca", car_fatia:"car_fatia_faca"};
 
 function sugestoes(A){
-  if(!A||!A.cars.length) return [
-    ["Diga o produto e o que deve se mover","esfiha de carne com vapor"],
-    ["Peça para abrir e mostrar o recheio","abrir ao meio mostrando o recheio"],
-    ["Peça um clima de comercial","clima de comercial com fundo escurecido"]
-  ];
+  if(!A||!A.cars.length) return [];
   const s=[], tem=function(k){return A.cars.indexOf(k)>=0};
 
   // Realismo: transformacao sem ferramenta costuma sair artificial.
@@ -2454,9 +2512,13 @@ function montarAnalise(lista,rec,orn,foto){
   const cfg=cfgDeCaracteristicas(lista);
 
   const avisos=[], entendido=[];
-  lista.forEach(function(k){entendido.push(["car",k,D.caracteristicas[k][0]])});
-  if(rec) entendido.push(["rec",rec,"Recheio: "+D.insumos[rec][0]]);
-  if(orn) entendido.push(["orn",orn,"Ao lado: "+D.ornamentos[orn][0]]);
+  lista.forEach(function(k){
+    entendido.push(["car",k,D.caracteristicas[k][0],(D.efeito_pt||{})[k]||""]);
+  });
+  if(rec) entendido.push(["rec",rec,"Recheio: "+D.insumos[rec][0],
+    "O interior sai como "+(D.insumos[rec][2]||D.insumos[rec][0].toLowerCase())+"."]);
+  if(orn) entendido.push(["orn",orn,"Ao lado: "+D.ornamentos[orn][0],
+    "Aparece no plano final, parado, sem encostar no produto."]);
 
   const hist=lista.length?lerNota(chaveNota(lista)):null;
   if(hist&&hist.n>=2&&hist.media<2.5)
@@ -2688,18 +2750,19 @@ let txFoto="", txQuer="", analise=null, guia="flow", notaDada=0;
 
 function renderAssist(){
   const A=analise, ouv=!!ouvindo;
-  let h='<div class="topo"><h1 class="tt">Fale o que deve acontecer</h1>'+
-    ((txQuer||A) ? '<button class="lnk" id="bnovo">Novo</button>' : '')+'</div>'+
+  let h='<h1 class="tt">Fale o que deve acontecer</h1>'+
     '<p class="sub">Diga o produto e o movimento. O prompt sai pronto.</p>';
 
   h+= VOZ
-    ? '<div class="falar"><button class="mic-g'+(ouv?" on":"")+'" id="mg" '+
-        'aria-label="Falar">'+
-        '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" '+
-        'stroke-width="1.7" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/>'+
-        '<path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button>'+
+    ? '<div class="falar">'+
+        '<button class="mic-g'+(ouv?" on":"")+'" id="mg" aria-label="'+
+          (ouv?"Parar de ouvir":"Falar")+'" title="'+(ouv?"Parar":"Falar")+'">'+
+          (ouv?'<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>':'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>')+'</button>'+
+        ((txQuer||A) ? '<button class="mic-s" id="bnovo" aria-label="Começar de novo" '+
+          'title="Começar de novo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v6h6"/><path d="M3.5 11a8.5 8.5 0 1 1 2 6"/></svg></button>' : '')+
         '<div class="falar-txt"><span class="falar-dica">'+
-          (ouv?"Ouvindo… toque para parar":"Toque e fale")+'</span>'+
+          (ouv?"Ouvindo… toque no quadrado para parar"
+              :(A?"Toque e fale":"Toque e fale: diga o produto e o que deve acontecer"))+'</span>'+
           '<div class="dicas">'+sugestoes(A).map(function(s){
             return '<button class="dica" data-add="'+s[1].replace(/"/g,"&quot;")+'">'+
               s[0]+'</button>'}).join("")+'</div></div></div>'
