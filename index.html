@@ -2647,25 +2647,52 @@ function montarPromptPT(prod,cfg,combo){
 // ---------- versao curta para o campo do Canva ----------
 // O Canva ja e image-to-video por construcao: cabecalho de formato e
 // trava longa sao redundantes ali. Fica so o movimento e uma guarda curta.
+// O campo "Imagem a vídeo → Personalizar" do Canva corta em 600 caracteres.
+const LIMITE_CANVA=600;
+
 function montarPromptCurto(prod,cfg,pt){
   if(embalado(cfg)) cfg=Object.assign({},cfg,{tr:"tr_nenhuma",amb:"amb_nada",
                                               hum:"hum_nenhum",ut:"ut_nenhum",cena:""});
   const B=pt?blocoPT:bloco;
-  const b=[[B("camera",cfg.cam),B("ambiente",cfg.amb),B("humano",cfg.hum),
-            B("utensilio",cfg.ut),B("ritmo",cfg.rit)].filter(Boolean)
-            .join(" ").replace(/MOTION:\s*/g,"")];
-  const tr=B("transformacao",cfg.tr);
-  if(tr) b.push(tr.replace(/TRANSFORMATION:\s*/,""));
-  const rec=pt?recheioPT(prod.sku):recheioEN(prod.sku);
-  if(rec&&pedeRecheio(cfg))
-    b.push(pt ? "O interior que fica visível é "+rec+"." : "The interior revealed is "+rec+".");
-  if(cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
-  b.push(embalado(cfg)
+  const guarda = embalado(cfg)
     ? (pt ? "Mantenha a embalagem e cada palavra impressa exatamente como na foto. Só a câmera se move."
           : "Keep the packaging and every printed word exactly as in the photo. Only the camera moves.")
     : (pt ? "Mantenha o produto, o prato e o fundo exatamente como na foto. Não acrescente nem remova nada."
-          : "Keep the product, plate and background exactly as in the photo. Add nothing, remove nothing."));
-  return b.filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+          : "Keep the product, plate and background exactly as in the photo. Add nothing, remove nothing.");
+
+  // Ordem de descarte quando estoura o limite: primeiro o acessório, por último
+  // o movimento e a guarda de fidelidade, que sao o que faz o video funcionar.
+  const recs=recheiosDe(prod.sku);
+  function montar(nRec,comLivre,comRitmo){
+    const mov=[B("camera",cfg.cam),B("ambiente",cfg.amb),B("humano",cfg.hum),
+               B("utensilio",cfg.ut)];
+    if(comRitmo) mov.push(B("ritmo",cfg.rit));
+    const b=[mov.filter(Boolean).join(" ").replace(/MOTION:\s*/g,"")];
+    const tr=B("transformacao",cfg.tr);
+    if(tr) b.push(tr.replace(/TRANSFORMATION:\s*/,""));
+    if(nRec>0&&pedeRecheio(cfg)){
+      const l=recs.slice(0,nRec).map(function(c){
+        const e=D.insumos[c]; if(!e) return "";
+        return pt?(e[2]||e[0].toLowerCase()):e[1];
+      }).filter(Boolean);
+      if(l.length){
+        const junto = l.length>1
+          ? l.slice(0,-1).join(", ")+(pt?" e ":" and ")+l[l.length-1] : l[0];
+        b.push(pt ? "O interior que fica visível é "+junto+"."
+                  : "The interior revealed is "+junto+".");
+      }
+    }
+    if(comLivre&&cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
+    b.push(guarda);
+    return b.filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+  }
+
+  let txt=montar(recs.length,true,true);
+  const tentativas=[[recs.length,false,true],[recs.length,false,false],
+                    [2,false,false],[1,false,false],[0,false,false]];
+  for(let i=0;i<tentativas.length&&txt.length>LIMITE_CANVA;i++)
+    txt=montar.apply(null,tentativas[i]);
+  return txt.length>LIMITE_CANVA ? txt.slice(0,LIMITE_CANVA-1).replace(/\s+\S*$/,"")+"." : txt;
 }
 
 function montarPrompt(prod,cfg,combo){
@@ -2886,7 +2913,8 @@ function renderAssist(){
            '<button class="gb'+(guia==="canva"?" on":"")+'" data-g="canva">Canva · 5s</button>'+
          '</div><textarea id="pp" class="mono" rows="'+(guia==="flow"?8:5)+'"></textarea>'+
          '<p class="hint">Você lê em português. O botão copia em inglês, '+
-           'que é o idioma que o modelo entende melhor.</p>'+
+           'que é o idioma que o modelo entende melhor.'+
+           (guia==="canva"?' <b id="cnt"></b> — é o limite do campo do Canva.':'')+'</p>'+
          '<button class="act" id="cp">Copiar em inglês para o '+
            (guia==="flow"?"Flow":"Canva")+'</button></div>'+
          estrelasHTML(chaveNota(A.cars),notaDada);
@@ -2941,6 +2969,10 @@ function renderAssist(){
     // Na tela, português; na área de transferência, inglês.
     $("pp").value = guia==="flow" ? montarPromptPT(prod,A.cfg)
                                   : montarPromptCurto(prod,A.cfg,true);
+    if($("cnt")){
+      const n=montarPromptCurto(prod,A.cfg).length;
+      $("cnt").textContent=n+" de "+LIMITE_CANVA+" caracteres";
+    }
     $("cp").onclick=function(){
       copiar(guia==="flow" ? montarPrompt(prod,A.cfg) : montarPromptCurto(prod,A.cfg),
              "Prompt em inglês copiado para o "+(guia==="flow"?"Flow":"Canva")+".");
