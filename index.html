@@ -151,7 +151,13 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
   background:transparent;color:var(--ink-2);cursor:pointer}
 .gb.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .chip[data-off]{cursor:pointer}
-.falar{display:flex;align-items:center;gap:14px;margin:4px 0 26px}
+.falar{display:flex;align-items:flex-start;gap:14px;margin:4px 0 26px}
+.falar-txt{flex:1 1 auto;min-width:0;padding-top:6px}
+.dicas{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px}
+.dica{font-family:inherit;font-size:12.5px;line-height:1.35;text-align:left;
+  padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface);color:var(--ink-2);cursor:pointer}
+.dica:hover{border-color:var(--accent);color:var(--ink)}
 .mic-g{display:flex;align-items:center;justify-content:center;width:66px;height:66px;
   border:0;border-radius:50%;background:var(--accent);color:#fff;cursor:pointer;flex:0 0 auto}
 .mic-g.on{background:var(--heat);animation:pulsa 1.1s ease-in-out infinite}
@@ -945,22 +951,22 @@ const D = {
    [
     "ut_espatula",
     "Espátula levanta a fatia",
-    "A cake server slides under one slice and slowly lifts it clear of the rest, then holds it steady."
+    "A gloved hand holding a cake server slides it under one slice and slowly lifts the slice clear of the rest, then holds it steady."
    ],
    [
     "ut_pinca",
     "Pinça pega a peça",
-    "Metal tongs close gently on one single piece, lift it slowly, and hold it steady. The remaining pieces stay exactly in place."
+    "A gloved hand holding a pair of tongs closes them on one piece, lifts it slowly and holds it steady."
    ],
    [
     "ut_garfo",
     "Garfo separa um pedaço",
-    "A fork slowly presses into the product and draws a portion away, lifting it a little."
+    "A gloved hand holding a fork presses it into the product and slowly draws one portion away."
    ],
    [
     "ut_colher",
     "Colher recolhe o recheio",
-    "A spoon slowly draws through the filling that is already exposed and lifts some of it."
+    "A gloved hand holding a spoon draws it through the filling that is already exposed and slowly lifts some of it."
    ]
   ]
  },
@@ -1190,7 +1196,7 @@ const D = {
   "hum_luva_fatia": "Produto inteiro, cortável, no centro do prato.",
   "hum_luva_pega": "Mais de uma peça no prato.",
   "hum_luva_serve": "Espaço livre no prato para a peça ser colocada.",
-  "ut_espatula": "Produto já fatiado, fatias encostadas.",
+  "ut_espatula": "O produto já precisa estar fatiado na foto.",
   "ut_pinca": "Mais de uma peça, soltas.",
   "ut_garfo": "Produto macio o bastante para o garfo entrar.",
   "ut_colher": "Recheio já exposto — um item aberto.",
@@ -1316,6 +1322,15 @@ const D = {
    },
    "forma"
   ],
+  "car_recheio_faca": [
+   "Abre ao meio — uma faca corta",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_abre_faca",
+    "rit": "rit_lento"
+   },
+   "forma"
+  ],
   "car_miolo": [
    "Miolo macio por dentro",
    {
@@ -1330,6 +1345,26 @@ const D = {
    {
     "cam": "cam_aproxima",
     "tr": "tr_fatia"
+   },
+   "forma"
+  ],
+  "car_fatia_faca": [
+   "Solta uma fatia — uma faca corta",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_fatia_faca",
+    "rit": "rit_lento"
+   },
+   "forma"
+  ],
+  "car_espatula": [
+   "Espátula levanta a fatia",
+   {
+    "cam": "cam_aproxima",
+    "tr": "tr_nenhuma",
+    "ut": "ut_espatula",
+    "hum": "hum_nenhum",
+    "rit": "rit_lento"
    },
    "forma"
   ],
@@ -1947,6 +1982,33 @@ const D = {
    "selo",
    "lata",
    "pote"
+  ],
+  "car_recheio_faca": [
+   "faca abrindo ao meio",
+   "com uma faca abrindo",
+   "abrindo com uma faca",
+   "faca corta ao meio",
+   "cortar com faca",
+   "abrir com faca",
+   "faca partindo",
+   "faca abrindo"
+  ],
+  "car_fatia_faca": [
+   "com uma faca cortando a fatia",
+   "cortando a fatia com uma faca",
+   "faca cortando a fatia",
+   "cortando uma fatia",
+   "faca tira a fatia",
+   "fatiar com faca"
+  ],
+  "car_espatula": [
+   "com uma espatula levantando",
+   "levantando com espatula",
+   "levantar com espatula",
+   "espatula levantando",
+   "servir a fatia",
+   "pa de bolo",
+   "espatula"
   ]
  },
  "lexico_in": {
@@ -2166,7 +2228,7 @@ function facaNaForma(cfg){
   return /_faca$/.test(cfg.tr||"");
 }
 function comLuvas(cfg){
-  return (cfg.hum||"").indexOf("hum_luva")===0 || facaNaForma(cfg);
+  return (cfg.hum||"").indexOf("hum_luva")===0 || comTalher(cfg);
 }
 function maoDaFoto(cfg){
   return cfg.hum==="hum_imovel"||cfg.hum==="hum_levanta";
@@ -2268,6 +2330,42 @@ function montarPromptCriar(prod,cfg){
   b.push(temOrn ? D.criar_estrutura_orn.replace("%s",orn) : D.criar_estrutura,
          D.criar_estilo, D.criar_trava);
   return b.filter(Boolean).join(" ");
+}
+
+// ---------- sugestoes de detalhe ----------
+// A falha mais comum nao e o prompt errado, e o prompt incompleto: comida que
+// se move sozinha nao parece real. Aqui o app pede o que ficou faltando.
+const PARES_FACA={car_recheio:"car_recheio_faca", car_fatia:"car_fatia_faca"};
+
+function sugestoes(A){
+  if(!A||!A.cars.length) return [
+    ["Diga o produto e o que deve se mover","esfiha de carne com vapor"],
+    ["Peça para abrir e mostrar o recheio","abrir ao meio mostrando o recheio"],
+    ["Peça um clima de comercial","clima de comercial com fundo escurecido"]
+  ];
+  const s=[], tem=function(k){return A.cars.indexOf(k)>=0};
+
+  // Realismo: transformacao sem ferramenta costuma sair artificial.
+  if(tem("car_recheio"))
+    s.push(["Produto que se abre sozinho parece artificial — quer uma faca?",
+            "abrindo com uma faca"]);
+  if(tem("car_fatia"))
+    s.push(["Fatia que se solta sozinha parece artificial — quer uma faca?",
+            "cortando a fatia com uma faca"]);
+  if(tem("car_fio")&&!tem("car_espatula"))
+    s.push(["Uma espátula levantando a fatia deixa o fio de queijo mais real",
+            "com uma espatula levantando"]);
+  // Interior exposto sem recheio nomeado.
+  if(pedeRecheio(A.cfg)&&!A.rec)
+    s.push(["Diga o recheio, senão o modelo inventa","recheio de carne moída"]);
+  // Acabamento.
+  if(!tem("car_cinema")&&!tem("car_fundo_escuro")&&!tem("car_chama"))
+    s.push(["Fundo escurecido destaca o produto","com fundo escurecido"]);
+  if(!tem("car_ornamento"))
+    s.push(["Ingredientes ao lado enriquecem a cena","com ingredientes ao lado"]);
+  if(A.cfg.amb==="amb_nada"&&!embalado(A.cfg))
+    s.push(["Nada se move na superfície — vapor ou brilho ajudam","com vapor"]);
+  return s.slice(0,3);
 }
 
 // ---------- memoria de resultados ----------
@@ -2536,7 +2634,7 @@ const VOZ = (typeof window!=="undefined" &&
 let ouvindo=null;
 
 function pararVoz(){
-  if(ouvindo){ try{ouvindo.stop()}catch(e){} ouvindo=null; }
+  if(ouvindo){ ouvindo._parado=true; try{ouvindo.stop()}catch(e){} ouvindo=null; }
 }
 
 // campoId: onde escrever. aoTexto: callback para atualizar o estado.
@@ -2544,7 +2642,9 @@ function ditar(campoId, aoTexto, aoFim){
   if(!VOZ){toast("Este navegador não tem ditado. Use o microfone do teclado.");return}
   if(ouvindo){pararVoz();renderAssist();return}
   const r=new VOZ();
-  r.lang="pt-BR"; r.continuous=false; r.interimResults=true; r.maxAlternatives=1;
+  // Continuo: so encerra quando o usuario clicar de novo. Prompt longo nao
+  // pode exigir varios cliques.
+  r.lang="pt-BR"; r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
   const base=($(campoId)&&$(campoId).value)||"";
   r.onresult=function(ev){
     let txt="";
@@ -2561,7 +2661,12 @@ function ditar(campoId, aoTexto, aoFim){
       : "Não consegui usar o microfone.");
     renderAssist();
   };
-  r.onend=function(){ ouvindo=null; if(aoFim) aoFim(); else renderAssist(); };
+  r.onend=function(){
+    // Alguns navegadores encerram sozinhos apos silencio: reabre se o usuario
+    // nao pediu para parar.
+    if(ouvindo===r && !r._parado){ try{r.start();return}catch(e){} }
+    ouvindo=null; if(aoFim) aoFim(); else renderAssist();
+  };
   ouvindo=r;
   try{ r.start(); toast("Pode falar."); renderAssist(); }
   catch(e){ ouvindo=null; toast("Não consegui abrir o microfone."); }
@@ -2593,7 +2698,11 @@ function renderAssist(){
         '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" '+
         'stroke-width="1.7" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/>'+
         '<path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button>'+
-        '<span class="falar-dica">'+(ouv?"Ouvindo… toque para parar":"Toque e fale")+'</span></div>'
+        '<div class="falar-txt"><span class="falar-dica">'+
+          (ouv?"Ouvindo… toque para parar":"Toque e fale")+'</span>'+
+          '<div class="dicas">'+sugestoes(A).map(function(s){
+            return '<button class="dica" data-add="'+s[1].replace(/"/g,"&quot;")+'">'+
+              s[0]+'</button>'}).join("")+'</div></div></div>'
     : '<p class="hint">Este navegador não tem ditado. Use o microfone do teclado.</p>';
 
   h+='<div class="field"><textarea id="tq" rows="3" '+
@@ -2630,6 +2739,13 @@ function renderAssist(){
   $("tq").oninput =function(e){txQuer=e.target.value};
   $("tq").onchange=function(e){txQuer=e.target.value; analisar()};
 
+  Array.prototype.forEach.call($("vAssist").querySelectorAll("[data-add]"),function(b){
+    b.onclick=function(){
+      const frase=b.getAttribute("data-add");
+      txQuer=(txQuer.trim()?txQuer.trim()+", ":"")+frase;
+      analise=interpretar(txQuer,txQuer); notaDada=0; renderAssist();
+    };
+  });
   if($("mg")) $("mg").onclick=function(){
     ditar("tq",function(txt){txQuer=txt}, analisar);
   };
