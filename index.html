@@ -2974,6 +2974,17 @@ const VOZ = (typeof window!=="undefined" &&
              (window.SpeechRecognition||window.webkitSpeechRecognition)) || null;
 let ouvindo=null;
 
+// Android e desktop precisam de estrategias opostas de escuta:
+// - Desktop (Chrome): continuous:true e estavel e mantem UMA permissao de
+//   microfone. Reiniciar sessoes curtas faz o Chrome pedir permissao a cada
+//   frase.
+// - Android: continuous:true entra num ciclo de reinicio curto demais que
+//   nao capta fala e toca o bip do sistema; sessoes curtas com reinicio
+//   manual sao mais estaveis, e a permissao ali fica lembrada de qualquer
+//   forma.
+const EH_ANDROID = (typeof navigator!=="undefined") &&
+  /Android/i.test(navigator.userAgent||"");
+
 // Bip curto e proprio quando um trecho e confirmado, para nao depender do
 // bip de sistema que o Android toca a cada reinicio interno da escuta.
 function tocarBip(){
@@ -3002,11 +3013,16 @@ function ditar(campoId, aoTexto, aoFim){
   if(!VOZ){toast("Este navegador não tem ditado. Use o microfone do teclado.");return}
   if(ouvindo){pararVoz();renderAssist();return}
   const r=new VOZ();
-  // Continuo para nao exigir varios cliques. interimResults LIGADO: sem
-  // isso nada aparece na tela ate a frase inteira ser confirmada, e no
-  // Android o reconhecimento pode reiniciar (com um bip do sistema) antes
-  // disso acontecer — dando a impressao de que nada foi transcrito.
-  r.lang="pt-BR"; r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
+  // continuous:true e instavel em varios Android: o reconhecimento entra
+  // num ciclo de reinicio rapido demais para captar qualquer fala, cada
+  // reinicio com o bip do proprio sistema. Em vez de pedir ao navegador
+  // para ficar continuo, usamos sessoes curtas e reiniciamos por conta
+  // propria — com uma pequena pausa entre uma e outra — o que e mais
+  // estavel nesses aparelhos. interimResults LIGADO para o texto aparecer
+  // conforme a pessoa fala, nao so quando a frase inteira termina.
+  // No desktop, sessao continua = uma permissao so. No Android, sessoes
+  // curtas com reinicio manual (continuous:false) sao mais estaveis.
+  r.lang="pt-BR"; r.continuous=!EH_ANDROID; r.interimResults=true; r.maxAlternatives=1;
 
   // Trechos CONFIRMADOS (isFinal): nao confiamos em ev.resultIndex, pois em
   // varios celulares o Chrome reenvia resultados ja confirmados com o
@@ -3061,7 +3077,17 @@ function ditar(campoId, aoTexto, aoFim){
           return;
         }
       } else reinicVazios=0;
-      try{ r.start(); return }catch(e){}
+      // Android: pequena pausa antes de reabrir (reiniciar na mesma fracao
+      // de segundo repete o ciclo curto demais). Desktop: reabre na hora,
+      // mas como la e continuous:true isto quase nunca e alcançado.
+      if(EH_ANDROID){
+        setTimeout(function(){
+          if(ouvindo===r && !r._parado){ try{r.start()}catch(e){} }
+        },200);
+      } else {
+        try{ r.start(); }catch(e){}
+      }
+      return;
     }
     pararMedidor();
     ouvindo=null; if(aoFim) aoFim(); else renderAssist();
@@ -3222,7 +3248,13 @@ function renderAssist(){
            'que é o idioma que o modelo entende melhor.'+
            (guia==="canva"?' <b id="cnt"></b> — é o limite do campo do Canva.':'')+'</p>'+
          '<button class="act" id="cp">Copiar em inglês para o '+
-           (guia==="flow"?"Flow":"Canva")+'</button></div>'+
+           (guia==="flow"?"Flow":"Canva")+'</button>'+
+         (guia==="flow"
+           ? '<button class="act ghost" id="abrirflow">Copiar e abrir o Flow</button>'+
+             '<p class="hint">Abre o Flow (app ou navegador, conforme seu aparelho). '+
+             'O prompt vai copiado — é só colar lá.</p>'
+           : '')+
+         '</div>'+
          estrelasHTML(chaveNota(A.cars),notaDada);
   }
   $("vAssist").innerHTML=h;
@@ -3293,6 +3325,15 @@ function renderAssist(){
     $("cp").onclick=function(){
       copiar(guia==="flow" ? montarPrompt(prod,A.cfg) : montarPromptCurto(prod,A.cfg),
              "Prompt em inglês copiado para o "+(guia==="flow"?"Flow":"Canva")+".");
+    };
+    if($("abrirflow")) $("abrirflow").onclick=function(){
+      // Copia primeiro; o Flow decide sozinho (Android) se abre no app do
+      // Google ou no navegador — o endereco padrao serve para os dois.
+      copiar(montarPrompt(prod,A.cfg),
+             "Prompt copiado. No Flow, cole no campo e gere.");
+      // Abre em outra aba/app, sem trocar a pagina atual do assistente.
+      try{ win.open("https://labs.google/fx/tools/flow","_blank","noopener"); }
+      catch(e){ location.href="https://labs.google/fx/tools/flow"; }
     };
   }
 }
