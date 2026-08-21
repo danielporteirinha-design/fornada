@@ -103,6 +103,7 @@ table.lote td{padding:7px 12px 7px 0;border-top:1px solid var(--line);vertical-a
   margin-top:10px;border:1px solid var(--line-2);border-radius:50%;background:var(--surface);
   color:var(--ink-2);cursor:pointer;flex:0 0 auto}
 .mic-s:hover{border-color:var(--accent);color:var(--accent)}
+#onda{display:block;width:100%;max-width:260px;height:34px;margin-bottom:4px}
 .falar-txt{flex:1 1 auto;min-width:0;padding-top:6px}
 .dicas{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px}
 .dica{font-family:inherit;font-size:12.5px;line-height:1.35;text-align:left;
@@ -172,6 +173,13 @@ details.fino[open]>summary{margin-bottom:14px}
   <input type="text" id="menu" placeholder="https://...">
 
   <p class="hint">Fica salvo neste aparelho. Sem cardápio preenchido, a legenda usa só o WhatsApp.</p>
+
+  <h2 style="margin-top:28px">Interpretação por IA</h2>
+  <label class="flabel" for="wurl">Endereço do Worker</label>
+  <input type="text" id="wurl" placeholder="https://appfornada.SEUUSUARIO.workers.dev">
+  <label class="flabel" for="wkey" style="margin-top:12px">Senha do Worker</label>
+  <input type="text" id="wkey" placeholder="a senha que você criou no Cloudflare">
+  <p class="hint">Fica salva só neste aparelho, nunca no código do site. Sem preencher, o app continua funcionando com o dicionário local.</p>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -695,18 +703,18 @@ const D = {
    [
     "cam_aproxima",
     "Aproximação lenta",
-    "The camera pushes in slowly and continuously toward the subject.",
-    "A câmera aproxima devagar e sem parar em direção ao produto.",
-    "",
-    ""
+    "The camera pushes in slowly and continuously toward the subject, on a straight line, without stopping and without tilting; the subject grows in frame until it fills about three quarters of the height.",
+    "A câmera aproxima devagar e sem parar em direção ao produto, em linha reta, sem inclinar; o produto cresce no quadro até ocupar cerca de três quartos da altura.",
+    "The camera pushes in slowly and continuously toward the subject, without stopping or tilting.",
+    "A câmera aproxima devagar e sem parar em direção ao produto, sem parar nem inclinar."
    ],
    [
     "cam_afasta",
     "Afastamento lento",
-    "The camera pulls back slowly and continuously, revealing more of the frame.",
-    "A câmera afasta devagar, revelando mais da cena.",
-    "",
-    ""
+    "The camera pulls back slowly and continuously, on a straight line, revealing more of the surface around the subject; the subject stays centred and in focus the whole time.",
+    "A câmera afasta devagar e sem parar, em linha reta, revelando mais da superfície ao redor; o produto continua centralizado e em foco o tempo todo.",
+    "The camera pulls back slowly, revealing more of the surface; the subject stays centred and in focus.",
+    "A câmera afasta devagar, revelando mais da superfície; o produto continua centralizado e em foco."
    ],
    [
     "cam_orbita",
@@ -759,8 +767,10 @@ const D = {
    [
     "amb_vapor",
     "Vapor subindo",
-    "Hot steam rises steadily from the subject and dissolves into the air.",
-    "Vapor quente sobe do produto e se dissolve no ar."
+    "Thin threads of hot steam rise from the surface of the subject, bend slightly as they rise and dissolve before reaching the top of the frame; they never form a cloud and never cover the subject.",
+    "Fios finos de vapor quente sobem da superfície do produto, curvam-se ao subir e se dissolvem antes de chegar ao topo do quadro; nunca formam nuvem nem cobrem o produto.",
+    "Thin threads of hot steam rise from the subject and dissolve in the air, never covering it.",
+    "Fios finos de vapor quente sobem do produto e se dissolvem no ar, sem cobri-lo."
    ],
    [
     "amb_vapor_leve",
@@ -777,8 +787,10 @@ const D = {
    [
     "amb_farelo",
     "Farelos assentando",
-    "A few loose crumbs settle and come to rest.",
-    "Alguns farelos soltos assentam devagar no prato."
+    "A few loose crumbs shift and settle on the plate beside the subject, one at a time, moving only a few millimetres; nothing rolls off the plate.",
+    "Alguns farelos soltos se acomodam no prato ao lado do produto, um de cada vez, movendo poucos milímetros; nada rola para fora do prato.",
+    "A few loose crumbs settle on the plate beside the subject, moving only a little.",
+    "Alguns farelos soltos se acomodam no prato ao lado do produto, movendo pouco."
    ],
    [
     "amb_creme",
@@ -893,16 +905,16 @@ const D = {
    [
     "tr_abre",
     "Abre ao meio",
-    "TRANSFORMATION: the product slowly separates into two halves along one clean natural break, revealing its interior. It happens on its own, gradually, from the middle outward.",
-    "O produto se abre devagar em duas metades por uma quebra natural, revelando o interior. Acontece sozinho, do meio para fora.",
-    "",
-    ""
+    "The product separates slowly into two halves along one clean natural break, starting at the middle and opening outward, until the interior is visible. The halves stay on the plate and move only a couple of centimetres apart. It happens on its own, with no hands and no tools.",
+    "O produto se separa devagar em duas metades por uma quebra natural, começando pelo meio e abrindo para fora, até o interior ficar visível. As metades ficam no prato e se afastam apenas alguns centímetros. Acontece sozinho, sem mãos e sem ferramentas.",
+    "The product slowly separates into two halves along one clean natural break, revealing its interior. It happens on its own.",
+    "O produto se abre devagar em duas metades, revelando o interior. Acontece sozinho."
    ],
    [
     "tr_abre_faca",
     "Abre ao meio — uma faca corta",
-    "TRANSFORMATION: A gloved hand holding a kitchen knife enters the frame, cuts the product cleanly in half in one single slow stroke, and the two halves separate slightly, revealing the interior. The knife then withdraws out of frame.",
-    "Uma mão com luva segurando uma faca entra no quadro, corta o produto ao meio num único golpe lento, e as duas metades se afastam revelando o interior. A faca sai do quadro.",
+    "A gloved hand holding a kitchen knife enters the frame from one side. The blade meets the crust, meets slight resistance, and passes through in one single slow stroke until it reaches the plate. The two halves then part by a couple of centimetres, revealing the interior, and the knife withdraws out of frame.",
+    "Uma mão com luva segurando uma faca entra pela lateral do quadro. A lâmina encosta na casca, encontra leve resistência e atravessa num único golpe lento até tocar o prato. As duas metades se afastam alguns centímetros, revelando o interior, e a faca sai de quadro.",
     "A gloved hand brings a kitchen knife in, cuts the product cleanly in half in one slow stroke, the halves part, and the knife withdraws.",
     "Uma mão com luva traz uma faca, corta o produto ao meio num golpe lento, as metades se afastam e a faca sai de quadro."
    ],
@@ -2310,7 +2322,68 @@ const D = {
   "rotulo": "A embalagem, a tampa, o rótulo e cada palavra, logotipo e código de barras impressos nele permanecem exatamente como na fotografia: mesmo layout, mesma tipografia, mesmas cores, mesma posição. Não redesenhe, reescreva, traduza, invente nem substitua qualquer elemento impresso.",
   "parado": "O produto está lacrado e não muda de forma alguma: nada derrete, solta vapor, abre, verte, derrama ou se move. Só a câmera se move.",
   "combo": "Dois itens aparecem juntos e ambos permanecem inteiramente no quadro durante todo o plano: nenhum some, sai do quadro, troca de lugar, muda de tamanho ou é substituído."
- }
+ },
+ "negacao_recheio": [
+  "nao tem recheio",
+  "sem recheio",
+  "nao e recheado",
+  "nao tem nada dentro",
+  "e simples sem recheio",
+  "nao tem interior",
+  "sem nada dentro",
+  "nao tem recheio nenhum",
+  "produto simples sem recheio",
+  "massa pura sem recheio",
+  "sem nenhum recheio"
+ ],
+ "lexico_cob": {
+  "cb_chocolate": [
+   "cobertura de chocolate",
+   "calda de chocolate",
+   "chocolate"
+  ],
+  "cb_glace": [
+   "glace branco",
+   "acucar glace",
+   "glace"
+  ],
+  "cb_acucar": [
+   "acucar cristal",
+   "acucar"
+  ],
+  "cb_coco": [
+   "coco ralado"
+  ],
+  "cb_goiabada": [
+   "cobertura de goiabada",
+   "goiabada"
+  ],
+  "cb_leite_cond": [
+   "leite condensado"
+  ],
+  "cb_granulado": [
+   "chocolate granulado",
+   "granulado"
+  ],
+  "cb_queijo": [
+   "queijo derretido por cima",
+   "queijo derretido"
+  ]
+ },
+ "marcador_cobertura": [
+  "cobertura de",
+  "cobertura",
+  "por cima",
+  "escorrendo por cima",
+  "escorre por cima",
+  "escorrendo",
+  "goteja",
+  "gotejando",
+  "banhado",
+  "glaceado",
+  "calda de",
+  "regado com"
+ ]
 };
 
 function bloco(banco,id){
@@ -2556,6 +2629,15 @@ function achar(txt,banco){
   return achados;
 }
 
+// Nao ha reconhecimento de negacao geral — e reconhecimento de vocabulario,
+// nao compreensao. Mas "nao tem recheio" e comum o bastante para tratar:
+// sem isto, a palavra de um ingrediente citado em outro contexto (ex: uma
+// cobertura de chocolate) era lida como recheio, mesmo com a negacao ao lado.
+function semRecheioDito(txt){
+  const n=" "+norm(txt)+" ";
+  return (D.negacao_recheio||[]).some(function(f){return n.indexOf(" "+f)>=0});
+}
+
 function interpretar(foto,quer){
   const tudo=foto+" "+quer;
   let cars=achar(quer,D.lexico_car);
@@ -2567,16 +2649,31 @@ function interpretar(foto,quer){
   let lista=[];
   cars.forEach(function(k){lista=alternarCaracteristica(lista,k)});
 
-  const rec=achar(tudo,D.lexico_in).slice(0,3).join(",");
-  const orn=achar(quer,D.lexico_or)[0]||"";
-  return montarAnalise(lista,rec,orn,foto);
+  const semRec=semRecheioDito(tudo);
+  // "Cobertura" e um terceiro papel, distinto de recheio e ornamento: o app
+  // so reconhecia os dois primeiros, entao "chocolate" citado como cobertura
+  // ia parar nos lugares errados. Se o texto marca cobertura explicitamente
+  // (ex: "cobertura de chocolate", "escorre por cima"), o ingrediente citado
+  // ali vai para cob, e sai das listas de recheio e ornamento.
+  const ehCobertura=(D.marcador_cobertura||[]).some(function(f){
+    return (" "+norm(quer)+" ").indexOf(" "+f)>=0;
+  });
+  const cob=ehCobertura ? (achar(tudo,D.lexico_cob)[0]||"") : "";
+  // Mesmo sabor, papel diferente: se "chocolate" ja foi lido como cobertura,
+  // ele nao pode tambem virar recheio — compara pelo rotulo (identico nos
+  // dois bancos), nao pela ancora ja traduzida (que tem textos diferentes).
+  const rec=semRec ? "" : achar(tudo,D.lexico_in).slice(0,3)
+    .filter(function(c){return !cob||D.insumos[c][0]!==D.coberturas[cob][0]})
+    .join(",");
+  const orn=ehCobertura ? "" : (achar(quer,D.lexico_or)[0]||"");
+  return montarAnalise(lista,rec,orn,foto,semRec,cob);
 }
 
-function reavaliar(lista,rec,orn,foto){return montarAnalise(lista,rec,orn,foto)}
+function reavaliar(lista,rec,orn,foto,semRec,cob){return montarAnalise(lista,rec,orn,foto,semRec,cob)}
 
 // Separado do reconhecimento: ao desmarcar um chip a conferencia precisa ser
 // recalculada sobre a lista nova, nao sobre a fala original.
-function montarAnalise(lista,rec,orn,foto){
+function montarAnalise(lista,rec,orn,foto,semRec,cob){
   const cfg=cfgDeCaracteristicas(lista);
 
   const avisos=[], entendido=[];
@@ -2589,6 +2686,8 @@ function montarAnalise(lista,rec,orn,foto){
   });
   if(orn) entendido.push(["orn",orn,"Ao lado: "+D.ornamentos[orn][0],
     "Aparece no plano final, parado, sem encostar no produto."]);
+  if(cob) entendido.push(["cob",cob,"Cobertura: "+D.coberturas[cob][0],
+    "Fica sobre o produto, exatamente como estiver na foto."]);
 
   const hist=lista.length?lerNota(chaveNota(lista)):null;
   if(hist&&hist.n>=2&&hist.media<2.5)
@@ -2601,12 +2700,18 @@ function montarAnalise(lista,rec,orn,foto){
     avisos.push(["!","Não reconheci nenhum efeito. Descreva o que deve se mover: "+
       "vapor, abrir ao meio, brilho, fatia, fundo escuro."]);
   if(pedeRecheio(cfg)&&!rec)
-    avisos.push(["!","Você pediu para mostrar o interior, mas não disse o que tem dentro. "+
-      "Sem isso o modelo inventa o recheio."]);
+    avisos.push(semRec
+      ? ["","Você disse que este produto não tem recheio: o interior vai aparecer sem "+
+             "nada definido. Confira se o resultado faz sentido."]
+      : ["!","Você pediu para mostrar o interior, mas não disse o que tem dentro. "+
+             "Sem isso o modelo inventa o recheio."]);
   if(embalado(cfg)&&lista.some(mudaForma))
     avisos.push(["!","Produto lacrado não abre nem parte. Vou manter só o movimento de câmera."]);
   if(ornamentando(cfg)&&!orn)
     avisos.push(["!","Diga qual ingrediente aparece ao lado, senão o modelo escolhe sozinho."]);
+  if(pedeCobertura(cfg)&&!cob)
+    avisos.push(["!","Você pediu para mostrar a cobertura, mas não disse qual é. "+
+      "Sem isso o modelo inventa."]);
   if(ornamentando(cfg)&&orn&&norm(foto).indexOf(norm(D.ornamentos[orn][0]))<0)
     avisos.push(["","Esse ingrediente não está na foto: será criado pelo modelo. "+
       "Colocar um de verdade na mesa é mais seguro."]);
@@ -2619,7 +2724,7 @@ function montarAnalise(lista,rec,orn,foto){
         .map(function(c){return D.insumos[c][0]}).join(" + ")+
       "\u201d — confira se bate com o produto real."]);
 
-  return {cars:lista,cfg:cfg,rec:rec,orn:orn,foto:foto,entendido:entendido,avisos:avisos};
+  return {cars:lista,cfg:cfg,rec:rec,orn:orn,cob:cob||"",foto:foto,semRec:!!semRec,entendido:entendido,avisos:avisos};
 }
 
 // ---------- versao em portugues ----------
@@ -2690,6 +2795,11 @@ function montarPromptCurto(prod,cfg,pt){
     if(cond){ const c=pt?b[5]:b[4]; if(c) return c; }
     return (pt?b[3]:b[2])||"";
   }
+  const guardaCurta = embalado(cfg)
+    ? (pt ? "Mantenha a embalagem e o texto impresso como na foto."
+          : "Keep the packaging and printed text as in the photo.")
+    : (pt ? "Mantenha o produto, o prato e o fundo como na foto."
+          : "Keep the product, plate and background as in the photo.");
   const guarda = embalado(cfg)
     ? (pt ? "Mantenha a embalagem e cada palavra impressa exatamente como na foto. Só a câmera se move."
           : "Keep the packaging and every printed word exactly as in the photo. Only the camera moves.")
@@ -2700,9 +2810,9 @@ function montarPromptCurto(prod,cfg,pt){
   // o movimento e a guarda de fidelidade, que sao o que faz o video funcionar.
   const recs=recheiosDe(prod.sku);
   function montar(nRec,comLivre,comRitmo,cond){
-    const mov=[B("camera",cfg.cam,cond),B("ambiente",cfg.amb),B("humano",cfg.hum),
-               B("utensilio",cfg.ut)];
-    if(comRitmo) mov.push(B("ritmo",cfg.rit));
+    const mov=[B("camera",cfg.cam,cond),B("ambiente",cfg.amb,cond),
+               B("humano",cfg.hum,cond),B("utensilio",cfg.ut,cond)];
+    if(comRitmo) mov.push(B("ritmo",cfg.rit,cond));
     const b=[mov.filter(Boolean).join(" ").replace(/MOTION:\s*/g,"")];
     const tr=B("transformacao",cfg.tr,cond);
     if(tr) b.push(tr.replace(/TRANSFORMATION:\s*/,""));
@@ -2715,23 +2825,26 @@ function montarPromptCurto(prod,cfg,pt){
         const junto = l.length>1
           ? l.slice(0,-1).join(", ")+(pt?" e ":" and ")+l[l.length-1] : l[0];
         b.push(pt ? "O interior que fica visível é "+junto+
-                    ". Quantidade contida e realista, sem esticar nem escorrer."
+                    (cond?". Quantidade contida, sem esticar."
+                        :". Quantidade contida e realista, sem esticar nem escorrer.")
                   : "The interior revealed is "+junto+
-                    ". Restrained, realistic amount: no stretching or oozing.");
+                    (cond?". Restrained amount, no stretching."
+                        :". Restrained, realistic amount: no stretching or oozing."));
       }
     }
     if(comLivre&&cfg.livre&&cfg.livre.trim()) b.push(cfg.livre.trim());
-    b.push(guarda);
+    b.push(cond?guardaCurta:guarda);
     return b.filter(Boolean).join(" ").replace(/\s+/g," ").trim();
   }
 
   // O recheio e o que o usuario mais precisa: so e descartado em ultimo caso.
   let txt=montar(recs.length,true,true,false);
   const tentativas=[[recs.length,false,true,false],   // sem texto livre
-                    [recs.length,true,true,true],     // blocos condensados
+                    [recs.length,true,true,true],     // tudo condensado
                     [recs.length,false,true,true],
                     [recs.length,false,false,true],   // sem ritmo
-                    [2,false,false,true],[1,false,false,true],[0,false,false,true]];
+                    [3,false,false,true],[2,false,false,true],
+                    [1,false,false,true],[0,false,false,true]];
   for(let i=0;i<tentativas.length&&txt.length>LIMITE_CANVA;i++)
     txt=montar.apply(null,tentativas[i]);
   return txt.length>LIMITE_CANVA ? txt.slice(0,LIMITE_CANVA-1).replace(/\s+\S*$/,"")+"." : txt;
@@ -2862,6 +2975,7 @@ const VOZ = (typeof window!=="undefined" &&
 let ouvindo=null;
 
 function pararVoz(){
+  pararMedidor();
   if(ouvindo){ ouvindo._parado=true; try{ouvindo.stop()}catch(e){} ouvindo=null; }
 }
 
@@ -2871,22 +2985,30 @@ function ditar(campoId, aoTexto, aoFim){
   if(ouvindo){pararVoz();renderAssist();return}
   const r=new VOZ();
   // Continuo para nao exigir varios cliques. interimResults DESLIGADO: os
-  // palpites provisorios do navegador mudam a cada instante e, acumulados,
-  // enchiam a caixa de variantes descartadas.
+  // palpites provisorios do navegador mudam a cada instante.
   r.lang="pt-BR"; r.continuous=true; r.interimResults=false; r.maxAlternatives=1;
 
-  // Vive fora do onresult: o navegador reinicia a escuta apos pausas longas e
-  // zera ev.results. Sem isto, o que ja foi falado se perdia no reinicio.
-  let texto=($(campoId)&&$(campoId).value)||"";
+  // NAO confiamos em ev.resultIndex: em varios celulares o Chrome reenvia
+  // resultados ja confirmados com o indice parado ou voltando, o que
+  // duplicava palavras inteiras. Em vez disso, a cada evento reconstruimos
+  // do zero o texto desta sessao interna a partir de TODOS os resultados
+  // finais presentes; "base" guarda o que veio de sessoes anteriores (texto
+  // ja no campo, ou falado antes de um reinicio automatico do navegador).
+  let base=($(campoId)&&$(campoId).value)||"";
+  let sessao="";
+
+  function juntar(a,b){ return a&&b ? a.replace(/\s*$/,"")+" "+b : (a||b||""); }
 
   r.onresult=function(ev){
-    for(let i=ev.resultIndex;i<ev.results.length;i++){
+    let s="";
+    for(let i=0;i<ev.results.length;i++){
       const seg=ev.results[i];
-      if(!seg.isFinal) continue;               // so o trecho ja confirmado
+      if(!seg.isFinal) continue;
       const t=(seg[0].transcript||"").trim();
-      if(!t) continue;
-      texto = texto ? texto.replace(/\s*$/,"")+" "+t : t;
+      if(t) s=juntar(s,t);
     }
+    sessao=s;
+    const texto=juntar(base,sessao);
     if($(campoId)) $(campoId).value=texto;
     aoTexto(texto);
   };
@@ -2899,11 +3021,17 @@ function ditar(campoId, aoTexto, aoFim){
     renderAssist();
   };
   r.onend=function(){
-    if(ouvindo===r && !r._parado){ try{r.start();return}catch(e){} }
+    if(ouvindo===r && !r._parado){
+      // Antes de reiniciar, o texto desta sessao vira base definitiva: a
+      // proxima sessao comeca do zero e nao pode reescrever o que ja foi dito.
+      base=juntar(base,sessao); sessao="";
+      try{ r.start(); return }catch(e){}
+    }
+    pararMedidor();
     ouvindo=null; if(aoFim) aoFim(); else renderAssist();
   };
   ouvindo=r;
-  try{ r.start(); toast("Pode falar."); renderAssist(); }
+  try{ r.start(); toast("Pode falar."); renderAssist(); iniciarMedidor(); }
   catch(e){ ouvindo=null; toast("Não consegui abrir o microfone."); }
 }
 
@@ -2917,9 +3045,101 @@ function botaoVoz(campoId){
     '<path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button>';
 }
 
+// ---------- medidor de voz ----------
+// Nivel real do microfone. Barra animada sem medir som daria a impressao
+// oposta: mostraria movimento quando nada estivesse sendo captado.
+let medidor=null;
+
+function pararMedidor(){
+  if(!medidor) return;
+  try{ cancelAnimationFrame(medidor.raf); }catch(e){}
+  try{ medidor.stream.getTracks().forEach(function(t){t.stop()}); }catch(e){}
+  try{ medidor.ctx.close(); }catch(e){}
+  medidor=null;
+}
+
+function iniciarMedidor(){
+  const cv=$("onda");
+  if(!cv||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia) return;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC) return;
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    if(!ouvindo){ stream.getTracks().forEach(function(t){t.stop()}); return; }
+    const ctx=new AC(), src=ctx.createMediaStreamSource(stream);
+    const an=ctx.createAnalyser(); an.fftSize=256; an.smoothingTimeConstant=0.75;
+    src.connect(an);
+    const dados=new Uint8Array(an.frequencyBinCount);
+    const g=cv.getContext("2d");
+    const BARRAS=22, cor=getComputedStyle(document.documentElement)
+      .getPropertyValue("--heat").trim()||"#8A2F14";
+    medidor={stream:stream,ctx:ctx,raf:0};
+    (function desenhar(){
+      if(!medidor) return;
+      medidor.raf=requestAnimationFrame(desenhar);
+      an.getByteFrequencyData(dados);
+      const L=cv.width/BARRAS, w=Math.max(2,L*0.55);
+      g.clearRect(0,0,cv.width,cv.height);
+      g.fillStyle=cor;
+      for(let i=0;i<BARRAS;i++){
+        // Concentra nas faixas de voz, onde a fala realmente aparece.
+        const idx=Math.floor(i*dados.length*0.45/BARRAS);
+        const v=dados[idx]/255;
+        const h=Math.max(3,v*cv.height);
+        g.fillRect(i*L+(L-w)/2,(cv.height-h)/2,w,h);
+      }
+    })();
+  }).catch(function(){ /* sem permissao: o botao pulsando ja indica */ });
+}
+
+// ---------- interpretacao por IA (Worker) ----------
+// A URL e a senha ficam guardadas so no navegador (Ajustes), nunca no
+// codigo commitado: o repositorio e publico, entao nada de credencial
+// gravada em texto no historico do Git.
+function iaConfigurada(){
+  return !!(store.get("worker_url")&&store.get("worker_key"));
+}
+
+async function interpretarIA(texto){
+  const url=store.get("worker_url"), chave=store.get("worker_key");
+  if(!url||!chave) return null;
+  const ctrl=new AbortController();
+  const t=setTimeout(function(){ctrl.abort()},8000);
+  try{
+    const resp=await fetch(url,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","X-App-Key":chave},
+      body:JSON.stringify({texto:texto}),
+      signal:ctrl.signal,
+    });
+    clearTimeout(t);
+    if(!resp.ok) return null;
+    const j=await resp.json();
+    if(j.erro) return null;
+    return j;
+  }catch(e){
+    clearTimeout(t);
+    return null;   // sem internet, Worker fora do ar, etc: cai no dicionario
+  }
+}
+
+// Converte a resposta da IA para o mesmo formato que o dicionario local
+// produz, e passa pelas mesmas regras de conferencia (montarAnalise).
+function analiseDaIA(j,texto){
+  let lista=[];
+  (j.cars||[]).forEach(function(k){
+    if(D.caracteristicas[k]) lista=alternarCaracteristica(lista,k);
+  });
+  const rec=(j.rec||[]).filter(function(c){return D.insumos[c]}).slice(0,3).join(",");
+  const cob=(j.cob||[]).filter(function(c){return D.coberturas[c]})[0]||"";
+  const orn=(j.orn||[]).filter(function(c){return D.ornamentos[c]})[0]||"";
+  const A=montarAnalise(lista,rec,orn,texto,j.semRec===true,cob);
+  A.viaIA=true;
+  return A;
+}
+
 // ---------- tela do assistente ----------
 const SKU_ASSIST="ASSIST";
-let txFoto="", txQuer="", analise=null, guia="flow", notaDada=0;
+let txFoto="", txQuer="", analise=null, guia="flow", notaDada=0, pensando=false;
 
 function renderAssist(){
   const A=analise, ouv=!!ouvindo;
@@ -2933,8 +3153,11 @@ function renderAssist(){
           (ouv?'<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>':'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>')+'</button>'+
         ((txQuer||A) ? '<button class="mic-s" id="bnovo" aria-label="Começar de novo" '+
           'title="Começar de novo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v6h6"/><path d="M3.5 11a8.5 8.5 0 1 1 2 6"/></svg></button>' : '')+
-        '<div class="falar-txt"><span class="falar-dica">'+
+        '<div class="falar-txt">'+
+          (ouv?'<canvas id="onda" width="260" height="34" aria-hidden="true"></canvas>':'')+
+          '<span class="falar-dica">'+
           (ouv?"Ouvindo… toque no quadrado para parar"
+              :pensando?"Pensando…"
               :(A?"Toque e fale":"Toque e fale: diga o produto e o que deve acontecer"))+'</span>'+
           '<div class="dicas">'+sugestoes(A).map(function(s){
             return '<button class="dica" data-add="'+s[1].replace(/"/g,"&quot;")+'">'+
@@ -2949,6 +3172,11 @@ function renderAssist(){
     if(A.avisos.length)
       h+='<div class="brief"><b>Confira antes</b><ul>'+A.avisos.map(function(v){
         return '<li'+(v[0]==="!"?' class="al"':'')+'>'+v[1]+'</li>'}).join("")+'</ul></div>';
+    if(A.viaIA)
+      h+='<p class="hint" style="margin-top:-14px">Interpretado por IA.</p>';
+    else if(iaConfigurada())
+      h+='<p class="hint" style="margin-top:-14px">A IA não respondeu agora — '+
+         'usei o dicionário local.</p>';
     if(A.cars.length)
       h+='<div class="field"><div class="guias">'+
            '<button class="gb'+(guia==="flow"?" on":"")+'" data-g="flow">Flow</button>'+
@@ -2965,9 +3193,19 @@ function renderAssist(){
   $("tq").value=txQuer;
 
   // O texto e a unica entrada: descreve a cena e o desejo ao mesmo tempo.
-  function analisar(){
-    analise = txQuer.trim() ? interpretar(txQuer,txQuer) : null;
-    notaDada=0;
+  async function analisar(){
+    const texto=txQuer.trim();
+    if(!texto){ analise=null; notaDada=0; renderAssist(); return; }
+    pensando=true; renderAssist();
+    let A=null;
+    if(iaConfigurada()){
+      const j=await interpretarIA(texto);
+      if(j) A=analiseDaIA(j,texto);
+    }
+    // Texto pode ter mudado enquanto a IA respondia (usuario editou de novo).
+    if(txQuer.trim()!==texto) return;
+    analise = A || interpretar(texto,texto);
+    pensando=false; notaDada=0;
     renderAssist();
   }
   $("tq").oninput =function(e){txQuer=e.target.value};
@@ -3007,6 +3245,7 @@ function renderAssist(){
     const prod={sku:SKU_ASSIST,cat:"OUTROS",nome:"Produto",preco:"",verdade:""};
     store.set("rec:"+SKU_ASSIST,A.rec||"");
     store.set("orn:"+SKU_ASSIST,A.orn||"");
+    store.set("cob:"+SKU_ASSIST,A.cob||"");
     store.set("mod:"+SKU_ASSIST,"animar");
     // Na tela, português; na área de transferência, inglês.
     $("pp").value = guia==="flow" ? montarPromptPT(prod,A.cfg)
@@ -3025,8 +3264,12 @@ function renderAssist(){
 // ---------- arranque ----------
 $("wpp").value=store.get("wpp")||"";
 $("menu").value=store.get("menu")||"";
+$("wurl").value=store.get("worker_url")||"";
+$("wkey").value=store.get("worker_key")||"";
 $("wpp").onchange=function(e){store.set("wpp",e.target.value)};
 $("menu").onchange=function(e){store.set("menu",e.target.value)};
+$("wurl").onchange=function(e){store.set("worker_url",e.target.value.trim())};
+$("wkey").onchange=function(e){store.set("worker_key",e.target.value.trim())};
 $("cfg").onclick=function(){$("painel").classList.toggle("on")};
 renderAssist();
 </script>
