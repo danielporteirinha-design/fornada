@@ -2995,7 +2995,7 @@ function ditar(campoId, aoTexto, aoFim){
   // finais presentes; "base" guarda o que veio de sessoes anteriores (texto
   // ja no campo, ou falado antes de um reinicio automatico do navegador).
   let base=($(campoId)&&$(campoId).value)||"";
-  let sessao="";
+  let sessao="", recebeuAlgo=false, reinicVazios=0;
 
   function juntar(a,b){ return a&&b ? a.replace(/\s*$/,"")+" "+b : (a||b||""); }
 
@@ -3008,6 +3008,7 @@ function ditar(campoId, aoTexto, aoFim){
       if(t) s=juntar(s,t);
     }
     sessao=s;
+    if(s) recebeuAlgo=true;
     const texto=juntar(base,sessao);
     if($(campoId)) $(campoId).value=texto;
     aoTexto(texto);
@@ -3015,8 +3016,8 @@ function ditar(campoId, aoTexto, aoFim){
   r.onerror=function(ev){
     if(ev.error==="no-speech") return;         // silencio nao e erro no modo continuo
     pararVoz();
-    toast(ev.error==="not-allowed"
-      ? "Permita o microfone nas configurações do navegador."
+    toast(ev.error==="not-allowed"||ev.error==="audio-capture"
+      ? "Permita o microfone nas configurações do Android e do navegador."
       : "Não consegui usar o microfone.");
     renderAssist();
   };
@@ -3025,6 +3026,20 @@ function ditar(campoId, aoTexto, aoFim){
       // Antes de reiniciar, o texto desta sessao vira base definitiva: a
       // proxima sessao comeca do zero e nao pode reescrever o que ja foi dito.
       base=juntar(base,sessao); sessao="";
+      // Se o microfone esta bloqueado (ex: permissao negada no Android), o
+      // navegador pode nao disparar erro nenhum — so reiniciar em silencio,
+      // sem nunca captar nada. Sem este limite, o app ficaria "ouvindo"
+      // para sempre sem avisar. Depois de varios reinicios vazios, desiste.
+      if(!recebeuAlgo){
+        reinicVazios++;
+        if(reinicVazios>=4){
+          pararVoz();
+          toast("Não captei nenhuma fala. Verifique a permissão do microfone "+
+                "nas configurações do Android e do navegador.");
+          renderAssist();
+          return;
+        }
+      } else reinicVazios=0;
       try{ r.start(); return }catch(e){}
     }
     pararMedidor();
