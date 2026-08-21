@@ -178,7 +178,7 @@ details.fino[open]>summary{margin-bottom:14px}
   <label class="flabel" for="wurl">Endereço do Worker</label>
   <input type="text" id="wurl" placeholder="https://appfornada.SEUUSUARIO.workers.dev">
   <label class="flabel" for="wkey" style="margin-top:12px">Senha do Worker</label>
-  <input type="text" id="wkey" placeholder="a senha que você criou no Cloudflare">
+  <input type="password" id="wkey" placeholder="a senha que você criou no Cloudflare">
   <p class="hint">Fica salva só neste aparelho, nunca no código do site. Sem preencher, o app continua funcionando com o dicionário local.</p>
 </div>
 
@@ -2974,6 +2974,24 @@ const VOZ = (typeof window!=="undefined" &&
              (window.SpeechRecognition||window.webkitSpeechRecognition)) || null;
 let ouvindo=null;
 
+// Bip curto e proprio quando um trecho e confirmado, para nao depender do
+// bip de sistema que o Android toca a cada reinicio interno da escuta.
+function tocarBip(){
+  const AC=(typeof window!=="undefined"&&(window.AudioContext||window.webkitAudioContext))||null;
+  if(!AC) return;
+  try{
+    const ctx=new AC();
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.frequency.value=880; osc.type="sine";
+    g.gain.setValueAtTime(0,ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.06,ctx.currentTime+0.01);
+    g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.09);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime+0.1);
+    setTimeout(function(){try{ctx.close()}catch(e){}},200);
+  }catch(e){ /* sem audio de saida: nao interrompe o ditado por isso */ }
+}
+
 function pararVoz(){
   pararMedidor();
   if(ouvindo){ ouvindo._parado=true; try{ouvindo.stop()}catch(e){} ouvindo=null; }
@@ -2984,32 +3002,35 @@ function ditar(campoId, aoTexto, aoFim){
   if(!VOZ){toast("Este navegador não tem ditado. Use o microfone do teclado.");return}
   if(ouvindo){pararVoz();renderAssist();return}
   const r=new VOZ();
-  // Continuo para nao exigir varios cliques. interimResults DESLIGADO: os
-  // palpites provisorios do navegador mudam a cada instante.
-  r.lang="pt-BR"; r.continuous=true; r.interimResults=false; r.maxAlternatives=1;
+  // Continuo para nao exigir varios cliques. interimResults LIGADO: sem
+  // isso nada aparece na tela ate a frase inteira ser confirmada, e no
+  // Android o reconhecimento pode reiniciar (com um bip do sistema) antes
+  // disso acontecer — dando a impressao de que nada foi transcrito.
+  r.lang="pt-BR"; r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
 
-  // NAO confiamos em ev.resultIndex: em varios celulares o Chrome reenvia
-  // resultados ja confirmados com o indice parado ou voltando, o que
-  // duplicava palavras inteiras. Em vez disso, a cada evento reconstruimos
-  // do zero o texto desta sessao interna a partir de TODOS os resultados
-  // finais presentes; "base" guarda o que veio de sessoes anteriores (texto
-  // ja no campo, ou falado antes de um reinicio automatico do navegador).
+  // Trechos CONFIRMADOS (isFinal): nao confiamos em ev.resultIndex, pois em
+  // varios celulares o Chrome reenvia resultados ja confirmados com o
+  // indice parado, o que duplicava palavras inteiras. Por isso "sessao" e
+  // sempre reconstruida do zero a partir de TODOS os finais do evento.
+  // "previa" e o trecho ainda sendo reconhecido: some ou e substituido a
+  // cada evento, nunca se acumula — e o que da a sensacao de tempo real.
   let base=($(campoId)&&$(campoId).value)||"";
-  let sessao="", recebeuAlgo=false, reinicVazios=0;
+  let sessao="", previa="", recebeuAlgo=false, reinicVazios=0;
 
   function juntar(a,b){ return a&&b ? a.replace(/\s*$/,"")+" "+b : (a||b||""); }
 
   r.onresult=function(ev){
-    let s="";
+    let s="", prov="";
     for(let i=0;i<ev.results.length;i++){
       const seg=ev.results[i];
-      if(!seg.isFinal) continue;
       const t=(seg[0].transcript||"").trim();
-      if(t) s=juntar(s,t);
+      if(seg.isFinal){ if(t) s=juntar(s,t); }
+      else prov=t;   // so o ultimo trecho provisorio importa
     }
-    sessao=s;
+    if(s&&s!==sessao) tocarBip();   // confirma o que foi ouvido, um bip so
+    sessao=s; previa=prov;
     if(s) recebeuAlgo=true;
-    const texto=juntar(base,sessao);
+    const texto=juntar(juntar(base,sessao),previa);
     if($(campoId)) $(campoId).value=texto;
     aoTexto(texto);
   };
@@ -3025,7 +3046,7 @@ function ditar(campoId, aoTexto, aoFim){
     if(ouvindo===r && !r._parado){
       // Antes de reiniciar, o texto desta sessao vira base definitiva: a
       // proxima sessao comeca do zero e nao pode reescrever o que ja foi dito.
-      base=juntar(base,sessao); sessao="";
+      base=juntar(base,sessao); sessao=""; previa="";
       // Se o microfone esta bloqueado (ex: permissao negada no Android), o
       // navegador pode nao disparar erro nenhum — so reiniciar em silencio,
       // sem nunca captar nada. Sem este limite, o app ficaria "ouvindo"
